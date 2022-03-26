@@ -3,7 +3,8 @@ import {
   CHUNKY_COLLECTION_SYMBOL,
   CHUNKY_ITEMS_COLLECTION_SYMBOL,
   WS_URL,
-  CHUNKY_BASE_SYMBOL
+  CHUNKY_BASE_SYMBOL,
+  itemList
 } from "./constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
@@ -12,37 +13,47 @@ import { u8aToHex } from "@polkadot/util";
 import { encodeAddress } from "@polkadot/keyring";
 import { nanoid } from "nanoid";
 import {pinSingleMetadataFromDir} from "./pinata-utils";
-
-const chunkyItems = [
-  {
-    symbol: "chunky_bone",
-    thumb: "Chunky_bone_thumb.png",
-    resources: ["Chunky_bone_left.svg", "Chunky_bone_right.svg"],
-    name: "The Bone",
-    description: "Chunky likes his bone!",
-  },
-  {
-    symbol: "chunky_flag",
-    thumb: "Chunky_flag_thumb.png",
-    resources: ["Chunky_flag_left.svg", "Chunky_flag_right.svg"],
-    name: "The Flag",
-    description: "Chunky likes his flag!",
-  },
-  {
-    symbol: "chunky_pencil",
-    thumb: "Chunky_pencil_thumb.png",
-    resources: ["Chunky_pencil_left.svg", "Chunky_pencil_right.svg"],
-    name: "The Pencil",
-    description: "Chunky likes his pencil!",
-  },
-  {
-    symbol: "chunky_spear",
-    thumb: "Chunky_spear_thumb.png",
-    resources: ["Chunky_spear_left.svg", "Chunky_spear_right.svg"],
-    name: "The Spear",
-    description: "Chunky likes his spear!",
-  },
-];
+const chunkyItems =(list:string[])=>{
+  return list.map((itemName)=>{
+    return {
+      symbol:itemName,
+      thumb: `${itemName}.png`,
+      resources: [`${itemName}.svg`],
+      name:itemName,
+      description: "Soldier1 likes his itemName!",
+    }
+  })
+}
+//  [
+//   {
+//     symbol: "chunky_bone",
+//     thumb: "Chunky_bone_thumb.png",
+//     resources: ["Chunky_bone_left.svg", "Chunky_bone_right.svg"],
+//     name: "The Bone",
+//     description: "Chunky likes his bone!",
+//   },
+//   {
+//     symbol: "chunky_flag",
+//     thumb: "Chunky_flag_thumb.png",
+//     resources: ["Chunky_flag_left.svg", "Chunky_flag_right.svg"],
+//     name: "The Flag",
+//     description: "Chunky likes his flag!",
+//   },
+//   {
+//     symbol: "chunky_pencil",
+//     thumb: "Chunky_pencil_thumb.png",
+//     resources: ["Chunky_pencil_left.svg", "Chunky_pencil_right.svg"],
+//     name: "The Pencil",
+//     description: "Chunky likes his pencil!",
+//   },
+//   {
+//     symbol: "chunky_spear",
+//     thumb: "Chunky_spear_thumb.png",
+//     resources: ["Chunky_spear_left.svg", "Chunky_spear_right.svg"],
+//     name: "The Spear",
+//     description: "Chunky likes his spear!",
+//   },
+// ];
 
 export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
   try {
@@ -73,11 +84,11 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
 
     await createItemsCollection();
 
-    const promises = chunkyItems.map(async (item, index) => {
+    const promises = chunkyItems(itemList).map(async (item, index) => {
       const sn = index + 1;
 
       const metadataCid = await pinSingleMetadataFromDir(
-        "/assets/chunky/Chunky Items",
+        "/assets/substra/items",
         item.thumb,
         item.name,
         {
@@ -108,7 +119,7 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
 
     const resaddSendRemarks = [];
 
-    chunkyItems.forEach((item, index) => {
+    chunkyItems(itemList).forEach((item, index) => {
       const sn = index + 1;
       const nft = new NFT({
         block,
@@ -119,16 +130,23 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
         collection: collectionId,
         symbol: item.symbol,
       });
-
+console.log("OOOOOOOOOOOOOOOOOOOOOOO")
+console.log("baseEntity.getId()")
+console.log(baseEntity.getId())
+console.log("item.name")
+console.log(item.name)
       item.resources.forEach((resource) => {
         resaddSendRemarks.push(
           nft.resadd({
-            src: `ipfs://ipfs/${ASSETS_CID}/Chunky Items/${resource}`,
-            thumb: `ipfs://ipfs/${ASSETS_CID}/Chunky Items/${item.thumb}`,
+            src: `ipfs://ipfs/${ASSETS_CID}/items/${resource}`,
+            thumb: `ipfs://ipfs/${ASSETS_CID}/items/${item.thumb}`,
             id: nanoid(8),
-            slot: resource.includes("left")
-              ? `${baseEntity.getId()}.chunky_objectLeft`
-              : `${baseEntity.getId()}.chunky_objectRight`,
+            slot:`${baseEntity.getId()}.${
+              item.name
+            }`
+            //  resource.includes("left")
+            //   ? `${baseEntity.getId()}.chunky_objectLeft`
+            //   : `${baseEntity.getId()}.chunky_objectRight`,
           })
         );
       });
@@ -147,7 +165,8 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
       resaddSendRemarks.push(
         nft.equip(
           `${baseEntity.getId()}.${
-            index % 2 ? "chunky_objectLeft" : "chunky_objectRight"
+            //index % 2 ? "chunky_objectLeft" : "chunky_objectRight"
+            item.name
           }`
         )
       );
@@ -181,8 +200,8 @@ export const createItemsCollection = async () => {
     );
 
     const collectionMetadataCid = await pinSingleMetadataFromDir(
-      "/assets/chunky",
-      "Chunky Preview.png",
+      "/assets/substra/fixedParts",
+      "nakedman.png",
       "RMRK2 demo chunky items collection",
       {
         description: "This is Chunky items! RMRK2 demo nested NFTs",

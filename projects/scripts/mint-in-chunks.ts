@@ -267,7 +267,7 @@ export const mintInChunksDemo = async () => {
     const chunksMintDemoMintArray = Object.values(chunksMintDemoMint);
 
     const accounts = getKeys();
-    const kp = getKeyringFromUri(process.env.PRIVATE_KEY as string);
+    const kp = getKeyringFromUri(process.env.PRIVAKE_KEY as string);
 
     for (const chunksMintDemoMintItem of chunksMintDemoMintArray) {
       const collectionId = Collection.generateId(

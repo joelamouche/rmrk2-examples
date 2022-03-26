@@ -4,6 +4,8 @@ import {
   ASSETS_CID,
   CHUNKY_BASE_SYMBOL,
   CHUNKY_COLLECTION_SYMBOL,
+  fixedPartsList,
+  itemList,
   WS_URL,
 } from "./constants";
 import { Base, Collection, NFT } from "rmrk-tools";
@@ -29,7 +31,7 @@ export const addBaseResource = async (
     );
 
     const api = await getApi(ws);
-    const serialNumbers = [1, 2, 3, 4];
+    const serialNumbers = [1] //[1, 2, 3, 4];
 
     const baseEntity = new Base(
       baseBlock,
@@ -54,19 +56,24 @@ export const addBaseResource = async (
       });
 
       const baseResId = nanoid(8);
-
+console.log("[...fixedPartsList,...itemList]")
+console.log([...fixedPartsList,...itemList])
+console.log("...fixedPartsList,...itemList")
+console.log(...fixedPartsList,...itemList)
       resourceRemarks.push(
         nft.resadd({
           base: BASE_ID,
           id: baseResId,
-          parts: [
-            `chunky_body_${sn}`,
-            `chunky_head_${sn}`,
-            `chunky_hand_${sn}`,
-            "chunky_objectLeft",
-            "chunky_objectRight",
-          ],
-          thumb: `ipfs://ipfs/${ASSETS_CID}/Chunky%20Preview.png`,
+          parts: [...fixedPartsList,...itemList],
+          // [
+          //   // `chunky_body_${sn}`,
+          //   // `chunky_head_${sn}`,
+          //   // `chunky_hand_${sn}`,
+          //   // "chunky_objectLeft",
+          //   // "chunky_objectRight",
+
+          // ],
+          thumb: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.png`,
         })
       );
 
@@ -74,8 +81,8 @@ export const addBaseResource = async (
         const secondaryArtResId = nanoid(8);
         resourceRemarks.push(
           nft.resadd({
-            src: `ipfs://ipfs/${ASSETS_CID}/chunky_altresource.jpg`,
-            thumb: `ipfs://ipfs/${ASSETS_CID}/chunky_altresource.jpg`,
+            src: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.jpg`,
+            thumb: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.jpg`,
             id: secondaryArtResId,
           })
         );
@@ -109,9 +116,9 @@ export const createChunkyCollection = async () => {
     );
 
     const collectionMetadataCid = await pinSingleMetadataFromDir(
-      "/assets/chunky",
-      "Chunky Preview.png",
-      "RMRK2 demo chunky collection",
+      "/assets/substra/fixedParts",
+      "nakedman.png",
+      "Substra demo soldier collection",
       {
         description: "This is Chunky! RMRK2 demo nested NFT",
         externalUri: "https://rmrk.app",
@@ -159,13 +166,13 @@ export const mintChunky = async () => {
 
     const api = await getApi(ws);
 
-    const serialNumbers = [1, 2, 3, 4];
+    const serialNumbers = [1]//, 2, 3, 4];
 
     const promises = serialNumbers.map(async (sn) => {
       const metadataCid = await pinSingleMetadataFromDir(
-        "/assets/chunky",
-        "Chunky Preview.png",
-        `RMRK2 demo chunky NFT #${sn}`,
+        "/assets/substra/fixedParts",
+        "nakedman.png",
+        `Substra demo soldier NFT #${sn}`,
         {
           description: `This is Chunky #${sn}! RMRK2 demo nested NFT`,
           externalUri: "https://rmrk.app",
