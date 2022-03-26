@@ -2,8 +2,8 @@ import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
 import {
   ASSETS_CID,
-  CHUNKY_BASE_SYMBOL,
-  CHUNKY_COLLECTION_SYMBOL,
+  SUBSTRAKNIGHT_BASE_SYMBOL,
+  SUBSTRAKNIGHT_COLLECTION_SYMBOL,
   fixedPartsList,
   itemList,
   WS_URL,
@@ -18,7 +18,7 @@ export const addBaseResource = async (
   baseBlock: number
 ) => {
   try {
-    console.log("ADD BASE RESOURCE TO CHUNKY NFT START -------");
+    console.log("ADD BASE RESOURCE TO SUBSTRAKNIGHT NFT START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
@@ -27,7 +27,7 @@ export const addBaseResource = async (
 
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
-      CHUNKY_COLLECTION_SYMBOL
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
     const api = await getApi(ws);
@@ -35,7 +35,7 @@ export const addBaseResource = async (
 
     const baseEntity = new Base(
       baseBlock,
-      CHUNKY_BASE_SYMBOL,
+      SUBSTRAKNIGHT_BASE_SYMBOL,
       encodeAddress(kp.address, 2),
       "svg"
     );
@@ -44,6 +44,7 @@ export const addBaseResource = async (
 
     const resourceRemarks = [];
 
+    // for each soldier, add base ressource
     serialNumbers.forEach((sn) => {
       const nft = new NFT({
         block: chunkyBlock,
@@ -77,32 +78,32 @@ console.log(...fixedPartsList,...itemList)
         })
       );
 
-      if (sn === 4) {
-        const secondaryArtResId = nanoid(8);
-        resourceRemarks.push(
-          nft.resadd({
-            src: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.jpg`,
-            thumb: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.jpg`,
-            id: secondaryArtResId,
-          })
-        );
+      // if (sn === 4) {
+      //   const secondaryArtResId = nanoid(8);
+      //   resourceRemarks.push(
+      //     nft.resadd({
+      //       src: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.jpg`,
+      //       thumb: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.jpg`,
+      //       id: secondaryArtResId,
+      //     })
+      //   );
 
-        resourceRemarks.push(nft.setpriority([secondaryArtResId, baseResId]));
-      }
+      //   resourceRemarks.push(nft.setpriority([secondaryArtResId, baseResId]));
+      //}
     });
 
     const txs = resourceRemarks.map((remark) => api.tx.system.remark(remark));
     const tx = api.tx.utility.batch(txs);
     const { block } = await sendAndFinalize(tx, kp);
-    console.log("Chunky base resources added at block: ", block);
+    console.log("Substraknight base resources added at block: ", block);
   } catch (error: any) {
     console.error(error);
   }
 };
 
-export const createChunkyCollection = async () => {
+export const createSubstraknightCollection = async () => {
   try {
-    console.log("CREATE CHUNKY COLLECTION START -------");
+    console.log("CREATE SUBSTRAKNIGHT COLLECTION START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
@@ -112,7 +113,7 @@ export const createChunkyCollection = async () => {
 
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
-      CHUNKY_COLLECTION_SYMBOL
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
     const collectionMetadataCid = await pinSingleMetadataFromDir(
@@ -120,7 +121,7 @@ export const createChunkyCollection = async () => {
       "nakedman.png",
       "Substra demo soldier collection",
       {
-        description: "This is Chunky! RMRK2 demo nested NFT",
+        description: "This is Substraknight! RMRK2 demo nested NFT",
         externalUri: "https://rmrk.app",
         properties: {},
       }
@@ -130,7 +131,7 @@ export const createChunkyCollection = async () => {
       0,
       10000,
       encodeAddress(accounts[0].address, 2),
-      CHUNKY_COLLECTION_SYMBOL,
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL,
       collectionId,
       collectionMetadataCid
     );
@@ -140,7 +141,7 @@ export const createChunkyCollection = async () => {
       kp
     );
     console.log("COLLECTION CREATION REMARK: ", ItemsCollection.create());
-    console.log("Chunky collection created at block: ", block);
+    console.log("Substraknight collection created at block: ", block);
 
     return block;
   } catch (error: any) {
@@ -148,33 +149,36 @@ export const createChunkyCollection = async () => {
   }
 };
 
-export const mintChunky = async () => {
+export const mintSubstraknight = async () => {
   try {
-    console.log("CREATE CHUNKY NFT START -------");
+    console.log("CREATE SUBSTRAKNIGHT NFT START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
     const kp = getKeyringFromUri(phrase);
 
+    // Generate collection id
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
-      CHUNKY_COLLECTION_SYMBOL
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
-    await createChunkyCollection();
+    await createSubstraknightCollection();
 
     const api = await getApi(ws);
 
     const serialNumbers = [1]//, 2, 3, 4];
 
+    // Mint base for each soldier
     const promises = serialNumbers.map(async (sn) => {
+      // Create Metadata
       const metadataCid = await pinSingleMetadataFromDir(
         "/assets/substra/fixedParts",
         "nakedman.png",
         `Substra demo soldier NFT #${sn}`,
         {
-          description: `This is Chunky #${sn}! RMRK2 demo nested NFT`,
+          description: `This is Substraknight #${sn}! RMRK2 demo nested NFT`,
           externalUri: "https://rmrk.app",
           properties: {
             rarity: {
@@ -185,6 +189,7 @@ export const mintChunky = async () => {
         }
       );
 
+      // mint nft
       const nft = new NFT({
         block: 0,
         collection: collectionId,
@@ -198,12 +203,12 @@ export const mintChunky = async () => {
       return nft.mint();
     });
 
+    // Batch send
     const remarks = await Promise.all(promises);
-
     const txs = remarks.map((remark) => api.tx.system.remark(remark));
     const tx = api.tx.utility.batchAll(txs);
     const { block } = await sendAndFinalize(tx, kp);
-    console.log("Chunky NFT minted at block: ", block);
+    console.log("Substraknight NFT minted at block: ", block);
     return block;
   } catch (error: any) {
     console.error(error);

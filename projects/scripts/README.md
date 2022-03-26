@@ -1,6 +1,6 @@
-# RMRK2 Chunky minting scripts
+# RMRK2 Substraknight minting scripts
 
-This is a collection of script to mint Chunky composable nested NFTs using RMRK2
+This is a collection of script to mint Substraknight composable nested NFTs using RMRK2
 
 Please Run scripts in following order:
 

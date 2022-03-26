@@ -15,4 +15,4 @@ Under `/projects/scripts` you can find all the minting scripts that you can run 
 
 ## React demo
 
-Under `/projects/react-demo` you can find a simple Next.js react app and an example of SVG composer component that composes single image from all the Base parts and nested NFTs of each parent Chunky
+Under `/projects/react-demo` you can find a simple Next.js react app and an example of SVG composer component that composes single image from all the Base parts and nested NFTs of each parent Substraknight

@@ -1,9 +1,9 @@
 import {
   ASSETS_CID,
-  CHUNKY_COLLECTION_SYMBOL,
-  CHUNKY_ITEMS_COLLECTION_SYMBOL,
+  SUBSTRAKNIGHT_COLLECTION_SYMBOL,
+  SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   WS_URL,
-  CHUNKY_BASE_SYMBOL,
+  SUBSTRAKNIGHT_BASE_SYMBOL,
   itemList
 } from "./constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
@@ -27,37 +27,37 @@ const chunkyItems =(list:string[])=>{
 //  [
 //   {
 //     symbol: "chunky_bone",
-//     thumb: "Chunky_bone_thumb.png",
-//     resources: ["Chunky_bone_left.svg", "Chunky_bone_right.svg"],
+//     thumb: "Substraknight_bone_thumb.png",
+//     resources: ["Substraknight_bone_left.svg", "Substraknight_bone_right.svg"],
 //     name: "The Bone",
-//     description: "Chunky likes his bone!",
+//     description: "Substraknight likes his bone!",
 //   },
 //   {
 //     symbol: "chunky_flag",
-//     thumb: "Chunky_flag_thumb.png",
-//     resources: ["Chunky_flag_left.svg", "Chunky_flag_right.svg"],
+//     thumb: "Substraknight_flag_thumb.png",
+//     resources: ["Substraknight_flag_left.svg", "Substraknight_flag_right.svg"],
 //     name: "The Flag",
-//     description: "Chunky likes his flag!",
+//     description: "Substraknight likes his flag!",
 //   },
 //   {
 //     symbol: "chunky_pencil",
-//     thumb: "Chunky_pencil_thumb.png",
-//     resources: ["Chunky_pencil_left.svg", "Chunky_pencil_right.svg"],
+//     thumb: "Substraknight_pencil_thumb.png",
+//     resources: ["Substraknight_pencil_left.svg", "Substraknight_pencil_right.svg"],
 //     name: "The Pencil",
-//     description: "Chunky likes his pencil!",
+//     description: "Substraknight likes his pencil!",
 //   },
 //   {
 //     symbol: "chunky_spear",
-//     thumb: "Chunky_spear_thumb.png",
-//     resources: ["Chunky_spear_left.svg", "Chunky_spear_right.svg"],
+//     thumb: "Substraknight_spear_thumb.png",
+//     resources: ["Substraknight_spear_left.svg", "Substraknight_spear_right.svg"],
 //     name: "The Spear",
-//     description: "Chunky likes his spear!",
+//     description: "Substraknight likes his spear!",
 //   },
 // ];
 
 export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
   try {
-    console.log("CREATE CHUNKY ITEMS START -------");
+    console.log("CREATE SUBSTRAKNIGHT ITEMS START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
@@ -67,23 +67,24 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
 
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
-      CHUNKY_ITEMS_COLLECTION_SYMBOL
+      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
     );
 
     const chunkyCollectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
-      CHUNKY_COLLECTION_SYMBOL
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
     const baseEntity = new Base(
       baseBlock,
-      CHUNKY_BASE_SYMBOL,
+      SUBSTRAKNIGHT_BASE_SYMBOL,
       encodeAddress(kp.address, 2),
       "svg"
     );
 
     await createItemsCollection();
 
+    // First mint all the items
     const promises = chunkyItems(itemList).map(async (item, index) => {
       const sn = index + 1;
 
@@ -115,13 +116,13 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
     const txs = remarks.map((remark) => api.tx.system.remark(remark));
     const batch = api.tx.utility.batch(txs);
     const { block } = await sendAndFinalize(batch, kp);
-    console.log("CHUNKY ITEMS MINTED AT BLOCK: ", block);
+    console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", block);
 
     const resaddSendRemarks = [];
 
     chunkyItems(itemList).forEach((item, index) => {
       const sn = index + 1;
-      const nft = new NFT({
+      const itemNft = new NFT({
         block,
         sn: sn.toString().padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),
@@ -137,7 +138,7 @@ console.log("item.name")
 console.log(item.name)
       item.resources.forEach((resource) => {
         resaddSendRemarks.push(
-          nft.resadd({
+          itemNft.resadd({
             src: `ipfs://ipfs/${ASSETS_CID}/items/${resource}`,
             thumb: `ipfs://ipfs/${ASSETS_CID}/items/${item.thumb}`,
             id: nanoid(8),
@@ -154,16 +155,16 @@ console.log(item.name)
       const chunkyNft = new NFT({
         block: chunkyBlock,
         collection: chunkyCollectionId,
-        symbol: `chunky_${sn}`,
+        symbol: `chunky_${1}`,
         transferable: 1,
-        sn: `${sn}`.padStart(8, "0"),
+        sn: `${1}`.padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),
         metadata: "",
       });
 
-      resaddSendRemarks.push(nft.send(chunkyNft.getId()));
+      resaddSendRemarks.push(itemNft.send(chunkyNft.getId()));
       resaddSendRemarks.push(
-        nft.equip(
+        itemNft.equip(
           `${baseEntity.getId()}.${
             //index % 2 ? "chunky_objectLeft" : "chunky_objectRight"
             item.name
@@ -177,7 +178,7 @@ console.log(item.name)
     );
     const resbatch = api.tx.utility.batch(restxs);
     const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
-    console.log("CHUNKY ITEMS RESOURCE ADDED AND SENT: ", resaddSendBlock);
+    console.log("SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ", resaddSendBlock);
     return true;
   } catch (error: any) {
     console.error(error);
@@ -186,7 +187,7 @@ console.log(item.name)
 
 export const createItemsCollection = async () => {
   try {
-    console.log("CREATE CHUNKY ITEMS COLLECTION START -------");
+    console.log("CREATE SUBSTRAKNIGHT ITEMS COLLECTION START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
@@ -196,7 +197,7 @@ export const createItemsCollection = async () => {
 
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
-      CHUNKY_ITEMS_COLLECTION_SYMBOL
+      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
     );
 
     const collectionMetadataCid = await pinSingleMetadataFromDir(
@@ -204,17 +205,18 @@ export const createItemsCollection = async () => {
       "nakedman.png",
       "RMRK2 demo chunky items collection",
       {
-        description: "This is Chunky items! RMRK2 demo nested NFTs",
+        description: "This is Substraknight items! RMRK2 demo nested NFTs",
         externalUri: "https://rmrk.app",
         properties: {},
       }
     );
+    console.log("collectionMetadataCid",collectionMetadataCid)
 
     const ItemsCollection = new Collection(
       0,
       0,
       encodeAddress(accounts[0].address, 2),
-      CHUNKY_ITEMS_COLLECTION_SYMBOL,
+      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
       collectionId,
       collectionMetadataCid
     );
@@ -223,7 +225,7 @@ export const createItemsCollection = async () => {
       api.tx.system.remark(ItemsCollection.create()),
       kp
     );
-    console.log("Chunky items collection created at block: ", block);
+    console.log("Substraknight items collection created at block: ", block);
 
     return block;
   } catch (error: any) {

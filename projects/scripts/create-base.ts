@@ -1,8 +1,8 @@
 import { IBasePart } from "rmrk-tools/dist/classes/base";
 import {
   ASSETS_CID,
-  CHUNKY_BASE_SYMBOL,
-  CHUNKY_ITEMS_COLLECTION_SYMBOL,
+  SUBSTRAKNIGHT_BASE_SYMBOL,
+  SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   itemList,
   fixedPartsList,
   WS_URL,
@@ -50,7 +50,7 @@ const getSlotKanariaParts = (itemList:string[],equippable: string[] | "*" = []):
 
 export const createBase = async () => {
   try {
-    console.log("CREATE CHUNKY BASE START -------");
+    console.log("CREATE SUBSTRAKNIGHT BASE START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
@@ -60,10 +60,12 @@ export const createBase = async () => {
 
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
-      CHUNKY_ITEMS_COLLECTION_SYMBOL
+      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
     );
     console.log("collectionId", collectionId);
 
+    console.log("getSlotKanariaParts(itemList,[collectionId])")
+    console.log(getSlotKanariaParts(itemList,[collectionId]))
     const baseParts = [
     //   {
     //   type: "fixed",
@@ -75,7 +77,7 @@ export const createBase = async () => {
 
     const baseEntity = new Base(
       0,
-      CHUNKY_BASE_SYMBOL,
+      SUBSTRAKNIGHT_BASE_SYMBOL,
       encodeAddress(kp.address, 2),
       "svg",
       baseParts
@@ -85,7 +87,7 @@ export const createBase = async () => {
       api.tx.system.remark(baseEntity.base()),
       kp
     );
-    console.log("Chunky Base created at block: ", block);
+    console.log("Substraknight Base created at block: ", block);
     return block;
   } catch (error: any) {
     console.error(error);
