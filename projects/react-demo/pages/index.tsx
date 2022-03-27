@@ -12,7 +12,7 @@ import SvgResourceComposer from '../components/rmrk-svg-composer';
 
 export const fetchData = async (setNfts: (nfts: NFTConsolidated[]) => void) => {
   try {
-    const payload = await fetch('/chunky-dump.json');
+    const payload = await fetch('/substra-dump.json');
     const data: ConsolidatorReturnType = await payload.json();
     if (data?.nfts) {
       setNfts(Object.values(data.nfts));

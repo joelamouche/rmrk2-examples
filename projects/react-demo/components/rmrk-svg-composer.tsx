@@ -18,7 +18,7 @@ export const getEquippedInventoryItems = async (
   resources_parts?: IBasePart[],
   children?: NFTConsolidated['children'],
 ) => {
-  const payload = await fetch('/chunky-dump.json');
+  const payload = await fetch('/substra-dump.json');
   const data: ConsolidatorReturnType = await payload.json();
 
   const equippedChildren = (children || []).map((child) => {

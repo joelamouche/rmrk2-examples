@@ -12,12 +12,12 @@ import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
 import { Collection, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 
-export const fixedParts =(list:string[]):IBasePart[]=>{
+export const fixedParts =(list:string[],setNumber):IBasePart[]=>{
   return list.map((name,i)=>{
     return {
       type: "fixed",
       id: name,
-      src: `ipfs://ipfs/${ASSETS_CID}/fixedParts/${name}.svg`,
+      src: `ipfs://ipfs/${ASSETS_CID}/Set${setNumber}/fixedParts/${name}.svg`,
       z: i,
     }
   })
@@ -35,13 +35,13 @@ const getSlotKanariaParts = (itemList:string[],equippable: string[] | "*" = []):
   // [
   //   {
   //     type: "slot",
-  //     id: "chunky_objectLeft",
+  //     id: "soldier_objectLeft",
   //     equippable,
   //     z: 1,
   //   },
   //   {
   //     type: "slot",
-  //     id: "chunky_objectRight",
+  //     id: "soldier_objectRight",
   //     equippable,
   //     z: 2,
   //   },
@@ -73,7 +73,8 @@ export const createBase = async () => {
     //   src: `ipfs://ipfs/${ASSETS_CID}/ityems/nakedman.svg`,
     //   z: 0,
     // } as IBasePart,
-    ...fixedParts(fixedPartsList), ...getSlotKanariaParts(itemList,[collectionId])];
+    // TODO fix base index
+    ...fixedParts(fixedPartsList,1), ...getSlotKanariaParts(itemList,[collectionId])];
 
     const baseEntity = new Base(
       0,

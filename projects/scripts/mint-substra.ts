@@ -7,6 +7,7 @@ import {
   fixedPartsList,
   itemList,
   WS_URL,
+  soldierIndexList,
 } from "./constants";
 import { Base, Collection, NFT } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
@@ -14,7 +15,7 @@ import { pinSingleMetadataFromDir } from "./pinata-utils";
 import { nanoid } from "nanoid";
 
 export const addBaseResource = async (
-  chunkyBlock: number,
+  substraBlock: number,
   baseBlock: number
 ) => {
   try {
@@ -31,7 +32,7 @@ export const addBaseResource = async (
     );
 
     const api = await getApi(ws);
-    const serialNumbers = [1] //[1, 2, 3, 4];
+    const serialNumbers = soldierIndexList
 
     const baseEntity = new Base(
       baseBlock,
@@ -47,9 +48,9 @@ export const addBaseResource = async (
     // for each soldier, add base ressource
     serialNumbers.forEach((sn) => {
       const nft = new NFT({
-        block: chunkyBlock,
+        block: substraBlock,
         collection: collectionId,
-        symbol: `chunky_${sn}`,
+        symbol: `soldier_${sn}`,
         transferable: 1,
         sn: `${sn}`.padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),
@@ -67,14 +68,14 @@ console.log(...fixedPartsList,...itemList)
           id: baseResId,
           parts: [...fixedPartsList,...itemList],
           // [
-          //   // `chunky_body_${sn}`,
-          //   // `chunky_head_${sn}`,
-          //   // `chunky_hand_${sn}`,
-          //   // "chunky_objectLeft",
-          //   // "chunky_objectRight",
+          //   // `soldier_body_${sn}`,
+          //   // `soldier_head_${sn}`,
+          //   // `soldier_hand_${sn}`,
+          //   // "soldier_objectLeft",
+          //   // "soldier_objectRight",
 
           // ],
-          thumb: `ipfs://ipfs/${ASSETS_CID}/fixedParts/nakedman.png`,
+          thumb: `ipfs://ipfs/${ASSETS_CID}/Set${sn}/fixedParts/nakedman.png`,
         })
       );
 
@@ -168,13 +169,13 @@ export const mintSubstraknight = async () => {
 
     const api = await getApi(ws);
 
-    const serialNumbers = [1]//, 2, 3, 4];
+    const serialNumbers = soldierIndexList
 
     // Mint base for each soldier
     const promises = serialNumbers.map(async (sn) => {
       // Create Metadata
       const metadataCid = await pinSingleMetadataFromDir(
-        "/assets/substra/fixedParts",
+        `/assets/Set${sn}/fixedParts`,
         "nakedman.png",
         `Substra demo soldier NFT #${sn}`,
         {
@@ -193,7 +194,7 @@ export const mintSubstraknight = async () => {
       const nft = new NFT({
         block: 0,
         collection: collectionId,
-        symbol: `chunky_${sn}`,
+        symbol: `soldier_${sn}`,
         transferable: 1,
         sn: `${sn}`.padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),

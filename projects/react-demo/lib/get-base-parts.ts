@@ -7,7 +7,7 @@ export const getBaseParts = async (
   baseResource?: IResourceConsolidated,
 ) => {
   if (baseResource) {
-    const payload = await fetch('/chunky-dump.json');
+    const payload = await fetch('/substra-dump.json');
     const data: ConsolidatorReturnType = await payload.json();
     const base = data.bases?.[baseResource.base || ''];
     const baseParts = base?.parts

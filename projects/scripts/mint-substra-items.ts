@@ -13,7 +13,7 @@ import { u8aToHex } from "@polkadot/util";
 import { encodeAddress } from "@polkadot/keyring";
 import { nanoid } from "nanoid";
 import {pinSingleMetadataFromDir} from "./pinata-utils";
-const chunkyItems =(list:string[])=>{
+const substraItems =(list:string[])=>{
   return list.map((itemName)=>{
     return {
       symbol:itemName,
@@ -26,28 +26,28 @@ const chunkyItems =(list:string[])=>{
 }
 //  [
 //   {
-//     symbol: "chunky_bone",
+//     symbol: "soldier_bone",
 //     thumb: "Substraknight_bone_thumb.png",
 //     resources: ["Substraknight_bone_left.svg", "Substraknight_bone_right.svg"],
 //     name: "The Bone",
 //     description: "Substraknight likes his bone!",
 //   },
 //   {
-//     symbol: "chunky_flag",
+//     symbol: "soldier_flag",
 //     thumb: "Substraknight_flag_thumb.png",
 //     resources: ["Substraknight_flag_left.svg", "Substraknight_flag_right.svg"],
 //     name: "The Flag",
 //     description: "Substraknight likes his flag!",
 //   },
 //   {
-//     symbol: "chunky_pencil",
+//     symbol: "soldier_pencil",
 //     thumb: "Substraknight_pencil_thumb.png",
 //     resources: ["Substraknight_pencil_left.svg", "Substraknight_pencil_right.svg"],
 //     name: "The Pencil",
 //     description: "Substraknight likes his pencil!",
 //   },
 //   {
-//     symbol: "chunky_spear",
+//     symbol: "soldier_spear",
 //     thumb: "Substraknight_spear_thumb.png",
 //     resources: ["Substraknight_spear_left.svg", "Substraknight_spear_right.svg"],
 //     name: "The Spear",
@@ -55,9 +55,9 @@ const chunkyItems =(list:string[])=>{
 //   },
 // ];
 
-export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
+export const mintItems = async (substraBlock: number, baseBlock: number, soldierNumber:number, itemNumber) => {
   try {
-    console.log("CREATE SUBSTRAKNIGHT ITEMS START -------");
+    console.log(`CREATE SUBSTRAKNIGHT ITEMS # ${itemNumber} START -------`);
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
@@ -70,7 +70,7 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
       SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
     );
 
-    const chunkyCollectionId = Collection.generateId(
+    const substraCollectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
       SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
@@ -85,11 +85,11 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
     await createItemsCollection();
 
     // First mint all the items
-    const promises = chunkyItems(itemList).map(async (item, index) => {
+    const promises = substraItems(itemList).map(async (item, index) => {
       const sn = index + 1;
 
       const metadataCid = await pinSingleMetadataFromDir(
-        "/assets/substra/items",
+        `/assets/Set${itemNumber}/items`,
         item.thumb,
         item.name,
         {
@@ -118,9 +118,12 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
     const { block } = await sendAndFinalize(batch, kp);
     console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", block);
 
+    console.log(`ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS # ${itemNumber} TO SOLDIER # ${soldierNumber}  START -------`);
+
+    // then add base, send and equip
     const resaddSendRemarks = [];
 
-    chunkyItems(itemList).forEach((item, index) => {
+    substraItems(itemList).forEach((item, index) => {
       const sn = index + 1;
       const itemNft = new NFT({
         block,
@@ -131,42 +134,44 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
         collection: collectionId,
         symbol: item.symbol,
       });
-console.log("OOOOOOOOOOOOOOOOOOOOOOO")
-console.log("baseEntity.getId()")
-console.log(baseEntity.getId())
-console.log("item.name")
-console.log(item.name)
+// console.log("OOOOOOOOOOOOOOOOOOOOOOO")
+// console.log("baseEntity.getId()")
+// console.log(baseEntity.getId())
+// console.log("item.name")
+// console.log(item.name)
       item.resources.forEach((resource) => {
         resaddSendRemarks.push(
           itemNft.resadd({
-            src: `ipfs://ipfs/${ASSETS_CID}/items/${resource}`,
-            thumb: `ipfs://ipfs/${ASSETS_CID}/items/${item.thumb}`,
+            src: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${resource}`,
+            thumb: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${item.thumb}`,
             id: nanoid(8),
             slot:`${baseEntity.getId()}.${
               item.name
             }`
             //  resource.includes("left")
-            //   ? `${baseEntity.getId()}.chunky_objectLeft`
-            //   : `${baseEntity.getId()}.chunky_objectRight`,
+            //   ? `${baseEntity.getId()}.soldier_objectLeft`
+            //   : `${baseEntity.getId()}.soldier_objectRight`,
           })
         );
       });
 
-      const chunkyNft = new NFT({
-        block: chunkyBlock,
-        collection: chunkyCollectionId,
-        symbol: `chunky_${1}`,
+      // instantiate soldier nft
+      const soldierNft = new NFT({
+        block: substraBlock,
+        collection: substraCollectionId,
+        symbol: `soldier_${soldierNumber}`,
         transferable: 1,
         sn: `${1}`.padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),
         metadata: "",
       });
 
-      resaddSendRemarks.push(itemNft.send(chunkyNft.getId()));
+      // send and equip
+      resaddSendRemarks.push(itemNft.send(soldierNft.getId()));
       resaddSendRemarks.push(
         itemNft.equip(
           `${baseEntity.getId()}.${
-            //index % 2 ? "chunky_objectLeft" : "chunky_objectRight"
+            //index % 2 ? "soldier_objectLeft" : "soldier_objectRight"
             item.name
           }`
         )
@@ -201,9 +206,9 @@ export const createItemsCollection = async () => {
     );
 
     const collectionMetadataCid = await pinSingleMetadataFromDir(
-      "/assets/substra/fixedParts",
+      `/assets/substra/fixedParts`,
       "nakedman.png",
-      "RMRK2 demo chunky items collection",
+      "RMRK2 demo substra items collection",
       {
         description: "This is Substraknight items! RMRK2 demo nested NFTs",
         externalUri: "https://rmrk.app",
