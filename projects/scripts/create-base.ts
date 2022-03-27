@@ -3,7 +3,7 @@ import {
   ASSETS_CID,
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
-  itemList,
+  slotList,
   fixedPartsList,
   WS_URL,
 } from "./constants";
@@ -64,8 +64,8 @@ export const createBase = async () => {
     );
     console.log("collectionId", collectionId);
 
-    console.log("getSlotKanariaParts(itemList,[collectionId])")
-    console.log(getSlotKanariaParts(itemList,[collectionId]))
+    console.log("getSlotKanariaParts(slotList,[collectionId])")
+    console.log(getSlotKanariaParts(slotList,[collectionId]))
     const baseParts = [
     //   {
     //   type: "fixed",
@@ -74,7 +74,7 @@ export const createBase = async () => {
     //   z: 0,
     // } as IBasePart,
     // TODO fix base index
-    ...fixedParts(fixedPartsList,1), ...getSlotKanariaParts(itemList,[collectionId])];
+    ...fixedParts(fixedPartsList,1), ...getSlotKanariaParts(slotList,[collectionId])];
 
     const baseEntity = new Base(
       0,

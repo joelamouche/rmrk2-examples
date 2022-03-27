@@ -5,7 +5,7 @@ import {
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SUBSTRAKNIGHT_COLLECTION_SYMBOL,
   fixedPartsList,
-  itemList,
+  slotList,
   WS_URL,
   soldierIndexList,
 } from "./constants";
@@ -59,14 +59,14 @@ export const addBaseResource = async (
 
       const baseResId = nanoid(8);
 console.log("[...fixedPartsList,...itemList]")
-console.log([...fixedPartsList,...itemList])
+console.log([...fixedPartsList,...slotList])
 console.log("...fixedPartsList,...itemList")
-console.log(...fixedPartsList,...itemList)
+console.log(...fixedPartsList,...slotList)
       resourceRemarks.push(
         nft.resadd({
           base: BASE_ID,
           id: baseResId,
-          parts: [...fixedPartsList,...itemList],
+          parts: [...fixedPartsList,...slotList],
           // [
           //   // `soldier_body_${sn}`,
           //   // `soldier_head_${sn}`,

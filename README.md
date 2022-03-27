@@ -5,7 +5,7 @@ You can find Crowdcast demo of using this code here: https://www.crowdcast.io/e/
 
 This is a monorepo, so do `yarn install` from the root of this repo
 
-![Chunkies](chunkies.png)
+![Chunkies](substras.png)
 
 This example shows how to create a composable NFT using [Base](https://github.com/rmrk-team/rmrk-spec/blob/2.0-wip/standards/rmrk2.0.0/entities/base.md) entity of type SVG. As well as nested NFTs equippable into substra hands
 

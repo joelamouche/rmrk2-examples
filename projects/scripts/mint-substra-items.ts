@@ -4,7 +4,7 @@ import {
   SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   WS_URL,
   SUBSTRAKNIGHT_BASE_SYMBOL,
-  itemList
+  slotList
 } from "./constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
@@ -85,7 +85,7 @@ export const mintItems = async (substraBlock: number, baseBlock: number, soldier
     await createItemsCollection();
 
     // First mint all the items
-    const promises = substraItems(itemList).map(async (item, index) => {
+    const promises = substraItems(slotList).map(async (item, index) => {
       const sn = index + 1;
 
       const metadataCid = await pinSingleMetadataFromDir(
@@ -123,7 +123,7 @@ export const mintItems = async (substraBlock: number, baseBlock: number, soldier
     // then add base, send and equip
     const resaddSendRemarks = [];
 
-    substraItems(itemList).forEach((item, index) => {
+    substraItems(slotList).forEach((item, index) => {
       const sn = index + 1;
       const itemNft = new NFT({
         block,
@@ -134,11 +134,7 @@ export const mintItems = async (substraBlock: number, baseBlock: number, soldier
         collection: collectionId,
         symbol: item.symbol,
       });
-// console.log("OOOOOOOOOOOOOOOOOOOOOOO")
-// console.log("baseEntity.getId()")
-// console.log(baseEntity.getId())
-// console.log("item.name")
-// console.log(item.name)
+      
       item.resources.forEach((resource) => {
         resaddSendRemarks.push(
           itemNft.resadd({
@@ -189,6 +185,7 @@ export const mintItems = async (substraBlock: number, baseBlock: number, soldier
     console.error(error);
   }
 };
+
 
 export const createItemsCollection = async () => {
   try {
