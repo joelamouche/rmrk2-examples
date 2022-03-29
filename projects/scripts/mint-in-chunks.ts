@@ -4,11 +4,12 @@ import { Resource } from "rmrk-tools/dist/classes/nft";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { isProd, WS_URL } from "./constants";
 import {
-    chunkArray,
-    getApi,
-    getKeyringFromUri,
-    getKeys,
-    sendAndFinalize, sleep,
+  chunkArray,
+  getApi,
+  getKeyringFromUri,
+  getKeys,
+  sendAndFinalize,
+  sleep,
 } from "./utils";
 import { Collection, NFT } from "rmrk-tools";
 import { encodeAddress } from "@polkadot/keyring";
@@ -277,9 +278,9 @@ export const mintInChunksDemo = async () => {
       const owner = encodeAddress(accounts[0].address, 2);
       const recipients = Object.keys(chunksMintDemoMintItem.recipients)
         .map((recipient) => {
-          return Array(parseInt(chunksMintDemoMintItem.recipients[recipient])).fill(
-            recipient
-          );
+          return Array(
+            parseInt(chunksMintDemoMintItem.recipients[recipient])
+          ).fill(recipient);
         })
         .flat();
 
@@ -305,8 +306,8 @@ export const mintInChunksDemo = async () => {
         };
       }
 
-      const contextProperty = chunksMintDemoMintItem.properties.find((property) =>
-        Boolean(property.context)
+      const contextProperty = chunksMintDemoMintItem.properties.find(
+        (property) => Boolean(property.context)
       );
       if (contextProperty) {
         properties.context = {

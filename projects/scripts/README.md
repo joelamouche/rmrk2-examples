@@ -9,4 +9,4 @@ Please Run scripts in following order:
 - `yarn consolidate --json=dumps-unconsolidated.json`
 
 Then look at `consolidated-from-dumps-unconsolidated.json` to verify there's no invalid calls. If everything is ok, you can copy this json fil to `react-demo`
- project under `public/substra-dump.json`
+project under `public/substra-dump.json`

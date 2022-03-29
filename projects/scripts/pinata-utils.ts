@@ -1,12 +1,12 @@
-import {sleep} from "./utils";
+import { sleep } from "./utils";
 
-require('dotenv').config();
-import { Metadata } from 'rmrk-tools/dist/tools/types';
-import pLimit from 'p-limit';
-import { Readable } from 'stream';
-import fs from 'fs';
+require("dotenv").config();
+import { Metadata } from "rmrk-tools/dist/tools/types";
+import pLimit from "p-limit";
+import { Readable } from "stream";
+import fs from "fs";
 // @ts-ignore
-import pinataSDK, { PinataOptions, PinataPinOptions } from '@pinata/sdk';
+import pinataSDK, { PinataOptions, PinataPinOptions } from "@pinata/sdk";
 
 const defaultOptions: Partial<PinataPinOptions> = {
   pinataOptions: {
@@ -14,7 +14,10 @@ const defaultOptions: Partial<PinataPinOptions> = {
   },
 };
 
-export const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET);
+export const pinata = pinataSDK(
+  process.env.PINATA_KEY,
+  process.env.PINATA_SECRET
+);
 
 const fsPromises = fs.promises;
 export type StreamPinata = Readable & {
@@ -22,13 +25,18 @@ export type StreamPinata = Readable & {
 };
 const limit = pLimit(1);
 
-export const pinFileStreamToIpfs = async (file: StreamPinata, name?: string) => {
+export const pinFileStreamToIpfs = async (
+  file: StreamPinata,
+  name?: string
+) => {
   const options = { ...defaultOptions, pinataMetadata: { name } };
   const result = await pinata.pinFileToIPFS(file, options);
   return result.IpfsHash;
 };
 
-export const uploadAndPinIpfsMetadata = async (metadataFields: Metadata): Promise<string> => {
+export const uploadAndPinIpfsMetadata = async (
+  metadataFields: Metadata
+): Promise<string> => {
   const options = {
     ...defaultOptions,
     pinataMetadata: { name: metadataFields.name },
@@ -38,7 +46,7 @@ export const uploadAndPinIpfsMetadata = async (metadataFields: Metadata): Promis
     const metadataHashResult = await pinata.pinJSONToIPFS(metadata, options);
     return `ipfs://ipfs/${metadataHashResult.IpfsHash}`;
   } catch (error) {
-    return '';
+    return "";
   }
 };
 
@@ -46,12 +54,14 @@ export const pinSingleMetadataFromDir = async (
   dir: string,
   path: string,
   name: string,
-  metadataBase: Partial<Metadata>,
+  metadataBase: Partial<Metadata>
 ) => {
   try {
-    const imageFile = await fsPromises.readFile(`${process.cwd()}${dir}/${path}`);
+    const imageFile = await fsPromises.readFile(
+      `${process.cwd()}${dir}/${path}`
+    );
     if (!imageFile) {
-      throw new Error('No image file');
+      throw new Error("No image file");
     }
 
     const stream: StreamPinata = Readable.from(imageFile);
@@ -59,7 +69,11 @@ export const pinSingleMetadataFromDir = async (
 
     const imageCid = await pinFileStreamToIpfs(stream, name);
     console.log(`NFT ${path} IMAGE CID: `, imageCid);
-    const metadata: Metadata = { ...metadataBase, name, mediaUri: `ipfs://ipfs/${imageCid}` };
+    const metadata: Metadata = {
+      ...metadataBase,
+      name,
+      mediaUri: `ipfs://ipfs/${imageCid}`,
+    };
     const metadataCid = await uploadAndPinIpfsMetadata(metadata);
     await sleep(500);
     console.log(`NFT ${name} METADATA: `, metadataCid);
@@ -67,6 +81,6 @@ export const pinSingleMetadataFromDir = async (
   } catch (error) {
     console.log(error);
     console.log(JSON.stringify(error));
-    return '';
+    return "";
   }
 };

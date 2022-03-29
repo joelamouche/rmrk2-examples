@@ -4,34 +4,56 @@ import {
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   slotList,
-  fixedPartsList,
+  allFixedPartsList,
   WS_URL,
+  FixedPart,
+  FixedTrait,
+  FixedSet,
 } from "./constants";
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
 import { Collection, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 
-export const fixedParts =(list:string[],setNumber):IBasePart[]=>{
-  return list.map((name,i)=>{
-    return {
-      type: "fixed",
-      id: name,
-      src: `ipfs://ipfs/${ASSETS_CID}/Set${setNumber}/fixedParts/${name}.svg`,
-      z: i,
-    }
+export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
+  let res=[]
+  list.forEach((fixedPart)=>{
+    fixedPart.traits.forEach((trait)=>{
+      console.log("fixedPart.traitClass")
+      console.log(fixedPart.traitClass)
+      console.log("trait")
+      console.log(trait)
+      res.push({
+        type: "fixed",
+        id: trait,
+        src: `ipfs://ipfs/${ASSETS_CID}/FixedParts/${fixedPart.traitClass}/${trait}.svg`,
+        z: fixedPart.zIndex,
+      })
+    })
   })
-}
+  return res
+  // return list.map((fixedPart, i) => {
+  //   return {
+  //     type: "fixed",
+  //     id: fixedPart.trait,
+  //     src: `ipfs://ipfs/${ASSETS_CID}/FixedParts/${fixedPart.traitClass}/${fixedPart.trait}.svg`,
+  //     z: fixedPart.zIndex,
+  //   };
+  // });
+};
 
-const getSlotKanariaParts = (itemList:string[],equippable: string[] | "*" = []): IBasePart[] => {
-  return itemList.map((itemName,i)=>{
+const getSlotKanariaParts = (
+  itemList: string[],
+  equippable: string[] | "*" = []
+): IBasePart[] => {
+  return itemList.map((itemName, i) => {
     return {
-          type: "slot",
-          id: itemName,
-          equippable,
-          z: i+fixedPartsList.length,
-        }
-  })
+      type: "slot",
+      id: itemName,
+      equippable,
+      z: i + allFixedPartsList.length,
+    };
+  });
   // [
   //   {
   //     type: "slot",
@@ -48,7 +70,7 @@ const getSlotKanariaParts = (itemList:string[],equippable: string[] | "*" = []):
   // ];
 };
 
-export const createBase = async () => {
+export const createBase = async (allFixePartJSON: FixedPart[]) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT BASE START -------");
     await cryptoWaitReady();
@@ -64,17 +86,19 @@ export const createBase = async () => {
     );
     console.log("collectionId", collectionId);
 
-    console.log("getSlotKanariaParts(slotList,[collectionId])")
-    console.log(getSlotKanariaParts(slotList,[collectionId]))
+    console.log("getSlotKanariaParts(slotList,[collectionId])");
+    console.log(getSlotKanariaParts(slotList, [collectionId]));
     const baseParts = [
-    //   {
-    //   type: "fixed",
-    //   id: "nakedman",
-    //   src: `ipfs://ipfs/${ASSETS_CID}/ityems/nakedman.svg`,
-    //   z: 0,
-    // } as IBasePart,
-    // TODO fix base index
-    ...fixedParts(fixedPartsList,1), ...getSlotKanariaParts(slotList,[collectionId])];
+      //   {
+      //   type: "fixed",
+      //   id: "nakedman",
+      //   src: `ipfs://ipfs/${ASSETS_CID}/ityems/nakedman.svg`,
+      //   z: 0,
+      // } as IBasePart,
+      // TODO fix base index
+      ...allFixedParts(allFixePartJSON),
+      ...getSlotKanariaParts(slotList, [collectionId]),
+    ];
 
     const baseEntity = new Base(
       0,
