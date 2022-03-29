@@ -16,22 +16,22 @@ import { Collection, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 
 export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
-  let res=[]
-  list.forEach((fixedPart)=>{
-    fixedPart.traits.forEach((trait)=>{
-      console.log("fixedPart.traitClass")
-      console.log(fixedPart.traitClass)
-      console.log("trait")
-      console.log(trait)
+  let res = [];
+  list.forEach((fixedPart) => {
+    fixedPart.traits.forEach((trait) => {
+      console.log("fixedPart.traitClass");
+      console.log(fixedPart.traitClass);
+      console.log("trait");
+      console.log(trait);
       res.push({
         type: "fixed",
         id: trait,
         src: `ipfs://ipfs/${ASSETS_CID}/FixedParts/${fixedPart.traitClass}/${trait}.svg`,
         z: fixedPart.zIndex,
-      })
-    })
-  })
-  return res
+      });
+    });
+  });
+  return res;
   // return list.map((fixedPart, i) => {
   //   return {
   //     type: "fixed",

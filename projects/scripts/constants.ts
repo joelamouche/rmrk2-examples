@@ -23,7 +23,7 @@ export interface FixedTrait {
   trait: Trait;
   zIndex: number;
 }
-export type FixedSet=FixedTrait[]
+export type FixedSet = FixedTrait[];
 
 export const allFixedPartsList: FixedPart[] = [
   {
@@ -31,11 +31,11 @@ export const allFixedPartsList: FixedPart[] = [
     traits: ["NakedManBlue", "NakedManGrey", "NakedManPurple"],
     zIndex: 0,
   },
-//   {
-//     traitClass: "Eyes",
-//     traits: ["_Eyes", "EyesGreen", "EyesWhite"],
-//     zIndex: 1,
-//   },
+  //   {
+  //     traitClass: "Eyes",
+  //     traits: ["_Eyes", "EyesGreen", "EyesWhite"],
+  //     zIndex: 1,
+  //   },
   {
     traitClass: "Earings",
     traits: ["EaringDiamond", "EaringDoubleRing"],
@@ -54,11 +54,11 @@ export const fixedPartsSet: FixedSet = [
     trait: "NakedMan",
     zIndex: 0,
   },
-//   {
-//     traitClass: "Eyes",
-//     trait: "Eyes",
-//     zIndex: 1,
-//   },
+  //   {
+  //     traitClass: "Eyes",
+  //     trait: "Eyes",
+  //     zIndex: 1,
+  //   },
   {
     traitClass: "Earings",
     trait: "EaringDiamond",
@@ -70,7 +70,7 @@ export const fixedPartsSet: FixedSet = [
     zIndex: 1,
   },
 ];
-export const slotList = []
+export const slotList = [];
 // [
 //   "weapon",
 //   "pants",
