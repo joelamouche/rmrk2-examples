@@ -11,23 +11,23 @@ require("dotenv").config();
 
 export const drawSet = (fixedSetProba: FixedSetProba): FixedSet => {
   return fixedSetProba.map((fixedPartProba: FixedPartProba) => {
-    console.log("fixedPartProba.traits.length", fixedPartProba.traits.length);
+    //console.log("fixedPartProba.traits.length", fixedPartProba.traits.length);
     let totalProbaTrait = fixedPartProba.traits
       .map((probaTrait: TraitProba) => {
         return probaTrait.traitProba;
       })
       .reduce((partialSum, a) => partialSum + a, 0);
-    console.log("totalProbaTrait", totalProbaTrait);
+    //console.log("totalProbaTrait", totalProbaTrait);
     let drawnScore = totalProbaTrait * Math.random(); //Math.floor(Math.random()*fixedPartProba.traits.length)
-    console.log("drawnScore", drawnScore);
+    //console.log("drawnScore", drawnScore);
     let accScore = 0;
     let drawnIndex = 0;
     for (let i = 0; i < fixedPartProba.traits.length; i++) {
       accScore += fixedPartProba.traits[i].traitProba;
-      console.log("accScore", accScore);
+      //console.log("accScore", accScore);
       if (accScore > drawnScore) {
         drawnIndex = i;
-        console.log("drawnIndex", drawnIndex);
+        //console.log("drawnIndex", drawnIndex);
         break;
       }
     }
@@ -55,6 +55,7 @@ export const logStats = (drawnSetList: FixedSet[]) => {
   });
   console.log("obj", obj);
 };
+
 export const drawSets = (
   fixedSetProba: FixedSetProba,
   numberOfSets: number
@@ -65,10 +66,56 @@ export const drawSets = (
     console.log("set drawn ", set);
     res.push(set);
   }
-  logStats(res);
+  const filteredRes=res.map((set)=>syncHairColor(set))
+  logStats(filteredRes);
 
-  let data = JSON.stringify(res);
+  let data = JSON.stringify(filteredRes);
   fs.writeFileSync("drawnSets/drawnset1.json", data);
-  return res;
+  return filteredRes;
 };
+
+export const syncHairColor =(fixedSet:FixedSet): FixedSet => {
+  // get color
+  let color=""
+  fixedSet.forEach((part)=>{
+    if (part.traitClass==="Eyebrows"){
+      if (part.trait[9]==="b"){
+        color="brown"
+      } else {
+        color="white"
+      }
+    }
+  })
+  // replace with right color
+  let newSet=[]
+  fixedSet.forEach((part)=>{
+    if (part.traitClass==="Beards"){
+      if (part.trait[0]==="_"){
+        newSet.push(part)
+      } else {
+        let i=part.trait[5]
+        newSet.push({
+          traitClass: "Beards",
+          trait: `Beard${i}${color}`,
+          zIndex: 0,
+        })
+      }
+    } else  if (part.traitClass==="Hair"){
+      if (part.trait[0]==="_"){
+        newSet.push(part)
+      } else {
+        let i=part.trait[4]
+        newSet.push({
+          traitClass: "Hair",
+          trait: `Hair${i}${color}`,
+          zIndex: 0,
+        })
+      }
+    } else {
+      newSet.push(part)
+    }
+  })
+  return newSet
+};
+
 drawSets(fixedSetProba, 1000);
