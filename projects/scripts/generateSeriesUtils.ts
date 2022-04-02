@@ -97,7 +97,7 @@ export const syncHairColor =(fixedSet:FixedSet): FixedSet => {
         newSet.push({
           traitClass: "Beards",
           trait: `Beard${i}${color}`,
-          zIndex: 0,
+          zIndex: part.zIndex,
         })
       }
     } else  if (part.traitClass==="Hair"){
@@ -108,7 +108,7 @@ export const syncHairColor =(fixedSet:FixedSet): FixedSet => {
         newSet.push({
           traitClass: "Hair",
           trait: `Hair${i}${color}`,
-          zIndex: 0,
+          zIndex: part.zIndex,
         })
       }
     } else {
@@ -118,4 +118,4 @@ export const syncHairColor =(fixedSet:FixedSet): FixedSet => {
   return newSet
 };
 
-drawSets(fixedSetProba, 1000);
+drawSets(fixedSetProba, 10);

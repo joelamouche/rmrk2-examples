@@ -1,10 +1,14 @@
+import fs from 'fs'
 import { getKeyringFromUri, sendAndFinalize, getApi } from "./utils";
 import {
   allFixedPartsList,
-  fixedPartsSet,
+  // fixedPartsSet,
   FixedTrait,
   FixedSet,
   WS_URL,
+  fixedSetProba,
+  FixedSetProba,
+  FixedPartProba,
 } from "./constants";
 import { createBase } from "./create-base";
 import {
@@ -18,23 +22,25 @@ import { mintItems } from "./mint-substra-items";
 
 export const mintOneBase = async (
   baseBlock: number,
-  fixedPartsSet: FixedSet
+  fixedPartsSet: FixedSet,
+  soldierIndex
 ) => {
-  const substrasBlock = await mintSubstraknight();
-  await addBaseResource(substrasBlock, baseBlock, fixedPartsSet);
+  const substrasBlock = await mintSubstraknight(soldierIndex);
+  await addBaseResource(substrasBlock, baseBlock, fixedPartsSet,soldierIndex);
 };
 
 export const mintOneBaseTx = async (
   baseBlock: number,
   fixedPartsSet: FixedSet,
-  api
+  api,
+  soldierIndex
 ) => {
   // Create collection
   const { collectionId } = await createSubstraknightCollection();
 
   const phrase = process.env.PRIVAKE_KEY;
   const kp = getKeyringFromUri(phrase);
-  const txsMintSubtra = await getTxMintSubstraknight(api);
+  const txsMintSubtra = await getTxMintSubstraknight(api,soldierIndex);
   const tx = api.tx.utility.batchAll(txsMintSubtra);
   const { block } = await sendAndFinalize(tx, kp);
   console.log("Batch Substraknight NFT minted at block: ", block);
@@ -44,7 +50,8 @@ export const mintOneBaseTx = async (
     baseBlock,
     fixedPartsSet,
     api,
-    collectionId
+    collectionId,
+    soldierIndex
   );
   const tx2 = api.tx.utility.batchAll(txsAddBase);
   const { block: block2 } = await sendAndFinalize(tx2, kp);
@@ -68,7 +75,8 @@ export const mintListBaseTx = async (
   let totalTxListMint = [];
   for (let i = 0; i < fixedSetList.length; i++) {
     const txsMintSubtra = await getTxMintSubstraknight(api, i);
-    totalTxListMint = [...txsMintSubtra, ...totalTxListMint];
+    console.log("got tx for substra ",i)
+    totalTxListMint = [ ...totalTxListMint,...txsMintSubtra];
   }
   const tx = api.tx.utility.batchAll(totalTxListMint);
   const { block } = await sendAndFinalize(tx, kp);
@@ -88,7 +96,7 @@ export const mintListBaseTx = async (
       collectionId,
       i
     );
-    totalTxListAddABase = [...txsAddBase, ...totalTxListAddABase];
+    totalTxListAddABase = [...totalTxListAddABase , ...txsAddBase];
   }
   const tx2 = api.tx.utility.batchAll(totalTxListAddABase);
   const { block: block2 } = await sendAndFinalize(tx2, kp);
@@ -98,7 +106,7 @@ export const mintListBaseTx = async (
 };
 export const runMintSequence = async () => {
   try {
-    const baseBlock = await createBase(allFixedPartsList);
+    const baseBlock = await createBase(allFixedPartsList,[]);
     console.log("BASE CREATED");
     let mintList = [];
     allFixedPartsList[0].traits.forEach(async (trait0, i) => {
@@ -130,7 +138,7 @@ export const runMintSequence = async () => {
     for (let i = 0; i < mintList.length; i++) {
       console.log("----------------------------------STARTING MINT FOR");
       console.log(mintList[i]);
-      await mintOneBase(baseBlock, mintList[i]);
+      await mintOneBase(baseBlock, mintList[i],i);
     }
     process.exit(0);
   } catch (error: any) {
@@ -142,9 +150,9 @@ export const runMintSequenceBatch = async () => {
   try {
     const ws = WS_URL;
     const api = await getApi(ws);
-    const baseBlock = await createBase(allFixedPartsList);
+    const baseBlock = await createBase(allFixedPartsList,[]);
     console.log("BASE CREATED");
-    let mintList = [];
+    let mintList:FixedSet[] = [];
     // Create collection
     const { collectionId } = await createSubstraknightCollection();
     // create list of sets
@@ -186,5 +194,40 @@ export const runMintSequenceBatch = async () => {
     process.exit(0);
   }
 };
+export const getSetList=async():Promise<FixedSet[]>=>{
+  return new Promise((res)=>{
+    fs.readFile("drawnSets/drawnset1.json", (err, data) => {
+      if (err) throw err;
+      let setList = JSON.parse(data.toString());
+      res(setList)
+    });
+  })
+}
+export const runMintSequenceBatchWithProba = async (_fixedSetProba:FixedSetProba) => {
+  try {
+    const ws = WS_URL;
+    const api = await getApi(ws);
+    const allBaseParts=_fixedSetProba.map((fixedPartProba:FixedPartProba)=>{
+      const {traits,traitClass,zIndex}=fixedPartProba;
+      return {
+        traitClass,
+        zIndex,
+        traits:traits.map((trait)=>trait.traitName)
+      }
+    })
+    console.log("allBaseParts",allBaseParts)
+    const baseBlock = await createBase(allBaseParts,[]);
+    console.log("BASE CREATED");
+    // Create collection
+    const { collectionId } = await createSubstraknightCollection();
+    
+    // mint all
+    await mintListBaseTx(baseBlock, await getSetList(), api, collectionId);
+    process.exit(0);
+  } catch (error: any) {
+    console.error(error);
+    process.exit(0);
+  }
+};
 
-runMintSequenceBatch();
+runMintSequenceBatchWithProba(fixedSetProba);

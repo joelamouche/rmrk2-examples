@@ -4,7 +4,7 @@ export const WS_URL = isProd
   ? "wss://kusama-rpc.polkadot.io"
   : "ws://127.0.0.1:9944";
 
-export const ASSETS_CID = "QmQE99zLZ9oKMnYLDQV7MvnvdTweHVhd9XwWQHzLYp1jsv";
+export const ASSETS_CID = "QmPrKoTGp3johzJEu6uZeNia6E6sgwFgfNRCpTpBStkswB";
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
 export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "CHNK";
@@ -118,7 +118,7 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Beard8brown", traitProba: 0.1 },
       { traitName: "Beard9brown", traitProba: 0.1 },
     ],
-    zIndex: 3,
+    zIndex: 4,
   },
   {
     traitClass: "Eyebrows",
@@ -132,7 +132,17 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Eyebrows3brown", traitProba: 0.1 },
       { traitName: "Eyebrows4brown", traitProba: 0.1 },
     ],
-    zIndex: 3,
+    zIndex: 5,
+  },
+  {
+    traitClass: "Eyepatch",
+    traits: [
+      { traitName: "_Eyepatch1", traitProba: 91 },
+      { traitName: "Eyepatch1", traitProba: 3 },
+      { traitName: "Eyepatch2", traitProba: 3 },
+      { traitName: "Eyepatch3", traitProba: 3 },
+    ],
+    zIndex: 6,
   },
   {
     traitClass: "Earings",
@@ -144,18 +154,8 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Earings4", traitProba: 17.5 },
       { traitName: "Earings5", traitProba: 17.5 },
     ],
-    zIndex: 4,
-  },
-  {
-    traitClass: "Eyepatch",
-    traits: [
-      { traitName: "_Eyepatch1", traitProba: 91 },
-      { traitName: "Eyepatch1", traitProba: 3 },
-      { traitName: "Eyepatch2", traitProba: 3 },
-      { traitName: "Eyepatch3", traitProba: 3 },
-    ],
-    zIndex: 5,
-  },
+    zIndex: 7,
+  }
 ];
 
 export const fixedPartsSet: FixedSet = [
@@ -191,4 +191,4 @@ export const slotList = [];
 //   "shield",
 // ];
 
-export const soldierIndexList = [1]; //,2,3,4]
+// export const soldierIndexList = [1]; //,2,3,4]

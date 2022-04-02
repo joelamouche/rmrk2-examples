@@ -4,7 +4,7 @@ import {
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   slotList,
-  allFixedPartsList,
+  //allFixedPartsList,
   WS_URL,
   FixedPart,
   FixedTrait,
@@ -19,10 +19,10 @@ export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
   let res = [];
   list.forEach((fixedPart) => {
     fixedPart.traits.forEach((trait) => {
-      console.log("fixedPart.traitClass");
-      console.log(fixedPart.traitClass);
-      console.log("trait");
-      console.log(trait);
+      // console.log("fixedPart.traitClass");
+      // console.log(fixedPart.traitClass);
+      // console.log("trait");
+      // console.log(trait);
       res.push({
         type: "fixed",
         id: trait,
@@ -43,6 +43,7 @@ export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
 };
 
 const getSlotKanariaParts = (
+  offsetIndex,
   itemList: string[],
   equippable: string[] | "*" = []
 ): IBasePart[] => {
@@ -51,7 +52,7 @@ const getSlotKanariaParts = (
       type: "slot",
       id: itemName,
       equippable,
-      z: i + allFixedPartsList.length,
+      z: i + offsetIndex,
     };
   });
   // [
@@ -70,7 +71,7 @@ const getSlotKanariaParts = (
   // ];
 };
 
-export const createBase = async (allFixePartJSON: FixedPart[]) => {
+export const createBase = async (allFixedPartJSON: FixedPart[],_slotList) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT BASE START -------");
     await cryptoWaitReady();
@@ -85,9 +86,11 @@ export const createBase = async (allFixePartJSON: FixedPart[]) => {
       SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
     );
     console.log("collectionId", collectionId);
+    const _allFixedParts=allFixedParts(allFixedPartJSON)
 
     console.log("getSlotKanariaParts(slotList,[collectionId])");
-    console.log(getSlotKanariaParts(slotList, [collectionId]));
+    console.log(getSlotKanariaParts(_allFixedParts.length,_slotList, [collectionId]));
+    
     const baseParts = [
       //   {
       //   type: "fixed",
@@ -96,8 +99,8 @@ export const createBase = async (allFixePartJSON: FixedPart[]) => {
       //   z: 0,
       // } as IBasePart,
       // TODO fix base index
-      ...allFixedParts(allFixePartJSON),
-      ...getSlotKanariaParts(slotList, [collectionId]),
+      ..._allFixedParts,
+      ...getSlotKanariaParts(_allFixedParts.length,_slotList, [collectionId]),
     ];
 
     const baseEntity = new Base(
@@ -108,11 +111,12 @@ export const createBase = async (allFixePartJSON: FixedPart[]) => {
       baseParts
     );
 
-    const { block } = await sendAndFinalize(
+    const { block,success } = await sendAndFinalize(
       api.tx.system.remark(baseEntity.base()),
       kp
     );
     console.log("Substraknight Base created at block: ", block);
+    console.log("successk: ", success);
     return block;
   } catch (error: any) {
     console.error(error);
