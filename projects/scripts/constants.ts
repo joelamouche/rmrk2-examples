@@ -13,7 +13,7 @@ export const SUBSTRAKNIGHT_BASE_SYMBOL = "SKBS";
 export const CHUNK_SIZE = 70;
 
 export type Trait = string;
-export type TraitProba = {traitName:string,traitProba:number};
+export type TraitProba = { traitName: string; traitProba: number };
 export interface FixedPart {
   traitClass: string;
   traits: Trait[];
@@ -58,17 +58,27 @@ export const allFixedPartsList: FixedPart[] = [
 export const fixedSetProba: FixedSetProba = [
   {
     traitClass: "Skin",
-    traits: [{traitName:"NakedManBlue",traitProba:0.1},{traitName:"NakedManGrey",traitProba:0.5}, {traitName:"NakedManPurple",traitProba:0.2}],
+    traits: [
+      { traitName: "NakedManBlue", traitProba: 0.1 },
+      { traitName: "NakedManGrey", traitProba: 0.5 },
+      { traitName: "NakedManPurple", traitProba: 0.2 },
+    ],
     zIndex: 0,
   },
   {
     traitClass: "Earings",
-    traits: [{traitName:"EaringDiamond",traitProba:0.5},{traitName:"EaringDoubleRing",traitProba:0.1}],
+    traits: [
+      { traitName: "EaringDiamond", traitProba: 0.5 },
+      { traitName: "EaringDoubleRing", traitProba: 0.1 },
+    ],
     zIndex: 2,
   },
   {
     traitClass: "Nose",
-    traits: [{traitName:"_Nose",traitProba:0.2},{traitName:"Nose",traitProba:0.1}],
+    traits: [
+      { traitName: "_Nose", traitProba: 0.2 },
+      { traitName: "Nose", traitProba: 0.1 },
+    ],
     zIndex: 1,
   },
 ];
