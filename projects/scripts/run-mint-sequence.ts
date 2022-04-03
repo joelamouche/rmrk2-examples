@@ -6,9 +6,9 @@ import { mintItems } from "./mint-substra-items";
 
 export const runMintSequence = async () => {
   try {
-    const baseBlock = await createBase(allFixedPartsList,slotList);
+    const baseBlock = await createBase(allFixedPartsList, slotList);
     const substrasBlock = await mintSubstraknight(1);
-    await addBaseResource(substrasBlock, baseBlock, fixedPartsSet,1);
+    await addBaseResource(substrasBlock, baseBlock, fixedPartsSet, 1);
     await mintItems(substrasBlock, baseBlock, 1, 1);
     await mintItems(substrasBlock, baseBlock, 1, 2);
     await mintItems(substrasBlock, baseBlock, 1, 3);

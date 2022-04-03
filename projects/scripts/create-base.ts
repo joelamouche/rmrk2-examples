@@ -3,12 +3,13 @@ import {
   ASSETS_CID,
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
-  slotList,
+  // slotList,
   //allFixedPartsList,
   WS_URL,
   FixedPart,
   FixedTrait,
   FixedSet,
+  SlotConfig,
 } from "./constants";
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
@@ -43,35 +44,23 @@ export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
 };
 
 const getSlotKanariaParts = (
-  offsetIndex,
-  itemList: string[],
+  slotConfigList: SlotConfig[],
   equippable: string[] | "*" = []
 ): IBasePart[] => {
-  return itemList.map((itemName, i) => {
+  return slotConfigList.map((slotConfig, i) => {
     return {
       type: "slot",
-      id: itemName,
+      id: slotConfig.slotCategory,
       equippable,
-      z: i + offsetIndex,
+      z: slotConfig.zIndex,
     };
   });
-  // [
-  //   {
-  //     type: "slot",
-  //     id: "soldier_objectLeft",
-  //     equippable,
-  //     z: 1,
-  //   },
-  //   {
-  //     type: "slot",
-  //     id: "soldier_objectRight",
-  //     equippable,
-  //     z: 2,
-  //   },
-  // ];
 };
 
-export const createBase = async (allFixedPartJSON: FixedPart[],_slotList) => {
+export const createBase = async (
+  allFixedPartJSON: FixedPart[],
+  _slotList: SlotConfig[]
+) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT BASE START -------");
     await cryptoWaitReady();
@@ -86,11 +75,11 @@ export const createBase = async (allFixedPartJSON: FixedPart[],_slotList) => {
       SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
     );
     console.log("collectionId", collectionId);
-    const _allFixedParts=allFixedParts(allFixedPartJSON)
+    const _allFixedParts = allFixedParts(allFixedPartJSON);
 
     console.log("getSlotKanariaParts(slotList,[collectionId])");
-    console.log(getSlotKanariaParts(_allFixedParts.length,_slotList, [collectionId]));
-    
+    console.log(getSlotKanariaParts(_slotList, [collectionId]));
+
     const baseParts = [
       //   {
       //   type: "fixed",
@@ -100,7 +89,7 @@ export const createBase = async (allFixedPartJSON: FixedPart[],_slotList) => {
       // } as IBasePart,
       // TODO fix base index
       ..._allFixedParts,
-      ...getSlotKanariaParts(_allFixedParts.length,_slotList, [collectionId]),
+      ...getSlotKanariaParts(_slotList, [collectionId]),
     ];
 
     const baseEntity = new Base(
@@ -111,7 +100,7 @@ export const createBase = async (allFixedPartJSON: FixedPart[],_slotList) => {
       baseParts
     );
 
-    const { block,success } = await sendAndFinalize(
+    const { block, success } = await sendAndFinalize(
       api.tx.system.remark(baseEntity.base()),
       kp
     );

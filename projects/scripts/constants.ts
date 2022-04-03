@@ -4,7 +4,7 @@ export const WS_URL = isProd
   ? "wss://kusama-rpc.polkadot.io"
   : "ws://127.0.0.1:9944";
 
-export const ASSETS_CID = "QmPrKoTGp3johzJEu6uZeNia6E6sgwFgfNRCpTpBStkswB";
+export const ASSETS_CID = "QmWcNxu1iqYYb1NUVi7b7mW9arQksZUmoXQfJu3dCDM6jn";
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
 export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "CHNK";
@@ -32,6 +32,52 @@ export interface FixedTrait {
 export type FixedSet = FixedTrait[];
 export type FixedSetProba = FixedPartProba[];
 
+// Slots
+export type SlotTraitName = string;
+export type SlotCategory = string;
+export interface SlotTrait {
+  slotCategory: SlotCategory;
+  traitName: SlotTraitName;
+  zIndex: number;
+}
+export interface SlotConfig {
+  slotCategory: SlotCategory;
+  zIndex: number;
+}
+export type SlotConfigSet = SlotConfig[];
+export type SlotSet = SlotTrait[];
+
+export const slotConfigSet: SlotConfigSet = [
+  {
+    slotCategory: "Background",
+    zIndex: 0,
+  },
+  {
+    slotCategory: "Weapon",
+    zIndex: 1,
+  },
+  {
+    slotCategory: "Legs",
+    zIndex: 10,
+  },
+  {
+    slotCategory: "Underhelm",
+    zIndex: 11,
+  },
+  {
+    slotCategory: "Cloth",
+    zIndex: 12,
+  },
+  {
+    slotCategory: "Feet",
+    zIndex: 13,
+  },
+  {
+    slotCategory: "Arms",
+    zIndex: 14,
+  },
+];
+
 export const allFixedPartsList: FixedPart[] = [
   {
     traitClass: "NakedMan",
@@ -58,7 +104,7 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Grey", traitProba: 0.1 },
       { traitName: "Purple", traitProba: 0.1 },
     ],
-    zIndex: 0,
+    zIndex: 2,
   },
   {
     traitClass: "Mouth",
@@ -69,7 +115,7 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Mouth4", traitProba: 1 },
       { traitName: "Mouth5", traitProba: 1 },
     ],
-    zIndex: 1,
+    zIndex: 3,
   },
   {
     traitClass: "Scars",
@@ -80,20 +126,20 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Scar3", traitProba: 5 },
       { traitName: "Scar4", traitProba: 5 },
     ],
-    zIndex: 2,
+    zIndex: 4,
   },
   {
     traitClass: "Hair",
     traits: [
       { traitName: "_Hair", traitProba: 20 },
       { traitName: "Hair1white", traitProba: 15 },
-      { traitName: "Hair2white", traitProba: 15},
+      { traitName: "Hair2white", traitProba: 15 },
       { traitName: "Hair3white", traitProba: 10 },
       { traitName: "Hair1brown", traitProba: 15 },
       { traitName: "Hair2brown", traitProba: 15 },
       { traitName: "Hair3brown", traitProba: 10 },
     ],
-    zIndex: 3,
+    zIndex: 5,
   },
   {
     traitClass: "Beards",
@@ -118,7 +164,7 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Beard8brown", traitProba: 0.1 },
       { traitName: "Beard9brown", traitProba: 0.1 },
     ],
-    zIndex: 4,
+    zIndex: 6,
   },
   {
     traitClass: "Eyebrows",
@@ -132,7 +178,7 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Eyebrows3brown", traitProba: 0.1 },
       { traitName: "Eyebrows4brown", traitProba: 0.1 },
     ],
-    zIndex: 5,
+    zIndex: 7,
   },
   {
     traitClass: "Eyepatch",
@@ -142,7 +188,7 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Eyepatch2", traitProba: 3 },
       { traitName: "Eyepatch3", traitProba: 3 },
     ],
-    zIndex: 6,
+    zIndex: 8,
   },
   {
     traitClass: "Earings",
@@ -154,8 +200,8 @@ export const fixedSetProba: FixedSetProba = [
       { traitName: "Earings4", traitProba: 17.5 },
       { traitName: "Earings5", traitProba: 17.5 },
     ],
-    zIndex: 7,
-  }
+    zIndex: 9,
+  },
 ];
 
 export const fixedPartsSet: FixedSet = [

@@ -66,7 +66,7 @@ export const drawSets = (
     console.log("set drawn ", set);
     res.push(set);
   }
-  const filteredRes=res.map((set)=>syncHairColor(set))
+  const filteredRes = res.map((set) => syncHairColor(set));
   logStats(filteredRes);
 
   let data = JSON.stringify(filteredRes);
@@ -74,48 +74,48 @@ export const drawSets = (
   return filteredRes;
 };
 
-export const syncHairColor =(fixedSet:FixedSet): FixedSet => {
+export const syncHairColor = (fixedSet: FixedSet): FixedSet => {
   // get color
-  let color=""
-  fixedSet.forEach((part)=>{
-    if (part.traitClass==="Eyebrows"){
-      if (part.trait[9]==="b"){
-        color="brown"
+  let color = "";
+  fixedSet.forEach((part) => {
+    if (part.traitClass === "Eyebrows") {
+      if (part.trait[9] === "b") {
+        color = "brown";
       } else {
-        color="white"
+        color = "white";
       }
     }
-  })
+  });
   // replace with right color
-  let newSet=[]
-  fixedSet.forEach((part)=>{
-    if (part.traitClass==="Beards"){
-      if (part.trait[0]==="_"){
-        newSet.push(part)
+  let newSet = [];
+  fixedSet.forEach((part) => {
+    if (part.traitClass === "Beards") {
+      if (part.trait[0] === "_") {
+        newSet.push(part);
       } else {
-        let i=part.trait[5]
+        let i = part.trait[5];
         newSet.push({
           traitClass: "Beards",
           trait: `Beard${i}${color}`,
           zIndex: part.zIndex,
-        })
+        });
       }
-    } else  if (part.traitClass==="Hair"){
-      if (part.trait[0]==="_"){
-        newSet.push(part)
+    } else if (part.traitClass === "Hair") {
+      if (part.trait[0] === "_") {
+        newSet.push(part);
       } else {
-        let i=part.trait[4]
+        let i = part.trait[4];
         newSet.push({
           traitClass: "Hair",
           trait: `Hair${i}${color}`,
           zIndex: part.zIndex,
-        })
+        });
       }
     } else {
-      newSet.push(part)
+      newSet.push(part);
     }
-  })
-  return newSet
+  });
+  return newSet;
 };
 
-drawSets(fixedSetProba, 10);
+drawSets(fixedSetProba, 3);

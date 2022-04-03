@@ -1,102 +1,12 @@
 [
   [
-    { "traitClass": "Skin", "trait": "Grey", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth3", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "_Hair", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard4white", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows4white", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "_Earings1", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Grey", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth3", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "Hair3brown", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard6brown", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows2brown", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "Earings5", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Purple", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth2", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "Hair3brown", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard1brown", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows3brown", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "Earings2", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Grey", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth5", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "Hair2white", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "_Beard1white", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows1white", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "Earings2", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Grey", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth4", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "Hair2white", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard7white", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows3white", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "_Earings1", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Grey", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth1", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "Hair3white", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard5white", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows1white", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "_Earings1", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Blue", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth5", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "Scar2", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "Hair3white", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard4white", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows3white", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "Earings3", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Blue", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth4", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "Hair2white", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard3white", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows1white", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "Earings2", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Grey", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth1", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "_Hair", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard5white", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows1white", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "Earings5", "zIndex": 7 }
-  ],
-  [
-    { "traitClass": "Skin", "trait": "Purple", "zIndex": 0 },
-    { "traitClass": "Mouth", "trait": "Mouth4", "zIndex": 1 },
-    { "traitClass": "Scars", "trait": "Scar2", "zIndex": 2 },
-    { "traitClass": "Hair", "trait": "_Hair", "zIndex": 3 },
-    { "traitClass": "Beards", "trait": "Beard3brown", "zIndex": 4 },
-    { "traitClass": "Eyebrows", "trait": "Eyebrows2brown", "zIndex": 5 },
-    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 6 },
-    { "traitClass": "Earings", "trait": "Earings5", "zIndex": 7 }
+    { "traitClass": "Skin", "trait": "Blue", "zIndex": 2 },
+    { "traitClass": "Mouth", "trait": "Mouth1", "zIndex": 3 },
+    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 4 },
+    { "traitClass": "Hair", "trait": "Hair3white", "zIndex": 5 },
+    { "traitClass": "Beards", "trait": "Beard2white", "zIndex": 6 },
+    { "traitClass": "Eyebrows", "trait": "Eyebrows1white", "zIndex": 7 },
+    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 8 },
+    { "traitClass": "Earings", "trait": "Earings4", "zIndex": 9 }
   ]
 ]
