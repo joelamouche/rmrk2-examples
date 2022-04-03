@@ -26,6 +26,11 @@ export const getKeyringFromUri = (phrase: string): KeyringPair => {
   return keyring.addFromUri(phrase);
 };
 
+export const getKeyringFromMnemonic = (mnemonic: string): KeyringPair => {
+  const keyring = new Keyring({ type: "sr25519" });
+  return keyring.addFromMnemonic(mnemonic);
+};
+
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
   const api = ApiPromise.create({ provider: wsProvider });

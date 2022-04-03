@@ -20,7 +20,7 @@ interface SlotInfo {
   symbol: string;
   thumb: string;
   resources: string[];
-  name: string;
+  fileName: string;
   slotCategory: string;
   description: string;
 }
@@ -30,7 +30,7 @@ const substraItems = (list: SlotSet): SlotInfo[] => {
       symbol: slot.traitName,
       thumb: `${slot.traitName}.png`,
       resources: [`${slot.traitName}.svg`],
-      name: slot.traitName,
+      fileName: slot.traitName,
       description: `Soldier1 likes his ${slot.traitName}!`,
       slotCategory: slot.slotCategory,
     };
@@ -160,7 +160,7 @@ export const mintItems = async (
             src: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${resource}`,
             thumb: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${item.thumb}`,
             id: nanoid(8),
-            slot: `${baseEntity.getId()}.${item.name}`,
+            slot: `${baseEntity.getId()}.${item.slotCategory}`,
             //  resource.includes("left")
             //   ? `${baseEntity.getId()}.soldier_objectLeft`
             //   : `${baseEntity.getId()}.soldier_objectRight`,
@@ -206,9 +206,7 @@ export const mintItems = async (
   }
 };
 
-export const mintItemsFromSet = async (
-  substraBlock: number,
-  baseBlock: number,
+export const getMintItemTx = async (
   soldierNumber: number,
   slotSet: SlotSet
 ) => {
@@ -223,48 +221,50 @@ export const mintItemsFromSet = async (
     const api = await getApi(ws);
     const kp = getKeyringFromUri(phrase);
 
-    const collectionId = Collection.generateId(
+    const itemCollectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
       SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
     );
 
-    const substraCollectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_COLLECTION_SYMBOL
-    );
+    // const substraCollectionId = Collection.generateId(
+    //   u8aToHex(accounts[0].publicKey),
+    //   SUBSTRAKNIGHT_COLLECTION_SYMBOL
+    // );
 
-    const baseEntity = new Base(
-      baseBlock,
-      SUBSTRAKNIGHT_BASE_SYMBOL,
-      encodeAddress(kp.address, 2),
-      "svg"
-    );
+    // const baseEntity = new Base(
+    //   baseBlock,
+    //   SUBSTRAKNIGHT_BASE_SYMBOL,
+    //   encodeAddress(kp.address, 2),
+    //   "svg"
+    // );
 
-    await createItemsCollection();
+    // await createItemsCollection();
 
     // First mint all the items
     const promises = substraItems(slotSet).map(
       async (item: SlotInfo, index) => {
         const sn = index + 1;
 
+        // pin metadat on ipfs
+        console.log("pinning metadat on ipfs...")
         const metadataCid = await pinSingleMetadataFromDir(
           `/assets/SlotParts/${item.slotCategory}`,
           item.thumb,
-          item.name,
+          item.fileName,
           {
-            description: item.description,
+            description: item.description+soldierNumber.toString(),
             externalUri: "https://rmrk.app",
           }
         );
 
         const nft = new NFT({
           block: 0,
-          sn: sn.toString().padStart(8, "0"),
+          sn: soldierNumber.toString().padStart(8, "0"),
           owner: encodeAddress(accounts[0].address, 2),
           transferable: 1,
           metadata: metadataCid,
-          collection: collectionId,
-          symbol: item.symbol,
+          collection: itemCollectionId,
+          symbol: item.symbol+soldierNumber.toString(),
         });
 
         return nft.mint();
@@ -273,10 +273,40 @@ export const mintItemsFromSet = async (
 
     const remarks = await Promise.all(promises);
 
-    const txs = remarks.map((remark) => api.tx.system.remark(remark));
-    const batch = api.tx.utility.batch(txs);
-    const { block } = await sendAndFinalize(batch, kp);
-    console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", block);
+    return remarks.map((remark) => api.tx.system.remark(remark));
+
+  } catch (error: any) {
+    console.error(error);
+  }
+};
+
+export const getAddItemsTx = async (
+  substraBlock: number,
+  baseBlock: number,
+  itemBlock: number,
+  itemCollectionId,
+  substraCollectionId,
+  soldierNumber: number,
+  slotSet: SlotSet
+) => {
+  try {
+    console.log(
+      `ADD BASE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
+    );
+    await cryptoWaitReady();
+    const accounts = getKeys();
+    const ws = WS_URL;
+    const phrase = process.env.PRIVAKE_KEY;
+    const api = await getApi(ws);
+    const kp = getKeyringFromUri(phrase);
+
+
+    const baseEntity = new Base(
+      baseBlock,
+      SUBSTRAKNIGHT_BASE_SYMBOL,
+      encodeAddress(kp.address, 2),
+      "svg"
+    );
 
     console.log(
       `ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS TO SOLDIER # ${soldierNumber}  START -------`
@@ -288,13 +318,13 @@ export const mintItemsFromSet = async (
     substraItems(slotSet).forEach((item, index) => {
       const sn = index + 1;
       const itemNft = new NFT({
-        block,
-        sn: sn.toString().padStart(8, "0"),
+        block:itemBlock,
+        sn: soldierNumber.toString().padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),
         transferable: 1,
         metadata: `ipfs://ipfs/trololo`,
-        collection: collectionId,
-        symbol: item.symbol,
+        collection: itemCollectionId,
+        symbol: item.symbol+soldierNumber.toString(),
       });
 
       item.resources.forEach((resource) => {
@@ -334,10 +364,142 @@ export const mintItemsFromSet = async (
       );
     });
 
-    const restxs = resaddSendRemarks.map((remark) =>
+    return resaddSendRemarks.map((remark) =>
       api.tx.system.remark(remark)
     );
+    // const resbatch = api.tx.utility.batch(restxs);
+    // const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
+    // console.log(
+    //   "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
+    //   resaddSendBlock
+    // );
+    // return true;
+  } catch (error: any) {
+    console.error(error);
+  }
+};
+
+export const mintItemsFromSet = async (
+  substraBlock: number,
+  baseBlock: number,
+  soldierNumber: number,
+  slotSet: SlotSet
+) => {
+  try {
+    console.log(
+      `CREATE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
+    );
+    await cryptoWaitReady();
+    const accounts = getKeys();
+    const ws = WS_URL;
+    const phrase = process.env.PRIVAKE_KEY;
+    const api = await getApi(ws);
+    const kp = getKeyringFromUri(phrase);
+
+    const itemCollectionId = Collection.generateId(
+      u8aToHex(accounts[0].publicKey),
+      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
+    );
+
+    const substraCollectionId = Collection.generateId(
+      u8aToHex(accounts[0].publicKey),
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL
+    );
+
+    // const baseEntity = new Base(
+    //   baseBlock,
+    //   SUBSTRAKNIGHT_BASE_SYMBOL,
+    //   encodeAddress(kp.address, 2),
+    //   "svg"
+    // );
+
+    await createItemsCollection();
+
+    // Get mint item tx
+    const txs=await getMintItemTx(soldierNumber,slotSet)
+    const batch = api.tx.utility.batch(txs);
+    const { block: mintItemBlock } = await sendAndFinalize(batch, kp);
+    console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", mintItemBlock);
+
+    console.log(
+      `ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS TO SOLDIER # ${soldierNumber}  START -------`
+    );
+
+    // Get add base and equip tx
+    const restxs=await getAddItemsTx(substraBlock,baseBlock,mintItemBlock,itemCollectionId,substraCollectionId,soldierNumber,slotSet)
     const resbatch = api.tx.utility.batch(restxs);
+    const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
+    console.log(
+      "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
+      resaddSendBlock
+    );
+    return true;
+  } catch (error: any) {
+    console.error(error);
+  }
+};
+
+export const mintAndEquipAllItemsFromSetList = async (
+  substraBlock: number,
+  baseBlock: number,
+  numberOfSoldiers: number,
+  slotSetList: SlotSet[]
+) => {
+  try {
+    console.log(
+      `CREATE SUBSTRAKNIGHT ITEMS FOR ${numberOfSoldiers} SOLDIER START -------`
+    );
+    await cryptoWaitReady();
+    const accounts = getKeys();
+    const ws = WS_URL;
+    const phrase = process.env.PRIVAKE_KEY;
+    const api = await getApi(ws);
+    const kp = getKeyringFromUri(phrase);
+
+    const itemCollectionId = Collection.generateId(
+      u8aToHex(accounts[0].publicKey),
+      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
+    );
+
+    const substraCollectionId = Collection.generateId(
+      u8aToHex(accounts[0].publicKey),
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL
+    );
+
+    // const baseEntity = new Base(
+    //   baseBlock,
+    //   SUBSTRAKNIGHT_BASE_SYMBOL,
+    //   encodeAddress(kp.address, 2),
+    //   "svg"
+    // );
+
+    await createItemsCollection();
+
+    // Get mint item tx
+    let totalTxListMint = [];
+    for (let i = 0; i < numberOfSoldiers; i++) {
+      const txsMintItem = await getMintItemTx(i,slotSetList[i]);
+      console.log("got tx for substra ", i);
+      totalTxListMint = [...totalTxListMint, ...txsMintItem];
+    }
+    // const txs=await getMintItemTx(substraBlock,baseBlock,soldierNumber,slotSet)
+    const batch = api.tx.utility.batch(totalTxListMint);
+    const { block: mintItemBlock } = await sendAndFinalize(batch, kp);
+    console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", mintItemBlock);
+
+    console.log(
+      `ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS TO ${numberOfSoldiers} SOLDIERS  START -------`
+    );
+
+    // Get add base and equip tx
+    let totalTxAddBase = [];
+    for (let j = 0; j < numberOfSoldiers; j++) {
+      const txsAddBaseItem =await getAddItemsTx(substraBlock,baseBlock,mintItemBlock,itemCollectionId,substraCollectionId,j,slotSetList[j])
+      console.log("got tx for substra ", j);
+      totalTxAddBase = [...totalTxAddBase, ...txsAddBaseItem];
+    }
+    // const restxs=await getAddItemsTx(substraBlock,baseBlock,mintItemBlock,itemCollectionId,substraCollectionId,soldierNumber,slotSet)
+    const resbatch = api.tx.utility.batch(totalTxAddBase);
     const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
     console.log(
       "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
@@ -391,7 +553,7 @@ export const createItemsCollection = async () => {
     );
     console.log("Substraknight items collection created at block: ", block);
 
-    return block;
+    return {block,collectionMetadataCid};
   } catch (error: any) {
     console.error(error);
   }

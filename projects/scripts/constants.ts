@@ -4,7 +4,7 @@ export const WS_URL = isProd
   ? "wss://kusama-rpc.polkadot.io"
   : "ws://127.0.0.1:9944";
 
-export const ASSETS_CID = "QmWcNxu1iqYYb1NUVi7b7mW9arQksZUmoXQfJu3dCDM6jn";
+export const ASSETS_CID = "QmNa4aeCABtfCBWPVBHvWLbPAv2eRcqpiuPtSXxw8PPq7B";
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
 export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "CHNK";

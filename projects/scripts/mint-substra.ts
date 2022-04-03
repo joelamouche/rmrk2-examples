@@ -4,10 +4,7 @@ import {
   ASSETS_CID,
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SUBSTRAKNIGHT_COLLECTION_SYMBOL,
-  // allFixedPartsList,
-  // slotList,
   WS_URL,
-  // soldierIndexList,
   FixedTrait,
   slotConfigSet,
 } from "./constants";
@@ -80,7 +77,6 @@ export const getTxAddBaseResource = async (
     const resourceRemarks = [];
 
     // for each soldier, add base ressource
-    //serialNumbers.forEach((sn) => {
     let index = soldierIndex; //? soldierIndex : sn;
     // instantiate knight nft
     const substraNft = new NFT({
@@ -95,18 +91,6 @@ export const getTxAddBaseResource = async (
 
     // add base ressource
     const baseResId = nanoid(8);
-    // resourceRemarks.push(
-    //   substraNft.resadd({
-    //     base: BASE_ID,
-    //     id: baseResId,
-    //     parts: [
-    //       ...fixedPartSet.map((fixedPart) => fixedPart.trait),
-    //       ...slotList,
-    //     ],
-    //     thumb: `ipfs://ipfs/${ASSETS_CID}/substra/fixedParts/nakedman.png`,
-    //   })
-    // );
-    //});
 
     return [
       api.tx.system.remark(

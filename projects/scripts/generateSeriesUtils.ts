@@ -118,4 +118,4 @@ export const syncHairColor = (fixedSet: FixedSet): FixedSet => {
   return newSet;
 };
 
-drawSets(fixedSetProba, 3);
+drawSets(fixedSetProba, 2);

@@ -8,7 +8,7 @@ import {
 } from "./constants";
 import { createBase } from "./create-base";
 import { createSubstraknightCollection } from "./mint-substra";
-import { mintItemsFromSet } from "./mint-substra-items";
+import { mintAndEquipAllItemsFromSetList, mintItemsFromSet } from "./mint-substra-items";
 import { getApi } from "./utils";
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
 
@@ -49,18 +49,20 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
     // Create collection
     const { collectionId } = await createSubstraknightCollection();
 
+    const fixedPartList=await getSetList()
+
     // mint all bases
     const { mintSubstraBlock } = await mintListBaseTx(
       baseBlock,
-      await getSetList(),
+      fixedPartList,
       api,
       collectionId
     );
 
     // Add items
-    const drawnSlot=drawSlotSet()
-    console.log("drawnSlot",drawnSlot)
-    await mintItemsFromSet(mintSubstraBlock, baseBlock, 0, drawnSlot);
+    const drawnSlotList=fixedPartList.map((_)=>drawSlotSet()) 
+    console.log("drawnSlotList",drawnSlotList)
+    await mintAndEquipAllItemsFromSetList(mintSubstraBlock, baseBlock, fixedPartList.length, drawnSlotList);
     //   await mintItemsFromSet(mintSubstraBlock,baseBlock,1,drawSlotSet())
     //   await mintItemsFromSet(mintSubstraBlock,baseBlock,2,drawSlotSet())
 
