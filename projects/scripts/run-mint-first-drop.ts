@@ -24,14 +24,14 @@ export const drawSlotSet = (): SlotSet => {
   const weaponIndex=Math.floor(weaponsNames.length * Math.random())
   return [
     {
-      slotCategory: "Background",
+      slotCategory: "Backgrounds",
       fileName: "Prison",
-      traitName: "Prison cell",
+      traitName: "Prison Cell",
       zIndex: 0,
       traitDescription: "Tax fraud is no joke! In jail. It's cold and humid and there are rats about...",
     },
     {
-      slotCategory: "Weapon",
+      slotCategory: "Weapons",
       traitName: weaponsNames[weaponIndex],
       fileName: weaponsFileNames[weaponIndex],
       zIndex: 2,
@@ -45,14 +45,14 @@ export const drawSlotSet = (): SlotSet => {
       traitDescription: "Prisonner attire\nPOWER: 0",
     },
     {
-      slotCategory: "Underhelm",
+      slotCategory: "Underhelms",
       traitName: "Basic Collar",
       fileName: "Underhelm1",
       zIndex: 12,
       traitDescription: "Basic attire\nPOWER: 10",
     },
     {
-      slotCategory: "Cloth",
+      slotCategory: "Cloths",
       traitName: "Prisoner Cloth",
       fileName: "Cloth1",
       zIndex: 13,
@@ -66,7 +66,7 @@ export const drawSlotSet = (): SlotSet => {
       traitDescription: "Prisoner attire\nPOWER: 20",
     },
     {
-      slotCategory: "Head",
+      slotCategory: "Heads",
       traitName: "Prisoner Collar",
       fileName: "PrisonerCollar",
       zIndex: 16,

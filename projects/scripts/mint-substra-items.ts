@@ -209,9 +209,10 @@ const substraItems = (list: SlotSet): SlotInfo[] => {
 
 export const getMintItemTx = async (
   kp:KeyringPair,
-  soldierNumber: number,
+  _soldierNumber: number,
   slotSet: SlotSet
 ) => {
+  const soldierNumber=_soldierNumber+1
   try {
     console.log(
       `CREATE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
@@ -228,10 +229,10 @@ export const getMintItemTx = async (
         const metadataCid = await pinSingleMetadataFromDir(
           `/assets/SlotParts/${item.slotCategory}`,
           item.thumb,
-          item.fileName,
+          item.symbol,
           {
             description:
-              item.description + `  originally minted for ` + soldierNumber,
+              item.description + `\n${item.slotCategory} #` + (soldierNumber),
             externalUri: "https://rmrk.app",
           }
         );
@@ -264,9 +265,10 @@ export const getAddItemsTx = async (
   baseBlock: number,
   itemBlock: number,
   substraCollectionId,
-  soldierNumber: number,
+  _soldierNumber: number,
   slotSet: SlotSet
 ) => {
+  const soldierNumber=_soldierNumber+1
   try {
     console.log(
       `ADD BASE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
@@ -348,9 +350,10 @@ export const mintItemsFromSet = async (
   kp:KeyringPair,
   substraBlock: number,
   baseBlock: number,
-  soldierNumber: number,
+  _soldierNumber: number,
   slotSet: SlotSet
 ) => {
+  const soldierNumber=_soldierNumber
   try {
     console.log(
       `CREATE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
@@ -432,7 +435,7 @@ export const mintAndEquipAllItemsFromSetList = async (
       console.log("got tx for substra ", i);
       totalTxListMint = [...totalTxListMint, ...txsMintItem];
     }
-    // const txs=await getMintItemTx(substraBlock,baseBlock,soldierNumber,slotSet)
+    
     const batch = api.tx.utility.batch(totalTxListMint);
     const { block: mintItemBlock } = await sendAndFinalize(batch, kp);
     console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", mintItemBlock);
@@ -490,9 +493,9 @@ export const createItemsCollections = async (kp:KeyringPair,slotCatList: SlotCat
         let collectionMetadataCid = await pinSingleMetadataFromDir(
           `/assets/SlotParts/${slotCat}`,
           `${slotCat}.png`,
-          "RMRK2 Subtra Items Collection : " + slotCat,
+          "SubstraKnights 2.0 Items : " + slotCat,
           {
-            description: "This is Substraknight item collection for "+slotCat,
+            description: `Item collection for ${slotCat}`,
             externalUri: "https://rmrk.app",
             properties: {},
           }

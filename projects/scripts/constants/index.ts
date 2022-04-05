@@ -4,7 +4,7 @@ export const WS_URL = isProd
   ? "wss://kusama-rpc.polkadot.io"
   : "ws://127.0.0.1:9944";
 
-export const ASSETS_CID = "QmWBrAPXQvtT5GztdX52PXB5t9RJ71f1nwRMN5BE6Qi89o";
+export const ASSETS_CID = "QmVSHmwubHypdWSDCyRG33fypz28dddqJxyyJ4KjZbMrZZ";
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
 export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "SKC";
@@ -59,15 +59,15 @@ export type SlotSet = SlotTrait[];
 
 export const slotConfigSet: SlotConfigSet = [
   {
-    slotCategory: "Background",
+    slotCategory: "Backgrounds",
     zIndex: 0,
   },
   {
-    slotCategory: "Mount",
+    slotCategory: "Mounts",
     zIndex: 1,
   },
   {
-    slotCategory: "Weapon",
+    slotCategory: "Weapons",
     zIndex: 2,
   },
   {
@@ -75,11 +75,11 @@ export const slotConfigSet: SlotConfigSet = [
     zIndex: 11,
   },
   {
-    slotCategory: "Underhelm",
+    slotCategory: "Underhelms",
     zIndex: 12,
   },
   {
-    slotCategory: "Cloth",
+    slotCategory: "Cloths",
     zIndex: 13,
   },
   {
@@ -87,11 +87,11 @@ export const slotConfigSet: SlotConfigSet = [
     zIndex: 14,
   },
   {
-    slotCategory: "Chest",
+    slotCategory: "Chests",
     zIndex: 15,
   },
   {
-    slotCategory: "Head",
+    slotCategory: "Heads",
     zIndex: 16,
   },
   {
@@ -288,7 +288,7 @@ export const fixedSetProba: FixedSetProba = [
 //   },
 // ];
 
-export const substraCollectionDescription="This is Substraknight! RMRK2 Nested NFT"
+export const substraCollectionDescription="Kusamarauders is the name given to members of the warrior cast, the one that achieved dominance and started imposing the God of War as the only true god.\nEver since the Fall of the Empire, Tribal Houses have been fighting for hegemony.\nIn the shattered empire, sacred tournaments are organised in order to calm Tribal quarrels and eventually find the rightful heir to the Throne.\nTo achieve their goals, Kusamarauders have mastered the art of war and rely on their gear to overcome their ennemies. Armours are their skin and weapons their limbs.\nKusamarauders can equip many different pieces of gear: There are nine (9) armor & weapon slots for each kusamarauder."
 // export const slotList = [];
 // [
 //   "weapon",

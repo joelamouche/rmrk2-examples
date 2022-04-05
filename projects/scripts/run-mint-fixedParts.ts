@@ -1,5 +1,5 @@
 import fs from "fs";
-import { getKeyringFromUri, sendAndFinalize, getApi } from "./utils";
+import { sendAndFinalize, getApi } from "./utils";
 import {
   allFixedPartsList,
   FixedTrait,
@@ -184,11 +184,7 @@ export const runMintSequenceBatch = async (kp:KeyringPair) => {
     });
     console.log("mintList", mintList);
     await mintListBaseTx(kp,baseBlock, mintList, api, collectionId);
-    // for(let i=0;i<mintList.length;i++){
-    //     console.log("----------------------------------STARTING MINT FOR")
-    //     console.log(mintList[i])
-    //     await mintOneBase(baseBlock,mintList[i])
-    // }
+
     process.exit(0);
   } catch (error: any) {
     console.error(error);
@@ -199,7 +195,7 @@ export const runMintSequenceBatch = async (kp:KeyringPair) => {
 // Get list if fixed parts
 export const getSetList = async (): Promise<FixedSet[]> => {
   return new Promise((res) => {
-    fs.readFile("drawnSets/drawnset-4-5-4-2022-4:44:12 PM.json", (err, data) => {
+    fs.readFile("drawnSets/drawnset-2-5-4-2022-5:36:02 PM.json", (err, data) => {
       if (err) throw err;
       let setList = JSON.parse(data.toString());
       res(setList);
