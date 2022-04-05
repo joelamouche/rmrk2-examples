@@ -16,33 +16,35 @@ import {
   mintSubstraknight,
 } from "./mint-substra";
 import { addBaseResource } from "./mint-substra";
+import { KeyringPair } from "@polkadot/keyring/types";
 
 export const mintOneBase = async (
+  kp:KeyringPair,
   baseBlock: number,
   fixedPartsSet: FixedSet,
   soldierIndex
 ) => {
-  const substrasBlock = await mintSubstraknight(soldierIndex);
-  await addBaseResource(substrasBlock, baseBlock, fixedPartsSet, soldierIndex);
+  const substrasBlock = await mintSubstraknight(kp,soldierIndex);
+  await addBaseResource(kp,substrasBlock, baseBlock, fixedPartsSet, soldierIndex);
 };
 
 export const mintOneBaseTx = async (
+  kp:KeyringPair,
   baseBlock: number,
   fixedPartsSet: FixedSet,
   api,
   soldierIndex
 ) => {
   // Create collection
-  const { collectionId } = await createSubstraknightCollection();
+  const { collectionId } = await createSubstraknightCollection(kp);
 
-  const phrase = process.env.PRIVAKE_KEY;
-  const kp = getKeyringFromUri(phrase);
-  const txsMintSubtra = await getTxMintSubstraknight(api, soldierIndex);
+  const txsMintSubtra = await getTxMintSubstraknight(kp,api, soldierIndex);
   const tx = api.tx.utility.batchAll(txsMintSubtra);
   const { block } = await sendAndFinalize(tx, kp);
   console.log("Batch Substraknight NFT minted at block: ", block);
   // Add Base
   const txsAddBase = await getTxAddBaseResource(
+    kp,
     block,
     baseBlock,
     fixedPartsSet,
@@ -58,6 +60,7 @@ export const mintOneBaseTx = async (
 };
 
 export const mintListBaseTx = async (
+  kp:KeyringPair,
   baseBlock: number,
   fixedSetList: FixedSet[],
   api,
@@ -67,11 +70,9 @@ export const mintListBaseTx = async (
   console.log(
     "----------------------------------STARTING MINT FOR FIRST BATCH"
   );
-  const phrase = process.env.PRIVAKE_KEY;
-  const kp = getKeyringFromUri(phrase);
   let totalTxListMint = [];
   for (let i = 0; i < fixedSetList.length; i++) {
-    const txsMintSubtra = await getTxMintSubstraknight(api, i);
+    const txsMintSubtra = await getTxMintSubstraknight(kp,api, i);
     console.log("got tx for substra ", i);
     totalTxListMint = [...totalTxListMint, ...txsMintSubtra];
   }
@@ -86,6 +87,7 @@ export const mintListBaseTx = async (
   let totalTxListAddABase = [];
   for (let i = 0; i < fixedSetList.length; i++) {
     const txsAddBase = await getTxAddBaseResource(
+      kp,
       block,
       baseBlock,
       fixedSetList[i],
@@ -101,7 +103,9 @@ export const mintListBaseTx = async (
   return { mintSubstraBlock: block, addBaseBlock: block2 };
   //await addBaseResource(block, baseBlock, fixedPartsSet);
 };
-export const runMintSequence = async () => {
+
+//deprecated
+export const runMintSequence = async (kp:KeyringPair) => {
   try {
     const baseBlock = await createBase(allFixedPartsList, []);
     console.log("BASE CREATED");
@@ -135,7 +139,7 @@ export const runMintSequence = async () => {
     for (let i = 0; i < mintList.length; i++) {
       console.log("----------------------------------STARTING MINT FOR");
       console.log(mintList[i]);
-      await mintOneBase(baseBlock, mintList[i], i);
+      await mintOneBase(kp,baseBlock, mintList[i], i);
     }
     process.exit(0);
   } catch (error: any) {
@@ -143,7 +147,7 @@ export const runMintSequence = async () => {
     process.exit(0);
   }
 };
-export const runMintSequenceBatch = async () => {
+export const runMintSequenceBatch = async (kp:KeyringPair) => {
   try {
     const ws = WS_URL;
     const api = await getApi(ws);
@@ -151,7 +155,7 @@ export const runMintSequenceBatch = async () => {
     console.log("BASE CREATED");
     let mintList: FixedSet[] = [];
     // Create collection
-    const { collectionId } = await createSubstraknightCollection();
+    const { collectionId } = await createSubstraknightCollection(kp);
     // create list of sets
     allFixedPartsList[0].traits.forEach(async (trait0, i) => {
       allFixedPartsList[1].traits.forEach(async (trait1, j) => {
@@ -179,7 +183,7 @@ export const runMintSequenceBatch = async () => {
       });
     });
     console.log("mintList", mintList);
-    await mintListBaseTx(baseBlock, mintList, api, collectionId);
+    await mintListBaseTx(kp,baseBlock, mintList, api, collectionId);
     // for(let i=0;i<mintList.length;i++){
     //     console.log("----------------------------------STARTING MINT FOR")
     //     console.log(mintList[i])
@@ -191,16 +195,21 @@ export const runMintSequenceBatch = async () => {
     process.exit(0);
   }
 };
+
+// Get list if fixed parts
 export const getSetList = async (): Promise<FixedSet[]> => {
   return new Promise((res) => {
-    fs.readFile("drawnSets/drawnset1.json", (err, data) => {
+    fs.readFile("drawnSets/drawnset-2-5-4-2022-1:30:46 PM.json", (err, data) => {
       if (err) throw err;
       let setList = JSON.parse(data.toString());
       res(setList);
     });
   });
 };
+
+// Run mint seq with probas
 export const runMintSequenceBatchWithProba = async (
+  kp:KeyringPair,
   _fixedSetProba: FixedSetProba
 ) => {
   try {
@@ -220,10 +229,10 @@ export const runMintSequenceBatchWithProba = async (
     const baseBlock = await createBase(allBaseParts, []);
     console.log("BASE CREATED");
     // Create collection
-    const { collectionId } = await createSubstraknightCollection();
+    const { collectionId } = await createSubstraknightCollection(kp);
 
     // mint all
-    await mintListBaseTx(baseBlock, await getSetList(), api, collectionId);
+    await mintListBaseTx(kp,baseBlock, await getSetList(), api, collectionId);
     process.exit(0);
   } catch (error: any) {
     console.error(error);

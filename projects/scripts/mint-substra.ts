@@ -7,13 +7,16 @@ import {
   WS_URL,
   FixedTrait,
   slotConfigSet,
+  substraCollectionDescription,
 } from "./constants";
 import { Base, Collection, NFT } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 import { pinSingleMetadataFromDir } from "./pinata-utils";
 import { nanoid } from "nanoid";
+import { KeyringPair } from "@polkadot/keyring/types";
 
 export const addBaseResource = async (
+  kp:KeyringPair,
   substraBlock: number,
   baseBlock: number,
   fixedPartSet: FixedTrait[],
@@ -27,10 +30,11 @@ export const addBaseResource = async (
     const api = await getApi(ws);
 
     // Create collection
-    const { collectionId } = await createSubstraknightCollection();
+    const { collectionId } = await createSubstraknightCollection(kp);
 
     //add base res
     const txs = await getTxAddBaseResource(
+      kp,
       substraBlock,
       baseBlock,
       fixedPartSet,
@@ -38,8 +42,6 @@ export const addBaseResource = async (
       collectionId,
       soliderNumber
     );
-    const phrase = process.env.PRIVAKE_KEY;
-    const kp = getKeyringFromUri(phrase);
     const tx = api.tx.utility.batch(txs);
     const { block } = await sendAndFinalize(tx, kp);
     console.log("Substraknight base resources added at block: ", block);
@@ -49,6 +51,7 @@ export const addBaseResource = async (
 };
 
 export const getTxAddBaseResource = async (
+  kp:KeyringPair,
   substraBlock: number,
   baseBlock: number,
   fixedPartSet: FixedTrait[],
@@ -61,9 +64,6 @@ export const getTxAddBaseResource = async (
     console.log(fixedPartSet);
     await cryptoWaitReady();
     const accounts = getKeys();
-    const phrase = process.env.PRIVAKE_KEY;
-    const kp = getKeyringFromUri(phrase);
-    // const serialNumbers = soldierIndexList;
 
     const baseEntity = new Base(
       baseBlock,
@@ -74,10 +74,9 @@ export const getTxAddBaseResource = async (
 
     const BASE_ID = baseEntity.getId();
 
-    const resourceRemarks = [];
-
     // for each soldier, add base ressource
-    let index = soldierIndex; //? soldierIndex : sn;
+    let index = soldierIndex;
+
     // instantiate knight nft
     const substraNft = new NFT({
       block: substraBlock,
@@ -101,28 +100,22 @@ export const getTxAddBaseResource = async (
             ...fixedPartSet.map((fixedPart) => fixedPart.trait),
             ...slotConfigSet.map((slot) => slot.slotCategory),
           ],
-          thumb: `ipfs://ipfs/${ASSETS_CID}/substra/fixedParts/nakedman.png`,
+          thumb: `ipfs://ipfs/${ASSETS_CID}/SoldierPreview.png`,
         })
       ),
     ];
-    // return resourceRemarks.map((remark) => api.tx.system.remark(remark));
-    // const tx = api.tx.utility.batch(txs);
-    // const { block } = await sendAndFinalize(tx, kp);
-    // console.log("Substraknight base resources added at block: ", block);
   } catch (error: any) {
     console.error(error);
   }
 };
 
-export const createSubstraknightCollection = async () => {
+export const createSubstraknightCollection = async (kp:KeyringPair) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT COLLECTION START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
 
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
@@ -130,19 +123,19 @@ export const createSubstraknightCollection = async () => {
     );
 
     const collectionMetadataCid = await pinSingleMetadataFromDir(
-      "/assets/substra/fixedParts",
-      "nakedman.png",
-      "Substra demo soldier collection",
+      "/assets",
+      "SubstraCollectionLogo.png", 
+      "Substra Soldier Collection",
       {
-        description: "This is Substraknight! RMRK2 demo nested NFT",
+        description: substraCollectionDescription,
         externalUri: "https://rmrk.app",
         properties: {},
       }
     );
 
-    const ItemsCollection = new Collection(
+    const substraCollection = new Collection(
       0,
-      10000,
+      500,
       encodeAddress(accounts[0].address, 2),
       SUBSTRAKNIGHT_COLLECTION_SYMBOL,
       collectionId,
@@ -150,10 +143,10 @@ export const createSubstraknightCollection = async () => {
     );
 
     const { block } = await sendAndFinalize(
-      api.tx.system.remark(ItemsCollection.create()),
+      api.tx.system.remark(substraCollection.create()),
       kp
     );
-    console.log("COLLECTION CREATION REMARK: ", ItemsCollection.create());
+    console.log("COLLECTION CREATION REMARK: ", substraCollection.create());
     console.log("Substraknight collection created at block: ", block);
 
     return { block, collectionId };
@@ -162,17 +155,15 @@ export const createSubstraknightCollection = async () => {
   }
 };
 
-export const mintSubstraknight = async (soliderNumber: number) => {
+export const mintSubstraknight = async (kp:KeyringPair,soliderNumber: number) => {
   try {
-    const phrase = process.env.PRIVAKE_KEY;
-    const kp = getKeyringFromUri(phrase);
     const ws = WS_URL;
     const api = await getApi(ws);
 
     // Create collection
-    await createSubstraknightCollection();
+    await createSubstraknightCollection(kp);
     // get mint tx
-    const txs = await getTxMintSubstraknight(api, soliderNumber);
+    const txs = await getTxMintSubstraknight(kp,api, soliderNumber);
     const tx = api.tx.utility.batchAll(txs);
     // send
     const { block } = await sendAndFinalize(tx, kp);
@@ -183,27 +174,23 @@ export const mintSubstraknight = async (soliderNumber: number) => {
   }
 };
 
-export const getTxMintSubstraknight = async (api, soldierIndex: number) => {
+export const getTxMintSubstraknight = async (kp:KeyringPair,api, soldierIndex: number) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT NFT START -------");
     await cryptoWaitReady();
-    const accounts = getKeys();
 
     // Generate collection id
     const collectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
+      u8aToHex(kp.publicKey),
       SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
-    // const serialNumbers = soldierIndexList;
-
     // Mint base for each soldier
-    // const promises = serialNumbers.map(async (sn) => {
     // Create Metadata
     const metadataCid = await pinSingleMetadataFromDir(
-      `/assets/substra/fixedParts`,
-      "nakedman.png",
-      `Substra demo soldier NFT #${soldierIndex}`,
+      "/assets",
+      "SoldierPreview.png", 
+      `Substra Soldier NFT #${soldierIndex}`,
       {
         description: `This is Substraknight #${soldierIndex}! RMRK2 demo nested NFT`,
         externalUri: "https://rmrk.app",
@@ -223,22 +210,12 @@ export const getTxMintSubstraknight = async (api, soldierIndex: number) => {
       symbol: `soldier_${soldierIndex}`,
       transferable: 1,
       sn: `${soldierIndex}`.padStart(8, "0"),
-      owner: encodeAddress(accounts[0].address, 2),
+      owner: encodeAddress(kp.address, 2),
       metadata: metadataCid,
     });
 
-    // return nft.mint();
-    //});
     return [api.tx.system.remark(nft.mint())];
-    // return resourceRemarks.map((remark) => api.tx.system.remark(remark));
 
-    // // Batch send
-    // const remarks = await Promise.all(promises);
-    // return remarks.map((remark) => api.tx.system.remark(remark));
-    //return api.tx.utility.batchAll(txs);
-    // const { block } = await sendAndFinalize(tx, kp);
-    // console.log("Substraknight NFT minted at block: ", block);
-    // return block;
   } catch (error: any) {
     console.error(error);
   }

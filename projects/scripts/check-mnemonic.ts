@@ -1,10 +1,6 @@
 import {
-  WS_URL,
   fixedSetProba,
   FixedSetProba,
-  FixedPartProba,
-  SlotSet,
-  slotConfigSet,
 } from "./constants";
 
 import { getApi, getKeyringFromMnemonic } from "./utils";
@@ -13,8 +9,6 @@ const expectedAddress = "FCzwhSLYhFdqdSXXdUM2nGGpgDFit24tX8ajgfXWj49VEwo";
 
 export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
   try {
-    const ws = WS_URL;
-    const api = await getApi(ws);
 
     const pair = getKeyringFromMnemonic(process.env.MNEMONIC);
     // expect(pair.address).toEqual('HSLu2eci2GCfWkRimjjdTXKoFSDL3rBv5Ey2JWCBj68cVZj');

@@ -151,14 +151,14 @@ export const drawSets = (
   // Save drawn sets
   let data = JSON.stringify(filteredRes);
   fs.writeFileSync(
-    `drawnSets/drawnset-${numberOfSets}-${new Date(
+    `drawnSets/drawnset-${numberOfSets}-${new Date(Date.now()).getDate()}-${
+      new Date(Date.now()).getMonth() + 1
+    }-${new Date(Date.now()).getUTCFullYear()}-${new Date(
       Date.now()
-    ).getDate()}-${new Date(Date.now()).getMonth()+1}-${new Date(
-      Date.now()
-    ).getUTCFullYear()}-${new Date(Date.now()).toLocaleTimeString()}.json`,
+    ).toLocaleTimeString()}.json`,
     data
   );
   return filteredRes;
 };
 
-drawSets(fixedSetProba, 100);
+drawSets(fixedSetProba, 2);

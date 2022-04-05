@@ -13,30 +13,92 @@ import {
   mintAndEquipAllItemsFromSetList,
   mintItemsFromSet,
 } from "./mint-substra-items";
-import { getApi } from "./utils";
+import { getApi, getKeyringFromMnemonic } from "./utils";
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
 
-const weapons = ["Fourche", "Gourdin", "Poele"];
+const weaponsFileNames = ["Fourche", "Gourdin", "Poele"];
+const weaponsNames = ["Pitchfork", "Club", "Frying Pan"];
+const weaponsDescription = [`Wooden pitchfork. Better than nothing...\nPOWER: 500`, `Wooden club. Better than nothing...\nPOWER: 500`, `Frying pan. Better than nothing...\nPOWER: 500`];
 export const drawSlotSet = (): SlotSet => {
+  const weaponIndex=Math.floor(weaponsNames.length * Math.random())
   return [
-    { slotCategory: "Background", traitName: "Prison", zIndex: 0 },
+    {
+      slotCategory: "Background",
+      fileName: "Prison",
+      traitName: "Prison cell",
+      zIndex: 0,
+      traitDescription: "Tax fraud is no joke! In jail. It's cold and humid and there are rats about...",
+    },
     {
       slotCategory: "Weapon",
-      traitName: weapons[Math.floor(weapons.length * Math.random())],
-      zIndex: 1,
+      traitName: weaponsNames[weaponIndex],
+      fileName: weaponsFileNames[weaponIndex],
+      zIndex: 2,
+      traitDescription: weaponsDescription[weaponIndex],
     },
-    { slotCategory: "Legs", traitName: "Pants1", zIndex: 10 },
-    { slotCategory: "Underhelm", traitName: "Underhelm1", zIndex: 11 },
-    { slotCategory: "Cloth", traitName: "Cloth1", zIndex: 12 },
-    { slotCategory: "Feet", traitName: "Feet1", zIndex: 13 },
-    { slotCategory: "Arms", traitName: "Arms1", zIndex: 14 },
+    {
+      slotCategory: "Legs",
+      traitName: "Prisoner Pants",
+      fileName: "Pants1",
+      zIndex: 11,
+      traitDescription: "Prisonner attire\nPOWER: 0",
+    },
+    {
+      slotCategory: "Underhelm",
+      traitName: "Basic Collar",
+      fileName: "Underhelm1",
+      zIndex: 12,
+      traitDescription: "Basic attire\nPOWER: 10",
+    },
+    {
+      slotCategory: "Cloth",
+      traitName: "Prisoner Cloth",
+      fileName: "Cloth1",
+      zIndex: 13,
+      traitDescription: "Prisoner attire\nPOWER: 0",
+    },
+    {
+      slotCategory: "Feet",
+      traitName: "Prisoner Boots",
+      fileName: "Feet1",
+      zIndex: 14,
+      traitDescription: "Prisoner attire\nPOWER: 20",
+    },,
+    {
+      slotCategory: "Head",
+      traitName: "Prisoner Collar",
+      fileName: "PrisonerCollar",
+      zIndex: 16,
+      traitDescription: "Prisoner attire\nPOWER: -500",
+    },
+    {
+      slotCategory: "Arms",
+      traitName: "Prisoner Shackles",
+      fileName: "Feet1",
+      zIndex: 17,
+      traitDescription: "Prisoner attire\nPOWER: -1000",
+    },
   ];
 };
+
+const substraKnightsAddress="FCzwhSLYhFdqdSXXdUM2nGGpgDFit24tX8ajgfXWj49VEwo"
 
 export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
   try {
     const ws = WS_URL;
     const api = await getApi(ws);
+
+    // Fetch Key Pair
+    const kp=getKeyringFromMnemonic(process.env.MNEMONIC)
+    if (kp.address===substraKnightsAddress){
+      console.log("RIGHT ADDRESS : "+kp.address)
+    } else {
+      console.log("WRONG ADDRESS : "+kp.address)
+      console.log("SHOULD BE : "+substraKnightsAddress)
+      return;
+    }
+
+    // Create Base
     const allBaseParts = _fixedSetProba.map(
       (fixedPartProba: FixedPartProba) => {
         const { traits, traitClass, zIndex } = fixedPartProba;
@@ -51,13 +113,14 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
     const baseBlock = await createBase(allBaseParts, slotConfigSet);
     console.log("BASE CREATED");
 
-    // Create collection
-    const { collectionId } = await createSubstraknightCollection();
+    // Create Subtra collection
+    const { collectionId } = await createSubstraknightCollection(kp);
 
     const fixedPartList = await getSetList();
 
     // mint all bases
     const { mintSubstraBlock, addBaseBlock } = await mintListBaseTx(
+      kp,
       baseBlock,
       fixedPartList,
       api,
@@ -70,6 +133,7 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
 
     const { mintItemBlock, resaddSendBlock } =
       await mintAndEquipAllItemsFromSetList(
+        kp,
         mintSubstraBlock,
         baseBlock,
         fixedPartList.length,
@@ -78,6 +142,7 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
 
     // Save deployement
     let data = JSON.stringify({
+      address:kp.address,
       time: Date.now().toLocaleString(),
       baseBlock,
       collectionId,
@@ -87,7 +152,7 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
       resaddSendBlock,
     });
     fs.writeFileSync(
-      `drawnSets/deployement${new Date(Date.now()).toLocaleTimeString()}.json`,
+      `drawnSets/deployement-${new Date(Date.now()).toLocaleTimeString()}.json`,
       data
     );
 

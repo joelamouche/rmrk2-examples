@@ -4,10 +4,10 @@ import {
   SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   WS_URL,
   SUBSTRAKNIGHT_BASE_SYMBOL,
-  // slotList,
   SlotSet,
   SlotTrait,
-  slotList,
+  TraitDescription,
+  SlotCategory,
 } from "./constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
@@ -16,22 +16,23 @@ import { u8aToHex } from "@polkadot/util";
 import { encodeAddress } from "@polkadot/keyring";
 import { nanoid } from "nanoid";
 import { pinSingleMetadataFromDir } from "./pinata-utils";
+import { KeyringPair } from "@polkadot/keyring/types";
 interface SlotInfo {
   symbol: string;
   thumb: string;
   resources: string[];
   fileName: string;
   slotCategory: string;
-  description: string;
+  description: TraitDescription;
 }
 const substraItems = (list: SlotSet): SlotInfo[] => {
   return list.map((slot: SlotTrait) => {
     return {
       symbol: slot.traitName,
-      thumb: `${slot.traitName}.png`,
-      resources: [`${slot.traitName}.svg`],
-      fileName: slot.traitName,
-      description: `Soldier1 likes his ${slot.traitName}!`,
+      thumb: `${slot.fileName}.png`,
+      resources: [`${slot.fileName}.svg`],
+      fileName: slot.fileName,
+      description: slot.traitDescription,
       slotCategory: slot.slotCategory,
     };
   });
@@ -67,146 +68,147 @@ const substraItems = (list: SlotSet): SlotInfo[] => {
 //   },
 // ];
 
-export const mintItems = async (
-  substraBlock: number,
-  baseBlock: number,
-  soldierNumber: number,
-  itemNumber
-) => {
-  try {
-    console.log(`CREATE SUBSTRAKNIGHT ITEMS # ${itemNumber} START -------`);
-    await cryptoWaitReady();
-    const accounts = getKeys();
-    const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
-    const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
+// export const mintItems = async (
+//   substraBlock: number,
+//   baseBlock: number,
+//   soldierNumber: number,
+//   itemNumber
+// ) => {
+//   try {
+//     console.log(`CREATE SUBSTRAKNIGHT ITEMS # ${itemNumber} START -------`);
+//     await cryptoWaitReady();
+//     const accounts = getKeys();
+//     const ws = WS_URL;
+//     const phrase = process.env.PRIVAKE_KEY;
+//     const api = await getApi(ws);
+//     const kp = getKeyringFromUri(phrase);
 
-    const collectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
-    );
+//     const collectionId = Collection.generateId(
+//       u8aToHex(accounts[0].publicKey),
+//       SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
+//     );
 
-    const substraCollectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_COLLECTION_SYMBOL
-    );
+//     const substraCollectionId = Collection.generateId(
+//       u8aToHex(accounts[0].publicKey),
+//       SUBSTRAKNIGHT_COLLECTION_SYMBOL
+//     );
 
-    const baseEntity = new Base(
-      baseBlock,
-      SUBSTRAKNIGHT_BASE_SYMBOL,
-      encodeAddress(kp.address, 2),
-      "svg"
-    );
+//     const baseEntity = new Base(
+//       baseBlock,
+//       SUBSTRAKNIGHT_BASE_SYMBOL,
+//       encodeAddress(kp.address, 2),
+//       "svg"
+//     );
 
-    await createItemsCollection();
+//     await createItemsCollection();
 
-    // First mint all the items
-    const promises = substraItems(slotList).map(async (item, index) => {
-      const sn = index + 1;
+//     // First mint all the items
+//     const promises = substraItems(slotList).map(async (item, index) => {
+//       const sn = index + 1;
 
-      const metadataCid = await pinSingleMetadataFromDir(
-        `/assets/Set${itemNumber}/items`,
-        item.thumb,
-        item.symbol,
-        {
-          description: item.description,
-          externalUri: "https://rmrk.app",
-        }
-      );
+//       const metadataCid = await pinSingleMetadataFromDir(
+//         `/assets/Set${itemNumber}/items`,
+//         item.thumb,
+//         item.symbol,
+//         {
+//           description: item.description,
+//           externalUri: "https://rmrk.app",
+//         }
+//       );
 
-      const nft = new NFT({
-        block: 0,
-        sn: sn.toString().padStart(8, "0"),
-        owner: encodeAddress(accounts[0].address, 2),
-        transferable: 1,
-        metadata: metadataCid,
-        collection: collectionId,
-        symbol: item.symbol,
-      });
+//       const nft = new NFT({
+//         block: 0,
+//         sn: sn.toString().padStart(8, "0"),
+//         owner: encodeAddress(accounts[0].address, 2),
+//         transferable: 1,
+//         metadata: metadataCid,
+//         collection: collectionId,
+//         symbol: item.symbol,
+//       });
 
-      return nft.mint();
-    });
+//       return nft.mint();
+//     });
 
-    const remarks = await Promise.all(promises);
+//     const remarks = await Promise.all(promises);
 
-    const txs = remarks.map((remark) => api.tx.system.remark(remark));
-    const batch = api.tx.utility.batch(txs);
-    const { block } = await sendAndFinalize(batch, kp);
-    console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", block);
+//     const txs = remarks.map((remark) => api.tx.system.remark(remark));
+//     const batch = api.tx.utility.batch(txs);
+//     const { block } = await sendAndFinalize(batch, kp);
+//     console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", block);
 
-    console.log(
-      `ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS # ${itemNumber} TO SOLDIER # ${soldierNumber}  START -------`
-    );
+//     console.log(
+//       `ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS # ${itemNumber} TO SOLDIER # ${soldierNumber}  START -------`
+//     );
 
-    // then add base, send and equip
-    const resaddSendRemarks = [];
+//     // then add base, send and equip
+//     const resaddSendRemarks = [];
 
-    substraItems(slotList).forEach((item, index) => {
-      const sn = index + 1;
-      const itemNft = new NFT({
-        block,
-        sn: sn.toString().padStart(8, "0"),
-        owner: encodeAddress(accounts[0].address, 2),
-        transferable: 1,
-        metadata: `ipfs://ipfs/trololo`,
-        collection: collectionId,
-        symbol: item.symbol,
-      });
+//     substraItems(slotList).forEach((item, index) => {
+//       const sn = index + 1;
+//       const itemNft = new NFT({
+//         block,
+//         sn: sn.toString().padStart(8, "0"),
+//         owner: encodeAddress(accounts[0].address, 2),
+//         transferable: 1,
+//         metadata: `ipfs://ipfs/trololo`,
+//         collection: collectionId,
+//         symbol: item.symbol,
+//       });
 
-      item.resources.forEach((resource) => {
-        resaddSendRemarks.push(
-          itemNft.resadd({
-            src: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${resource}`,
-            thumb: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${item.thumb}`,
-            id: nanoid(8),
-            slot: `${baseEntity.getId()}.${item.slotCategory}`,
-            //  resource.includes("left")
-            //   ? `${baseEntity.getId()}.soldier_objectLeft`
-            //   : `${baseEntity.getId()}.soldier_objectRight`,
-          })
-        );
-      });
+//       item.resources.forEach((resource) => {
+//         resaddSendRemarks.push(
+//           itemNft.resadd({
+//             src: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${resource}`,
+//             thumb: `ipfs://ipfs/${ASSETS_CID}/Set${itemNumber}/items/${item.thumb}`,
+//             id: nanoid(8),
+//             slot: `${baseEntity.getId()}.${item.slotCategory}`,
+//             //  resource.includes("left")
+//             //   ? `${baseEntity.getId()}.soldier_objectLeft`
+//             //   : `${baseEntity.getId()}.soldier_objectRight`,
+//           })
+//         );
+//       });
 
-      // instantiate soldier nft
-      const soldierNft = new NFT({
-        block: substraBlock,
-        collection: substraCollectionId,
-        symbol: `soldier_${soldierNumber}`,
-        transferable: 1,
-        sn: `${1}`.padStart(8, "0"),
-        owner: encodeAddress(accounts[0].address, 2),
-        metadata: "",
-      });
+//       // instantiate soldier nft
+//       const soldierNft = new NFT({
+//         block: substraBlock,
+//         collection: substraCollectionId,
+//         symbol: `soldier_${soldierNumber}`,
+//         transferable: 1,
+//         sn: `${1}`.padStart(8, "0"),
+//         owner: encodeAddress(accounts[0].address, 2),
+//         metadata: "",
+//       });
 
-      // send and equip
-      resaddSendRemarks.push(itemNft.send(soldierNft.getId()));
-      resaddSendRemarks.push(
-        itemNft.equip(
-          `${baseEntity.getId()}.${
-            //index % 2 ? "soldier_objectLeft" : "soldier_objectRight"
-            item.symbol
-          }`
-        )
-      );
-    });
+//       // send and equip
+//       resaddSendRemarks.push(itemNft.send(soldierNft.getId()));
+//       resaddSendRemarks.push(
+//         itemNft.equip(
+//           `${baseEntity.getId()}.${
+//             //index % 2 ? "soldier_objectLeft" : "soldier_objectRight"
+//             item.symbol
+//           }`
+//         )
+//       );
+//     });
 
-    const restxs = resaddSendRemarks.map((remark) =>
-      api.tx.system.remark(remark)
-    );
-    const resbatch = api.tx.utility.batch(restxs);
-    const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
-    console.log(
-      "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
-      resaddSendBlock
-    );
-    return true;
-  } catch (error: any) {
-    console.error(error);
-  }
-};
+//     const restxs = resaddSendRemarks.map((remark) =>
+//       api.tx.system.remark(remark)
+//     );
+//     const resbatch = api.tx.utility.batch(restxs);
+//     const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
+//     console.log(
+//       "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
+//       resaddSendBlock
+//     );
+//     return true;
+//   } catch (error: any) {
+//     console.error(error);
+//   }
+// };
 
 export const getMintItemTx = async (
+  kp:KeyringPair,
   soldierNumber: number,
   slotSet: SlotSet
 ) => {
@@ -215,44 +217,21 @@ export const getMintItemTx = async (
       `CREATE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
     );
     await cryptoWaitReady();
-    const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
-
-    const itemCollectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
-    );
-
-    // const substraCollectionId = Collection.generateId(
-    //   u8aToHex(accounts[0].publicKey),
-    //   SUBSTRAKNIGHT_COLLECTION_SYMBOL
-    // );
-
-    // const baseEntity = new Base(
-    //   baseBlock,
-    //   SUBSTRAKNIGHT_BASE_SYMBOL,
-    //   encodeAddress(kp.address, 2),
-    //   "svg"
-    // );
-
-    // await createItemsCollection();
 
     // First mint all the items
     const promises = substraItems(slotSet).map(
       async (item: SlotInfo, index) => {
-        const sn = index + 1;
-
         // pin metadat on ipfs
-        console.log("pinning metadat on ipfs...");
+        console.log("pinning item metadat on ipfs...");
         const metadataCid = await pinSingleMetadataFromDir(
           `/assets/SlotParts/${item.slotCategory}`,
           item.thumb,
           item.fileName,
           {
-            description: item.description + soldierNumber.toString(),
+            description:
+              item.description + `  originally minted for ` + soldierNumber,
             externalUri: "https://rmrk.app",
           }
         );
@@ -260,10 +239,10 @@ export const getMintItemTx = async (
         const nft = new NFT({
           block: 0,
           sn: soldierNumber.toString().padStart(8, "0"),
-          owner: encodeAddress(accounts[0].address, 2),
+          owner: encodeAddress(kp.address, 2),
           transferable: 1,
           metadata: metadataCid,
-          collection: itemCollectionId,
+          collection: getItemCollectionId(kp, item.slotCategory),
           symbol: item.symbol + soldierNumber.toString(),
         });
 
@@ -280,10 +259,10 @@ export const getMintItemTx = async (
 };
 
 export const getAddItemsTx = async (
+  kp:KeyringPair,
   substraBlock: number,
   baseBlock: number,
   itemBlock: number,
-  itemCollectionId,
   substraCollectionId,
   soldierNumber: number,
   slotSet: SlotSet
@@ -293,11 +272,8 @@ export const getAddItemsTx = async (
       `ADD BASE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
     );
     await cryptoWaitReady();
-    const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
 
     const baseEntity = new Base(
       baseBlock,
@@ -313,15 +289,14 @@ export const getAddItemsTx = async (
     // then add base, send and equip
     const resaddSendRemarks = [];
 
-    substraItems(slotSet).forEach((item, index) => {
-      const sn = index + 1;
+    substraItems(slotSet).forEach((item, index) => { 
       const itemNft = new NFT({
         block: itemBlock,
         sn: soldierNumber.toString().padStart(8, "0"),
-        owner: encodeAddress(accounts[0].address, 2),
+        owner: encodeAddress(kp.address, 2),
         transferable: 1,
         metadata: `ipfs://ipfs/trololo`,
-        collection: itemCollectionId,
+        collection: getItemCollectionId(kp, item.slotCategory),
         symbol: item.symbol + soldierNumber.toString(),
       });
 
@@ -346,7 +321,7 @@ export const getAddItemsTx = async (
         symbol: `soldier_${soldierNumber}`,
         transferable: 1,
         sn: `${soldierNumber}`.padStart(8, "0"),
-        owner: encodeAddress(accounts[0].address, 2),
+        owner: encodeAddress(kp.address, 2),
         metadata: "",
       });
 
@@ -363,19 +338,14 @@ export const getAddItemsTx = async (
     });
 
     return resaddSendRemarks.map((remark) => api.tx.system.remark(remark));
-    // const resbatch = api.tx.utility.batch(restxs);
-    // const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
-    // console.log(
-    //   "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
-    //   resaddSendBlock
-    // );
-    // return true;
+
   } catch (error: any) {
     console.error(error);
   }
 };
 
 export const mintItemsFromSet = async (
+  kp:KeyringPair,
   substraBlock: number,
   baseBlock: number,
   soldierNumber: number,
@@ -388,31 +358,17 @@ export const mintItemsFromSet = async (
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
-
-    const itemCollectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
-    );
 
     const substraCollectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
       SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
-    // const baseEntity = new Base(
-    //   baseBlock,
-    //   SUBSTRAKNIGHT_BASE_SYMBOL,
-    //   encodeAddress(kp.address, 2),
-    //   "svg"
-    // );
-
-    await createItemsCollection();
+    await createItemsCollections(kp,slotSet.map((slot) => slot.slotCategory));
 
     // Get mint item tx
-    const txs = await getMintItemTx(soldierNumber, slotSet);
+    const txs = await getMintItemTx(kp,soldierNumber, slotSet);
     const batch = api.tx.utility.batch(txs);
     const { block: mintItemBlock } = await sendAndFinalize(batch, kp);
     console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", mintItemBlock);
@@ -423,10 +379,10 @@ export const mintItemsFromSet = async (
 
     // Get add base and equip tx
     const restxs = await getAddItemsTx(
+      kp,
       substraBlock,
       baseBlock,
       mintItemBlock,
-      itemCollectionId,
       substraCollectionId,
       soldierNumber,
       slotSet
@@ -444,6 +400,7 @@ export const mintItemsFromSet = async (
 };
 
 export const mintAndEquipAllItemsFromSetList = async (
+  kp:KeyringPair,
   substraBlock: number,
   baseBlock: number,
   numberOfSoldiers: number,
@@ -456,33 +413,22 @@ export const mintAndEquipAllItemsFromSetList = async (
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
-
-    const itemCollectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
-    );
 
     const substraCollectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
       SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
-    // const baseEntity = new Base(
-    //   baseBlock,
-    //   SUBSTRAKNIGHT_BASE_SYMBOL,
-    //   encodeAddress(kp.address, 2),
-    //   "svg"
-    // );
-
-    await createItemsCollection();
+    await createItemsCollections(
+      kp,
+      slotSetList[0].map((slot) => slot.slotCategory)
+    );
 
     // Get mint item tx
     let totalTxListMint = [];
     for (let i = 0; i < numberOfSoldiers; i++) {
-      const txsMintItem = await getMintItemTx(i, slotSetList[i]);
+      const txsMintItem = await getMintItemTx(kp,i, slotSetList[i]);
       console.log("got tx for substra ", i);
       totalTxListMint = [...totalTxListMint, ...txsMintItem];
     }
@@ -499,10 +445,10 @@ export const mintAndEquipAllItemsFromSetList = async (
     let totalTxAddBase = [];
     for (let j = 0; j < numberOfSoldiers; j++) {
       const txsAddBaseItem = await getAddItemsTx(
+        kp,
         substraBlock,
         baseBlock,
         mintItemBlock,
-        itemCollectionId,
         substraCollectionId,
         j,
         slotSetList[j]
@@ -510,7 +456,7 @@ export const mintAndEquipAllItemsFromSetList = async (
       console.log("got tx for substra ", j);
       totalTxAddBase = [...totalTxAddBase, ...txsAddBaseItem];
     }
-    // const restxs=await getAddItemsTx(substraBlock,baseBlock,mintItemBlock,itemCollectionId,substraCollectionId,soldierNumber,slotSet)
+
     const resbatch = api.tx.utility.batch(totalTxAddBase);
     const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
     console.log(
@@ -523,49 +469,68 @@ export const mintAndEquipAllItemsFromSetList = async (
   }
 };
 
-export const createItemsCollection = async () => {
+export const getItemCollectionId = (accountsZero, slotCategory) => {
+  return Collection.generateId(
+    u8aToHex(accountsZero.publicKey),
+    SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL + slotCategory
+  );
+};
+
+export const createItemsCollections = async (kp:KeyringPair,slotCatList: SlotCategory[]) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT ITEMS COLLECTION START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
 
-    const collectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
+    // First pin all item collection metadata
+    const collectionMetadataCids: string[] = await Promise.all(
+      slotCatList.map(async (slotCat) => {
+        let collectionMetadataCid = await pinSingleMetadataFromDir(
+          `/assets/SlotParts/${slotCat}`,
+          `${slotCat}.png`,
+          "RMRK2 Subtra Items Collection : " + slotCat,
+          {
+            description: "This is Substraknight items!",
+            externalUri: "https://rmrk.app",
+            properties: {},
+          }
+        );
+        console.log("collectionMetadataCid", collectionMetadataCid);
+        return collectionMetadataCid;
+      })
     );
 
-    const collectionMetadataCid = await pinSingleMetadataFromDir(
-      `/assets/substra/fixedParts`,
-      "nakedman.png",
-      "RMRK2 demo substra items collection",
-      {
-        description: "This is Substraknight items! RMRK2 demo nested NFTs",
-        externalUri: "https://rmrk.app",
-        properties: {},
-      }
-    );
-    console.log("collectionMetadataCid", collectionMetadataCid);
+    const remarks = await Promise.all(
+      collectionMetadataCids.map(async (collectionMetadataCid, i) => {
+        const collectionId = getItemCollectionId(accounts[0], slotCatList[i]);
 
-    const ItemsCollection = new Collection(
-      0,
-      0,
-      encodeAddress(accounts[0].address, 2),
-      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
-      collectionId,
-      collectionMetadataCid
+        const ItemsCollection = new Collection(
+          0,
+          0,
+          encodeAddress(accounts[0].address, 2),
+          SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL + slotCatList[i],
+          collectionId,
+          collectionMetadataCid
+        );
+        return ItemsCollection.create();
+      })
     );
 
-    const { block } = await sendAndFinalize(
-      api.tx.system.remark(ItemsCollection.create()),
+    const restxs = remarks.map((remark) => api.tx.system.remark(remark));
+    const resbatch = api.tx.utility.batch(restxs);
+    const { block: addItemCollectionsBlock } = await sendAndFinalize(
+      resbatch,
       kp
     );
-    console.log("Substraknight items collection created at block: ", block);
 
-    return { block, collectionMetadataCid };
+    console.log(
+      "Substraknight items collection created at block: ",
+      addItemCollectionsBlock
+    );
+
+    return { addItemCollectionsBlock, collectionMetadataCids };
   } catch (error: any) {
     console.error(error);
   }

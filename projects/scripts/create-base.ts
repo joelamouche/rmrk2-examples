@@ -2,28 +2,20 @@ import { IBasePart } from "rmrk-tools/dist/classes/base";
 import {
   ASSETS_CID,
   SUBSTRAKNIGHT_BASE_SYMBOL,
-  SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
-  // slotList,
-  //allFixedPartsList,
   WS_URL,
   FixedPart,
-  FixedTrait,
-  FixedSet,
   SlotConfig,
 } from "./constants";
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
 import { Collection, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
+import { getItemCollectionId } from "./mint-substra-items";
 
 export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
   let res = [];
   list.forEach((fixedPart) => {
     fixedPart.traits.forEach((trait) => {
-      // console.log("fixedPart.traitClass");
-      // console.log(fixedPart.traitClass);
-      // console.log("trait");
-      // console.log(trait);
       res.push({
         type: "fixed",
         id: trait,
@@ -33,14 +25,6 @@ export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
     });
   });
   return res;
-  // return list.map((fixedPart, i) => {
-  //   return {
-  //     type: "fixed",
-  //     id: fixedPart.trait,
-  //     src: `ipfs://ipfs/${ASSETS_CID}/FixedParts/${fixedPart.traitClass}/${fixedPart.trait}.svg`,
-  //     z: fixedPart.zIndex,
-  //   };
-  // });
 };
 
 const getSlotKanariaParts = (
@@ -70,15 +54,7 @@ export const createBase = async (
     const api = await getApi(ws);
     const kp = getKeyringFromUri(phrase);
 
-    const collectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
-      SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL
-    );
-    console.log("collectionId", collectionId);
     const _allFixedParts = allFixedParts(allFixedPartJSON);
-
-    console.log("getSlotKanariaParts(slotList,[collectionId])");
-    console.log(getSlotKanariaParts(_slotList, [collectionId]));
 
     const baseParts = [
       //   {
@@ -89,7 +65,7 @@ export const createBase = async (
       // } as IBasePart,
       // TODO fix base index
       ..._allFixedParts,
-      ...getSlotKanariaParts(_slotList, [collectionId]),
+      ...getSlotKanariaParts(_slotList, _slotList.map((slot)=>{return getItemCollectionId(accounts[0],slot.slotCategory)})),
     ];
 
     const baseEntity = new Base(
