@@ -107,7 +107,7 @@ export const mintListBaseTx = async (
 //deprecated
 export const runMintSequence = async (kp:KeyringPair) => {
   try {
-    const baseBlock = await createBase(allFixedPartsList, []);
+    const baseBlock = await createBase(kp,allFixedPartsList, []);
     console.log("BASE CREATED");
     let mintList = [];
     allFixedPartsList[0].traits.forEach(async (trait0, i) => {
@@ -151,7 +151,7 @@ export const runMintSequenceBatch = async (kp:KeyringPair) => {
   try {
     const ws = WS_URL;
     const api = await getApi(ws);
-    const baseBlock = await createBase(allFixedPartsList, []);
+    const baseBlock = await createBase(kp,allFixedPartsList, []);
     console.log("BASE CREATED");
     let mintList: FixedSet[] = [];
     // Create collection
@@ -199,7 +199,7 @@ export const runMintSequenceBatch = async (kp:KeyringPair) => {
 // Get list if fixed parts
 export const getSetList = async (): Promise<FixedSet[]> => {
   return new Promise((res) => {
-    fs.readFile("drawnSets/drawnset-2-5-4-2022-1:30:46 PM.json", (err, data) => {
+    fs.readFile("drawnSets/drawnset-4-5-4-2022-4:44:12 PM.json", (err, data) => {
       if (err) throw err;
       let setList = JSON.parse(data.toString());
       res(setList);
@@ -226,7 +226,7 @@ export const runMintSequenceBatchWithProba = async (
       }
     );
     console.log("allBaseParts", allBaseParts);
-    const baseBlock = await createBase(allBaseParts, []);
+    const baseBlock = await createBase(kp,allBaseParts, []);
     console.log("BASE CREATED");
     // Create collection
     const { collectionId } = await createSubstraknightCollection(kp);

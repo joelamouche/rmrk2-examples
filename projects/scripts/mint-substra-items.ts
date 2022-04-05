@@ -492,7 +492,7 @@ export const createItemsCollections = async (kp:KeyringPair,slotCatList: SlotCat
           `${slotCat}.png`,
           "RMRK2 Subtra Items Collection : " + slotCat,
           {
-            description: "This is Substraknight items!",
+            description: "This is Substraknight item collection for "+slotCat,
             externalUri: "https://rmrk.app",
             properties: {},
           }
@@ -506,7 +506,7 @@ export const createItemsCollections = async (kp:KeyringPair,slotCatList: SlotCat
       collectionMetadataCids.map(async (collectionMetadataCid, i) => {
         const collectionId = getItemCollectionId(accounts[0], slotCatList[i]);
 
-        const ItemsCollection = new Collection(
+        const itemsCollection = new Collection(
           0,
           0,
           encodeAddress(accounts[0].address, 2),
@@ -514,7 +514,7 @@ export const createItemsCollections = async (kp:KeyringPair,slotCatList: SlotCat
           collectionId,
           collectionMetadataCid
         );
-        return ItemsCollection.create();
+        return itemsCollection.create();
       })
     );
 

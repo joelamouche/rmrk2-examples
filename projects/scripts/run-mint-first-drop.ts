@@ -13,8 +13,9 @@ import {
   mintAndEquipAllItemsFromSetList,
   mintItemsFromSet,
 } from "./mint-substra-items";
-import { getApi, getKeyringFromMnemonic } from "./utils";
+import { getApi, getKeyringFromMnemonic, getKeyringFromUri } from "./utils";
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
+import { cryptoWaitReady } from "@polkadot/util-crypto";
 
 const weaponsFileNames = ["Fourche", "Gourdin", "Poele"];
 const weaponsNames = ["Pitchfork", "Club", "Frying Pan"];
@@ -63,7 +64,7 @@ export const drawSlotSet = (): SlotSet => {
       fileName: "Feet1",
       zIndex: 14,
       traitDescription: "Prisoner attire\nPOWER: 20",
-    },,
+    },
     {
       slotCategory: "Head",
       traitName: "Prisoner Collar",
@@ -74,7 +75,7 @@ export const drawSlotSet = (): SlotSet => {
     {
       slotCategory: "Arms",
       traitName: "Prisoner Shackles",
-      fileName: "Feet1",
+      fileName: "Arms1",
       zIndex: 17,
       traitDescription: "Prisoner attire\nPOWER: -1000",
     },
@@ -89,14 +90,16 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
     const api = await getApi(ws);
 
     // Fetch Key Pair
-    const kp=getKeyringFromMnemonic(process.env.MNEMONIC)
-    if (kp.address===substraKnightsAddress){
-      console.log("RIGHT ADDRESS : "+kp.address)
-    } else {
-      console.log("WRONG ADDRESS : "+kp.address)
-      console.log("SHOULD BE : "+substraKnightsAddress)
-      return;
-    }
+    await cryptoWaitReady();
+    const kp=getKeyringFromUri(process.env.PRIVAKE_KEY)
+    // const kp=getKeyringFromMnemonic(process.env.MNEMONIC)
+    // if (kp.address===substraKnightsAddress){
+    //   console.log("RIGHT ADDRESS : "+kp.address)
+    // } else {
+    //   console.log("WRONG ADDRESS : "+kp.address)
+    //   console.log("SHOULD BE : "+substraKnightsAddress)
+    //   return;
+    // }
 
     // Create Base
     const allBaseParts = _fixedSetProba.map(
@@ -110,7 +113,7 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
       }
     );
     console.log("allBaseParts", allBaseParts);
-    const baseBlock = await createBase(allBaseParts, slotConfigSet);
+    const baseBlock = await createBase(kp,allBaseParts, slotConfigSet);
     console.log("BASE CREATED");
 
     // Create Subtra collection
@@ -152,7 +155,11 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
       resaddSendBlock,
     });
     fs.writeFileSync(
-      `drawnSets/deployement-${new Date(Date.now()).toLocaleTimeString()}.json`,
+      `drawnSets/deployement-${fixedPartList.length}-${new Date(Date.now()).getDate()}-${
+        new Date(Date.now()).getMonth() + 1
+      }-${new Date(Date.now()).getUTCFullYear()}-${new Date(
+        Date.now()
+      ).toLocaleTimeString()}.json`,
       data
     );
 

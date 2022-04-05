@@ -4,10 +4,10 @@ export const WS_URL = isProd
   ? "wss://kusama-rpc.polkadot.io"
   : "ws://127.0.0.1:9944";
 
-export const ASSETS_CID = "QmNa4aeCABtfCBWPVBHvWLbPAv2eRcqpiuPtSXxw8PPq7B";
+export const ASSETS_CID = "QmWBrAPXQvtT5GztdX52PXB5t9RJ71f1nwRMN5BE6Qi89o";
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
-export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "CHNK";
+export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "SKC";
 export const SUBSTRAKNIGHT_BASE_SYMBOL = "SKBS";
 
 export const CHUNK_SIZE = 70;
@@ -97,11 +97,11 @@ export const slotConfigSet: SlotConfigSet = [
   {
     slotCategory: "Arms",
     zIndex: 17,
-  },,
+  },
   {
     slotCategory: "Shield",
     zIndex: 18,
-  },,
+  },
   {
     slotCategory: "Pet",
     zIndex: 19,

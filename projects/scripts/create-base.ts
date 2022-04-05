@@ -11,6 +11,7 @@ import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
 import { Collection, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 import { getItemCollectionId } from "./mint-substra-items";
+import { KeyringPair } from "@polkadot/keyring/types";
 
 export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
   let res = [];
@@ -42,17 +43,15 @@ const getSlotKanariaParts = (
 };
 
 export const createBase = async (
+  kp:KeyringPair,
   allFixedPartJSON: FixedPart[],
   _slotList: SlotConfig[]
 ) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT BASE START -------");
     await cryptoWaitReady();
-    const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
-    const kp = getKeyringFromUri(phrase);
 
     const _allFixedParts = allFixedParts(allFixedPartJSON);
 
@@ -65,7 +64,7 @@ export const createBase = async (
       // } as IBasePart,
       // TODO fix base index
       ..._allFixedParts,
-      ...getSlotKanariaParts(_slotList, _slotList.map((slot)=>{return getItemCollectionId(accounts[0],slot.slotCategory)})),
+      ...getSlotKanariaParts(_slotList, _slotList.map((slot)=>{return getItemCollectionId(kp,slot.slotCategory)})),
     ];
 
     const baseEntity = new Base(

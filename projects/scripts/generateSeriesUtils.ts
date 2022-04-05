@@ -161,4 +161,4 @@ export const drawSets = (
   return filteredRes;
 };
 
-drawSets(fixedSetProba, 2);
+drawSets(fixedSetProba, 4);
