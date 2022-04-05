@@ -246,13 +246,13 @@ export const getMintItemTx = async (
         const sn = index + 1;
 
         // pin metadat on ipfs
-        console.log("pinning metadat on ipfs...")
+        console.log("pinning metadat on ipfs...");
         const metadataCid = await pinSingleMetadataFromDir(
           `/assets/SlotParts/${item.slotCategory}`,
           item.thumb,
           item.fileName,
           {
-            description: item.description+soldierNumber.toString(),
+            description: item.description + soldierNumber.toString(),
             externalUri: "https://rmrk.app",
           }
         );
@@ -264,7 +264,7 @@ export const getMintItemTx = async (
           transferable: 1,
           metadata: metadataCid,
           collection: itemCollectionId,
-          symbol: item.symbol+soldierNumber.toString(),
+          symbol: item.symbol + soldierNumber.toString(),
         });
 
         return nft.mint();
@@ -274,7 +274,6 @@ export const getMintItemTx = async (
     const remarks = await Promise.all(promises);
 
     return remarks.map((remark) => api.tx.system.remark(remark));
-
   } catch (error: any) {
     console.error(error);
   }
@@ -300,7 +299,6 @@ export const getAddItemsTx = async (
     const api = await getApi(ws);
     const kp = getKeyringFromUri(phrase);
 
-
     const baseEntity = new Base(
       baseBlock,
       SUBSTRAKNIGHT_BASE_SYMBOL,
@@ -318,13 +316,13 @@ export const getAddItemsTx = async (
     substraItems(slotSet).forEach((item, index) => {
       const sn = index + 1;
       const itemNft = new NFT({
-        block:itemBlock,
+        block: itemBlock,
         sn: soldierNumber.toString().padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),
         transferable: 1,
         metadata: `ipfs://ipfs/trololo`,
         collection: itemCollectionId,
-        symbol: item.symbol+soldierNumber.toString(),
+        symbol: item.symbol + soldierNumber.toString(),
       });
 
       item.resources.forEach((resource) => {
@@ -364,9 +362,7 @@ export const getAddItemsTx = async (
       );
     });
 
-    return resaddSendRemarks.map((remark) =>
-      api.tx.system.remark(remark)
-    );
+    return resaddSendRemarks.map((remark) => api.tx.system.remark(remark));
     // const resbatch = api.tx.utility.batch(restxs);
     // const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
     // console.log(
@@ -416,7 +412,7 @@ export const mintItemsFromSet = async (
     await createItemsCollection();
 
     // Get mint item tx
-    const txs=await getMintItemTx(soldierNumber,slotSet)
+    const txs = await getMintItemTx(soldierNumber, slotSet);
     const batch = api.tx.utility.batch(txs);
     const { block: mintItemBlock } = await sendAndFinalize(batch, kp);
     console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", mintItemBlock);
@@ -426,7 +422,15 @@ export const mintItemsFromSet = async (
     );
 
     // Get add base and equip tx
-    const restxs=await getAddItemsTx(substraBlock,baseBlock,mintItemBlock,itemCollectionId,substraCollectionId,soldierNumber,slotSet)
+    const restxs = await getAddItemsTx(
+      substraBlock,
+      baseBlock,
+      mintItemBlock,
+      itemCollectionId,
+      substraCollectionId,
+      soldierNumber,
+      slotSet
+    );
     const resbatch = api.tx.utility.batch(restxs);
     const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
     console.log(
@@ -478,7 +482,7 @@ export const mintAndEquipAllItemsFromSetList = async (
     // Get mint item tx
     let totalTxListMint = [];
     for (let i = 0; i < numberOfSoldiers; i++) {
-      const txsMintItem = await getMintItemTx(i,slotSetList[i]);
+      const txsMintItem = await getMintItemTx(i, slotSetList[i]);
       console.log("got tx for substra ", i);
       totalTxListMint = [...totalTxListMint, ...txsMintItem];
     }
@@ -494,7 +498,15 @@ export const mintAndEquipAllItemsFromSetList = async (
     // Get add base and equip tx
     let totalTxAddBase = [];
     for (let j = 0; j < numberOfSoldiers; j++) {
-      const txsAddBaseItem =await getAddItemsTx(substraBlock,baseBlock,mintItemBlock,itemCollectionId,substraCollectionId,j,slotSetList[j])
+      const txsAddBaseItem = await getAddItemsTx(
+        substraBlock,
+        baseBlock,
+        mintItemBlock,
+        itemCollectionId,
+        substraCollectionId,
+        j,
+        slotSetList[j]
+      );
       console.log("got tx for substra ", j);
       totalTxAddBase = [...totalTxAddBase, ...txsAddBaseItem];
     }
@@ -505,7 +517,7 @@ export const mintAndEquipAllItemsFromSetList = async (
       "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
       resaddSendBlock
     );
-    return true;
+    return { mintItemBlock, resaddSendBlock };
   } catch (error: any) {
     console.error(error);
   }
@@ -553,7 +565,7 @@ export const createItemsCollection = async () => {
     );
     console.log("Substraknight items collection created at block: ", block);
 
-    return {block,collectionMetadataCid};
+    return { block, collectionMetadataCid };
   } catch (error: any) {
     console.error(error);
   }

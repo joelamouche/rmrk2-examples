@@ -1,3 +1,4 @@
+import fs from "fs";
 import {
   WS_URL,
   fixedSetProba,
@@ -8,7 +9,10 @@ import {
 } from "./constants";
 import { createBase } from "./create-base";
 import { createSubstraknightCollection } from "./mint-substra";
-import { mintAndEquipAllItemsFromSetList, mintItemsFromSet } from "./mint-substra-items";
+import {
+  mintAndEquipAllItemsFromSetList,
+  mintItemsFromSet,
+} from "./mint-substra-items";
 import { getApi } from "./utils";
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
 
@@ -25,7 +29,7 @@ export const drawSlotSet = (): SlotSet => {
     { slotCategory: "Underhelm", traitName: "Underhelm1", zIndex: 11 },
     { slotCategory: "Cloth", traitName: "Cloth1", zIndex: 12 },
     { slotCategory: "Feet", traitName: "Feet1", zIndex: 13 },
-    { slotCategory: "Arms", traitName: "Arms1", zIndex: 14 }
+    { slotCategory: "Arms", traitName: "Arms1", zIndex: 14 },
   ];
 };
 
@@ -46,13 +50,14 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
     console.log("allBaseParts", allBaseParts);
     const baseBlock = await createBase(allBaseParts, slotConfigSet);
     console.log("BASE CREATED");
+
     // Create collection
     const { collectionId } = await createSubstraknightCollection();
 
-    const fixedPartList=await getSetList()
+    const fixedPartList = await getSetList();
 
     // mint all bases
-    const { mintSubstraBlock } = await mintListBaseTx(
+    const { mintSubstraBlock, addBaseBlock } = await mintListBaseTx(
       baseBlock,
       fixedPartList,
       api,
@@ -60,11 +65,31 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
     );
 
     // Add items
-    const drawnSlotList=fixedPartList.map((_)=>drawSlotSet()) 
-    console.log("drawnSlotList",drawnSlotList)
-    await mintAndEquipAllItemsFromSetList(mintSubstraBlock, baseBlock, fixedPartList.length, drawnSlotList);
-    //   await mintItemsFromSet(mintSubstraBlock,baseBlock,1,drawSlotSet())
-    //   await mintItemsFromSet(mintSubstraBlock,baseBlock,2,drawSlotSet())
+    const drawnSlotList = fixedPartList.map((_) => drawSlotSet());
+    console.log("drawnSlotList", drawnSlotList);
+
+    const { mintItemBlock, resaddSendBlock } =
+      await mintAndEquipAllItemsFromSetList(
+        mintSubstraBlock,
+        baseBlock,
+        fixedPartList.length,
+        drawnSlotList
+      );
+
+    // Save deployement
+    let data = JSON.stringify({
+      time: Date.now().toLocaleString(),
+      baseBlock,
+      collectionId,
+      mintSubstraBlock,
+      addBaseBlock,
+      mintItemBlock,
+      resaddSendBlock,
+    });
+    fs.writeFileSync(
+      `drawnSets/deployement${new Date(Date.now()).toLocaleTimeString()}.json`,
+      data
+    );
 
     process.exit(0);
   } catch (error: any) {

@@ -99,7 +99,7 @@ export const getTxAddBaseResource = async (
           id: baseResId,
           parts: [
             ...fixedPartSet.map((fixedPart) => fixedPart.trait),
-            ...slotConfigSet.map((slot)=>slot.slotCategory),
+            ...slotConfigSet.map((slot) => slot.slotCategory),
           ],
           thumb: `ipfs://ipfs/${ASSETS_CID}/substra/fixedParts/nakedman.png`,
         })

@@ -41,6 +41,7 @@ export const drawSet = (fixedSetProba: FixedSetProba): FixedSet => {
 };
 
 export const logStats = (drawnSetList: FixedSet[]) => {
+  console.log("Stats for ", drawnSetList.length, "sets");
   let obj = {};
   drawnSetList.forEach((set) => {
     set.forEach((trait) => {
@@ -54,24 +55,6 @@ export const logStats = (drawnSetList: FixedSet[]) => {
     });
   });
   console.log("obj", obj);
-};
-
-export const drawSets = (
-  fixedSetProba: FixedSetProba,
-  numberOfSets: number
-): FixedSet[] => {
-  const res = [];
-  for (let i = 0; i < numberOfSets; i++) {
-    let set = drawSet(fixedSetProba);
-    console.log("set drawn ", set);
-    res.push(set);
-  }
-  const filteredRes = res.map((set) => syncHairColor(set));
-  logStats(filteredRes);
-
-  let data = JSON.stringify(filteredRes);
-  fs.writeFileSync("drawnSets/drawnset1.json", data);
-  return filteredRes;
 };
 
 export const syncHairColor = (fixedSet: FixedSet): FixedSet => {
@@ -118,4 +101,64 @@ export const syncHairColor = (fixedSet: FixedSet): FixedSet => {
   return newSet;
 };
 
-drawSets(fixedSetProba, 2);
+export const removeDuplicates = (fixedSetList: FixedSet[]): FixedSet[] => {
+  let res = [];
+  fixedSetList.forEach((setRef, i) => {
+    let hasOneDup = false;
+    fixedSetList.forEach((setLook, j) => {
+      if (j > i && !hasOneDup) {
+        const isDup = setRef
+          .map((part, i) => {
+            return part.trait === setLook[i].trait;
+          })
+          .reduce((prev, cur) => {
+            return prev && cur;
+          }, true);
+        if (isDup) {
+          console.log("FOUND ONE DUPLICATE ", i, j);
+          console.log(setRef);
+          hasOneDup = true;
+        }
+      }
+    });
+    if (!hasOneDup) {
+      res.push(setRef);
+    }
+  });
+  return res;
+};
+
+export const drawSets = (
+  fixedSetProba: FixedSetProba,
+  numberOfSets: number
+): FixedSet[] => {
+  // draw random sets
+  const res = [];
+  for (let i = 0; i < numberOfSets; i++) {
+    let set = drawSet(fixedSetProba);
+    console.log("set drawn ", set);
+    res.push(set);
+  }
+  // fix hair color
+  const fixedRes = res.map((set) => syncHairColor(set));
+
+  // fix hair color
+  const filteredRes = removeDuplicates(fixedRes);
+
+  // log set list stats
+  logStats(filteredRes);
+
+  // Save drawn sets
+  let data = JSON.stringify(filteredRes);
+  fs.writeFileSync(
+    `drawnSets/drawnset-${numberOfSets}-${new Date(
+      Date.now()
+    ).getDate()}-${new Date(Date.now()).getMonth()+1}-${new Date(
+      Date.now()
+    ).getUTCFullYear()}-${new Date(Date.now()).toLocaleTimeString()}.json`,
+    data
+  );
+  return filteredRes;
+};
+
+drawSets(fixedSetProba, 100);
