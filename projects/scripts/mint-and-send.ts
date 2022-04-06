@@ -21,11 +21,11 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 
 const slotSet: SlotSet = [
   {
-    slotCategory: "Pet",
-    fileName: "Fourche",
-    traitName: "Test Pet",
-    zIndex: 1,
-    traitDescription: "Test pet will be burned",
+    slotCategory: "Backgrounds",
+    fileName: "Prison",
+    traitName: "Prison Cell",
+    zIndex: 0,
+    traitDescription:"Tax fraud is no joke! In jail. It's cold and humid and there are rats about...",
   },
 ];
 
@@ -34,7 +34,8 @@ export const runMain = async (
   baseBlock,
   _slotSet: SlotSet,
   soldierNumber: number,
-  customCID: string
+  customCID: string,
+  needCreateItemCollection:boolean
 ) => {
   const ws = WS_URL;
   const api = await getApi(ws);
@@ -56,7 +57,7 @@ export const runMain = async (
       _slotSet.length,
       [_slotSet],
       soldierNumber,
-      true,
+      needCreateItemCollection,
       customCID
     );
   // Save deployement
@@ -82,9 +83,10 @@ export const runMain = async (
   // runFirstDropSeq(fixedSetProba);
 };
 runMain(
-  12134818,
-  12126274,
+    12135730,
+    12126274,
   slotSet,
-  15,
-  "QmU5fiuLSNaxpLq8Q9SV6cvEZSuHJp6QHwm8jNdrUBZwYY"
+  32, //write one under the targeted index
+  "QmVrRsTBcSh8mswQYpKMfaGwFKvNrpLiZVNmWQY9CXLozD",
+    false
 );

@@ -248,7 +248,7 @@ export const runMain = async () => {
     //await mintSeries(kp, 12126274, fixedPartList.slice(16,17), api, "7472058104f9f93924-SKC",16,false);
 
     const step = 4;
-    for (let j = 15; j < 25; j++) {
+    for (let j = 20; j < 25; j++) {
       console.log(
         "++++++++++++______________++++++++++++_____________+++++++++____________SEQ___ " +
           j +

@@ -49,7 +49,6 @@ export const pinFileStreamToIpfs = async (
 ) => {
   const options = { ...defaultOptions, pinataMetadata: { name } };
   const result = await pinata.pinFileToIPFS(file, options);
-  console.log("result", result);
   return result.IpfsHash;
 };
 
@@ -63,7 +62,6 @@ export const uploadAndPinIpfsMetadata = async (
   try {
     const metadata = { ...metadataFields };
     const metadataHashResult = await pinata.pinJSONToIPFS(metadata, options);
-    console.log("metadataHashResult", metadataHashResult);
     return `ipfs://ipfs/${metadataHashResult.IpfsHash}`;
   } catch (error) {
     return "";
