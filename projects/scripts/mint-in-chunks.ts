@@ -267,15 +267,14 @@ export const mintInChunksDemo = async () => {
     const chunksMintDemoMint: Record<string, BatchMintingObject> = mintObject;
     const chunksMintDemoMintArray = Object.values(chunksMintDemoMint);
 
-    const accounts = getKeys();
     const kp = getKeyringFromUri(process.env.PRIVAKE_KEY as string);
 
     for (const chunksMintDemoMintItem of chunksMintDemoMintArray) {
       const collectionId = Collection.generateId(
-        u8aToHex(accounts[0].publicKey),
+        u8aToHex(kp.publicKey),
         chunksMintDemoMintItem.collection.symbol
       );
-      const owner = encodeAddress(accounts[0].address, 2);
+      const owner = encodeAddress(kp.address, 2);
       const recipients = Object.keys(chunksMintDemoMintItem.recipients)
         .map((recipient) => {
           return Array(

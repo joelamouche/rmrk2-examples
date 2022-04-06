@@ -1,3 +1,4 @@
+import axios from "axios";
 import { sleep } from "./utils";
 
 require("dotenv").config();
@@ -25,12 +26,30 @@ export type StreamPinata = Readable & {
 };
 const limit = pLimit(1);
 
+export const testAuthentication = (cid: string) => {
+  const url = `https://musicgateway.mypinata.cloud/ipfs/${cid}`;
+  return axios
+    .get(url, {
+      headers: {
+        pinata_api_key: process.env.PINATA_KEY,
+        pinata_secret_api_key: process.env.PINATA_SECRET,
+      },
+    })
+    .then(function (response) {
+      //handle your response here
+    })
+    .catch(function (error) {
+      //handle error here
+    });
+};
+
 export const pinFileStreamToIpfs = async (
   file: StreamPinata,
   name?: string
 ) => {
   const options = { ...defaultOptions, pinataMetadata: { name } };
   const result = await pinata.pinFileToIPFS(file, options);
+  console.log("result", result);
   return result.IpfsHash;
 };
 
@@ -44,6 +63,7 @@ export const uploadAndPinIpfsMetadata = async (
   try {
     const metadata = { ...metadataFields };
     const metadataHashResult = await pinata.pinJSONToIPFS(metadata, options);
+    console.log("metadataHashResult", metadataHashResult);
     return `ipfs://ipfs/${metadataHashResult.IpfsHash}`;
   } catch (error) {
     return "";
@@ -75,7 +95,7 @@ export const pinSingleMetadataFromDir = async (
       mediaUri: `ipfs://ipfs/${imageCid}`,
     };
     const metadataCid = await uploadAndPinIpfsMetadata(metadata);
-    await sleep(500);
+    await sleep(1000);
     console.log(`NFT ${name} METADATA: `, metadataCid);
     return metadataCid;
   } catch (error) {

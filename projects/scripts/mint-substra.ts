@@ -1,5 +1,5 @@
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
-import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
+import { getApi, sendAndFinalize } from "./utils";
 import {
   ASSETS_CID,
   SUBSTRAKNIGHT_BASE_SYMBOL,
@@ -16,13 +16,13 @@ import { nanoid } from "nanoid";
 import { KeyringPair } from "@polkadot/keyring/types";
 
 export const addBaseResource = async (
-  kp:KeyringPair,
+  kp: KeyringPair,
   substraBlock: number,
   baseBlock: number,
   fixedPartSet: FixedTrait[],
   _soldierNumber: number
 ) => {
-  const soldierNumber=_soldierNumber+1
+  const soldierNumber = _soldierNumber + 1;
   try {
     console.log("ADD BASE RESOURCE TO SUBSTRAKNIGHT NFT START -------");
     const ws = WS_URL;
@@ -50,7 +50,7 @@ export const addBaseResource = async (
 };
 
 export const getTxAddBaseResource = async (
-  kp:KeyringPair,
+  kp: KeyringPair,
   substraBlock: number,
   baseBlock: number,
   fixedPartSet: FixedTrait[],
@@ -58,9 +58,11 @@ export const getTxAddBaseResource = async (
   substraCollectionId: string,
   soldierIndex: number
 ) => {
-  const soldierNumber=soldierIndex+1
+  const soldierNumber = soldierIndex + 1;
   try {
-    console.log("ADD BASE RESOURCE TO SUBSTRAKNIGHT NFT START ------- "+soldierIndex);
+    console.log(
+      "ADD BASE RESOURCE TO SUBSTRAKNIGHT NFT START ------- " + soldierIndex
+    );
     console.log(fixedPartSet);
 
     const baseEntity = new Base(
@@ -106,22 +108,22 @@ export const getTxAddBaseResource = async (
   }
 };
 
-export const createSubstraknightCollection = async (kp:KeyringPair) => {
+export const createSubstraknightCollection = async (kp: KeyringPair) => {
   try {
     console.log("CREATE SUBSTRAKNIGHT COLLECTION START -------");
     await cryptoWaitReady();
-    const accounts = getKeys();
     const ws = WS_URL;
     const api = await getApi(ws);
 
     const collectionId = Collection.generateId(
-      u8aToHex(accounts[0].publicKey),
+      u8aToHex(kp.publicKey),
       SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
+    console.log("pinning substra collection metadat on ipfs...");
     const collectionMetadataCid = await pinSingleMetadataFromDir(
       "/assets",
-      "SubstraCollectionLogo.png", 
+      "SubstraCollectionLogo.png",
       "SubstraKnights 2.0",
       {
         description: substraCollectionDescription,
@@ -133,7 +135,7 @@ export const createSubstraknightCollection = async (kp:KeyringPair) => {
     const substraCollection = new Collection(
       0,
       500,
-      encodeAddress(accounts[0].address, 2),
+      encodeAddress(kp.address, 2),
       SUBSTRAKNIGHT_COLLECTION_SYMBOL,
       collectionId,
       collectionMetadataCid
@@ -152,8 +154,11 @@ export const createSubstraknightCollection = async (kp:KeyringPair) => {
   }
 };
 
-export const mintSubstraknight = async (kp:KeyringPair,_soliderNumber: number) => {
-  const soldierNumber=_soliderNumber+1
+export const mintSubstraknight = async (
+  kp: KeyringPair,
+  _soliderNumber: number
+) => {
+  const soldierNumber = _soliderNumber + 1;
   try {
     const ws = WS_URL;
     const api = await getApi(ws);
@@ -161,7 +166,7 @@ export const mintSubstraknight = async (kp:KeyringPair,_soliderNumber: number) =
     // Create collection
     await createSubstraknightCollection(kp);
     // get mint tx
-    const txs = await getTxMintSubstraknight(kp,api, soldierNumber);
+    const txs = await getTxMintSubstraknight(kp, api, soldierNumber);
     const tx = api.tx.utility.batchAll(txs);
     // send
     const { block } = await sendAndFinalize(tx, kp);
@@ -172,8 +177,12 @@ export const mintSubstraknight = async (kp:KeyringPair,_soliderNumber: number) =
   }
 };
 
-export const getTxMintSubstraknight = async (kp:KeyringPair,api, soldierIndex: number) => {
-  const soldierNumber=soldierIndex+1
+export const getTxMintSubstraknight = async (
+  kp: KeyringPair,
+  api,
+  soldierIndex: number
+) => {
+  const soldierNumber = soldierIndex + 1;
   try {
     console.log("CREATE SUBSTRAKNIGHT NFT START -------");
     await cryptoWaitReady();
@@ -186,15 +195,15 @@ export const getTxMintSubstraknight = async (kp:KeyringPair,api, soldierIndex: n
 
     // Mint base for each soldier
     // Create Metadata
+    console.log("pinning soldier metadata on ipfs...");
     const metadataCid = await pinSingleMetadataFromDir(
       "/assets",
-      "SoldierPreview.png", 
+      "SoldierPreview.png",
       `Kusamarauder #${soldierNumber}`,
       {
         description: `A mighty Kusamarauder. Member of the warrior cast.\nPOWER: 1000`,
         externalUri: "https://rmrk.app",
-        properties: {
-        },
+        properties: {},
       }
     );
 
@@ -210,7 +219,6 @@ export const getTxMintSubstraknight = async (kp:KeyringPair,api, soldierIndex: n
     });
 
     return [api.tx.system.remark(nft.mint())];
-
   } catch (error: any) {
     console.error(error);
   }

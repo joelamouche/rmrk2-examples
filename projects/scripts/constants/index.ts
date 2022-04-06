@@ -4,11 +4,14 @@ export const WS_URL = isProd
   ? "wss://kusama-rpc.polkadot.io"
   : "ws://127.0.0.1:9944";
 
-export const ASSETS_CID = "QmVSHmwubHypdWSDCyRG33fypz28dddqJxyyJ4KjZbMrZZ";
+export const ASSETS_CID = "QmVrRsTBcSh8mswQYpKMfaGwFKvNrpLiZVNmWQY9CXLozD";
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
 export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "SKC";
 export const SUBSTRAKNIGHT_BASE_SYMBOL = "SKBS";
+
+export const substraKnightsAddress =
+  "FCzwhSLYhFdqdSXXdUM2nGGpgDFit24tX8ajgfXWj49VEwo";
 
 export const CHUNK_SIZE = 70;
 
@@ -79,11 +82,11 @@ export const slotConfigSet: SlotConfigSet = [
     zIndex: 12,
   },
   {
-    slotCategory: "Cloths",
+    slotCategory: "Feet",
     zIndex: 13,
   },
   {
-    slotCategory: "Feet",
+    slotCategory: "Cloths",
     zIndex: 14,
   },
   {
@@ -288,7 +291,8 @@ export const fixedSetProba: FixedSetProba = [
 //   },
 // ];
 
-export const substraCollectionDescription="Kusamarauders is the name given to members of the warrior cast, the one that achieved dominance and started imposing the God of War as the only true god.\nEver since the Fall of the Empire, Tribal Houses have been fighting for hegemony.\nIn the shattered empire, sacred tournaments are organised in order to calm Tribal quarrels and eventually find the rightful heir to the Throne.\nTo achieve their goals, Kusamarauders have mastered the art of war and rely on their gear to overcome their ennemies. Armours are their skin and weapons their limbs.\nKusamarauders can equip many different pieces of gear: There are nine (9) armor & weapon slots for each kusamarauder."
+export const substraCollectionDescription =
+  "Kusamarauders is the name given to members of the warrior cast, the one that achieved dominance and started imposing the God of War as the only true god.\nEver since the Fall of the Empire, Tribal Houses have been fighting for hegemony.\nIn the shattered empire, sacred tournaments are organised in order to calm Tribal quarrels and eventually find the rightful heir to the Throne.\nTo achieve their goals, Kusamarauders have mastered the art of war and rely on their gear to overcome their ennemies. Armours are their skin and weapons their limbs.\nRead more : https://app.subsocial.network/6384/substra-knights-2-0-collection-here-come-the-kusamarauders-32374";
 // export const slotList = [];
 // [
 //   "weapon",

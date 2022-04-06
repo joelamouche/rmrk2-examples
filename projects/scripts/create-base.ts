@@ -7,9 +7,8 @@ import {
   SlotConfig,
 } from "./constants";
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
-import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
-import { Collection, Base } from "rmrk-tools";
-import { u8aToHex } from "@polkadot/util";
+import { getApi, sendAndFinalize } from "./utils";
+import { Base } from "rmrk-tools";
 import { getItemCollectionId } from "./mint-substra-items";
 import { KeyringPair } from "@polkadot/keyring/types";
 
@@ -43,7 +42,7 @@ const getSlotKanariaParts = (
 };
 
 export const createBase = async (
-  kp:KeyringPair,
+  kp: KeyringPair,
   allFixedPartJSON: FixedPart[],
   _slotList: SlotConfig[]
 ) => {
@@ -56,15 +55,13 @@ export const createBase = async (
     const _allFixedParts = allFixedParts(allFixedPartJSON);
 
     const baseParts = [
-      //   {
-      //   type: "fixed",
-      //   id: "nakedman",
-      //   src: `ipfs://ipfs/${ASSETS_CID}/ityems/nakedman.svg`,
-      //   z: 0,
-      // } as IBasePart,
-      // TODO fix base index
       ..._allFixedParts,
-      ...getSlotKanariaParts(_slotList, _slotList.map((slot)=>{return getItemCollectionId(kp,slot.slotCategory)})),
+      ...getSlotKanariaParts(
+        _slotList,
+        _slotList.map((slot) => {
+          return getItemCollectionId(kp, slot.slotCategory);
+        })
+      ),
     ];
 
     const baseEntity = new Base(

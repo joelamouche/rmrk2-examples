@@ -11,23 +11,18 @@ require("dotenv").config();
 
 export const drawSet = (fixedSetProba: FixedSetProba): FixedSet => {
   return fixedSetProba.map((fixedPartProba: FixedPartProba) => {
-    //console.log("fixedPartProba.traits.length", fixedPartProba.traits.length);
     let totalProbaTrait = fixedPartProba.traits
       .map((probaTrait: TraitProba) => {
         return probaTrait.traitProba;
       })
       .reduce((partialSum, a) => partialSum + a, 0);
-    //console.log("totalProbaTrait", totalProbaTrait);
-    let drawnScore = totalProbaTrait * Math.random(); //Math.floor(Math.random()*fixedPartProba.traits.length)
-    //console.log("drawnScore", drawnScore);
+    let drawnScore = totalProbaTrait * Math.random();
     let accScore = 0;
     let drawnIndex = 0;
     for (let i = 0; i < fixedPartProba.traits.length; i++) {
       accScore += fixedPartProba.traits[i].traitProba;
-      //console.log("accScore", accScore);
       if (accScore > drawnScore) {
         drawnIndex = i;
-        //console.log("drawnIndex", drawnIndex);
         break;
       }
     }
