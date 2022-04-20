@@ -8,6 +8,7 @@
     "fetch": "rmrk-tools-fetch",
     "consolidate": "rmrk-tools-consolidate",
     "generate": "npx ts-node generateSeriesUtils.ts && npx prettier drawnSets -w ",
+    "lint": "npx prettier -w .",
     "mint": "export NODE_OPTIONS=`--max-old-space-size=8192` && npx ts-node run-mint-first-drop.ts && npx prettier drawnSets -w ",
     "test-mnemonic": "npx ts-node check-mnemonic.ts"
   },

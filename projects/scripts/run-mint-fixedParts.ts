@@ -1,7 +1,6 @@
 import fs from "fs";
 import { sendAndFinalize, getApi } from "./utils";
 import {
-  allFixedPartsList,
   FixedTrait,
   FixedSet,
   WS_URL,
@@ -17,6 +16,7 @@ import {
 } from "./mint-substra";
 import { addBaseResource } from "./mint-substra";
 import { KeyringPair } from "@polkadot/keyring/types";
+import { allFixedPartsList } from "constants/misc";
 
 export const mintOneBase = async (
   kp: KeyringPair,

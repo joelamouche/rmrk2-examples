@@ -1,0 +1,42 @@
+[
+  [
+    { "traitClass": "Skin", "trait": "Grey", "zIndex": 3 },
+    { "traitClass": "Mouth", "trait": "Mouth5", "zIndex": 4 },
+    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 5 },
+    { "traitClass": "Hair", "trait": "Hair2white", "zIndex": 6 },
+    { "traitClass": "Beards", "trait": "Beard8white", "zIndex": 7 },
+    { "traitClass": "Eyebrows", "trait": "Eyebrows2white", "zIndex": 8 },
+    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 9 },
+    { "traitClass": "Earings", "trait": "_Earings1", "zIndex": 10 }
+  ],
+  [
+    { "traitClass": "Skin", "trait": "Blue", "zIndex": 3 },
+    { "traitClass": "Mouth", "trait": "Mouth2", "zIndex": 4 },
+    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 5 },
+    { "traitClass": "Hair", "trait": "_Hair", "zIndex": 6 },
+    { "traitClass": "Beards", "trait": "Beard1white", "zIndex": 7 },
+    { "traitClass": "Eyebrows", "trait": "Eyebrows2white", "zIndex": 8 },
+    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 9 },
+    { "traitClass": "Earings", "trait": "Earings5", "zIndex": 10 }
+  ],
+  [
+    { "traitClass": "Skin", "trait": "Grey", "zIndex": 3 },
+    { "traitClass": "Mouth", "trait": "Mouth3", "zIndex": 4 },
+    { "traitClass": "Scars", "trait": "Scar3", "zIndex": 5 },
+    { "traitClass": "Hair", "trait": "Hair3white", "zIndex": 6 },
+    { "traitClass": "Beards", "trait": "Beard2white", "zIndex": 7 },
+    { "traitClass": "Eyebrows", "trait": "Eyebrows2white", "zIndex": 8 },
+    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 9 },
+    { "traitClass": "Earings", "trait": "_Earings1", "zIndex": 10 }
+  ],
+  [
+    { "traitClass": "Skin", "trait": "Grey", "zIndex": 3 },
+    { "traitClass": "Mouth", "trait": "Mouth1", "zIndex": 4 },
+    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 5 },
+    { "traitClass": "Hair", "trait": "Hair1brown", "zIndex": 6 },
+    { "traitClass": "Beards", "trait": "Beard9brown", "zIndex": 7 },
+    { "traitClass": "Eyebrows", "trait": "Eyebrows2brown", "zIndex": 8 },
+    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 9 },
+    { "traitClass": "Earings", "trait": "Earings5", "zIndex": 10 }
+  ]
+]

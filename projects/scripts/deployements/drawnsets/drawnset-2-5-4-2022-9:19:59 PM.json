@@ -1,0 +1,22 @@
+[
+  [
+    { "traitClass": "Skin", "trait": "Purple", "zIndex": 3 },
+    { "traitClass": "Mouth", "trait": "Mouth4", "zIndex": 4 },
+    { "traitClass": "Scars", "trait": "Scar2", "zIndex": 5 },
+    { "traitClass": "Hair", "trait": "Hair1white", "zIndex": 6 },
+    { "traitClass": "Beards", "trait": "Beard1white", "zIndex": 7 },
+    { "traitClass": "Eyebrows", "trait": "Eyebrows2white", "zIndex": 8 },
+    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 9 },
+    { "traitClass": "Earings", "trait": "Earings4", "zIndex": 10 }
+  ],
+  [
+    { "traitClass": "Skin", "trait": "Grey", "zIndex": 3 },
+    { "traitClass": "Mouth", "trait": "Mouth3", "zIndex": 4 },
+    { "traitClass": "Scars", "trait": "_Scar1", "zIndex": 5 },
+    { "traitClass": "Hair", "trait": "_Hair", "zIndex": 6 },
+    { "traitClass": "Beards", "trait": "Beard1brown", "zIndex": 7 },
+    { "traitClass": "Eyebrows", "trait": "Eyebrows2brown", "zIndex": 8 },
+    { "traitClass": "Eyepatch", "trait": "_Eyepatch1", "zIndex": 9 },
+    { "traitClass": "Earings", "trait": "Earings5", "zIndex": 10 }
+  ]
+]
