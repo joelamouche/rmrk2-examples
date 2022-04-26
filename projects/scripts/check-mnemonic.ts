@@ -5,7 +5,7 @@ import { getKeyringFromMnemonic } from "./utils";
 
 const expectedAddress = "FCzwhSLYhFdqdSXXdUM2nGGpgDFit24tX8ajgfXWj49VEwo";
 
-export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
+export const checkMnemonic = async (_fixedSetProba: FixedSetProba) => {
   try {
     await cryptoWaitReady();
     const pair = getKeyringFromMnemonic(process.env.MNEMONIC);
@@ -21,4 +21,4 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
   }
 };
 
-runFirstDropSeq(fixedSetProba);
+checkMnemonic(fixedSetProba);

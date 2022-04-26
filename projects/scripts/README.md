@@ -1,5 +1,17 @@
 # RMRK2 Substraknight minting scripts
 
+All relevant settings are in the `constant` fodler.
+
+Run `npm run mint` to mind soldiers like in the first NFT drop of Kusamarauders
+
+*Make sure to provide the right SlotConfig and FixedTrait list in `collection-settings`.*
+
+Run `npm run add-items` to add items to specific soldiers.
+
+*The data in kusamrauder-item-deployement gives the right minting block for each soldier.*
+
+## RMRK2 Substraknight minting scripts (DEPRECATED)
+
 This is a collection of script to mint Substraknight composable nested NFTs using RMRK2
 
 Please Run scripts in following order:

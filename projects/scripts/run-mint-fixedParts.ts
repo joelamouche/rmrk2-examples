@@ -2,7 +2,7 @@ import fs from "fs";
 import { sendAndFinalize, getApi } from "./utils";
 import {
   FixedTrait,
-  FixedSet,
+  FixedTraitSet,
   WS_URL,
   FixedSetProba,
   FixedPartProba,
@@ -21,7 +21,7 @@ import { allFixedPartsList } from "constants/misc";
 export const mintOneBase = async (
   kp: KeyringPair,
   baseBlock: number,
-  fixedPartsSet: FixedSet,
+  fixedPartsSet: FixedTraitSet,
   soldierIndex
 ) => {
   const substrasBlock = await mintSubstraknight(kp, soldierIndex);
@@ -37,7 +37,7 @@ export const mintOneBase = async (
 export const mintOneBaseTx = async (
   kp: KeyringPair,
   baseBlock: number,
-  fixedPartsSet: FixedSet,
+  fixedPartsSet: FixedTraitSet,
   api,
   soldierIndex
 ) => {
@@ -66,7 +66,7 @@ export const mintOneBaseTx = async (
 export const mintListBaseTx = async (
   kp: KeyringPair,
   baseBlock: number,
-  fixedSetList: FixedSet[],
+  fixedSetList: FixedTraitSet[],
   api,
   collectionId,
   offset: number
@@ -78,7 +78,6 @@ export const mintListBaseTx = async (
   let totalTxListMint = [];
   for (let i = 0; i < fixedSetList.length; i++) {
     const txsMintSubtra = await getTxMintSubstraknight(kp, api, i + offset);
-    console.log("got tx for substra ", i);
     totalTxListMint = [...totalTxListMint, ...txsMintSubtra];
   }
   const tx = api.tx.utility.batchAll(totalTxListMint);
@@ -157,7 +156,7 @@ export const runMintSequenceBatch = async (kp: KeyringPair) => {
     const api = await getApi(ws);
     const baseBlock = await createBase(kp, allFixedPartsList, []);
     console.log("BASE CREATED");
-    let mintList: FixedSet[] = [];
+    let mintList: FixedTraitSet[] = [];
     // Create collection
     const { collectionId } = await createSubstraknightCollection(kp);
     // create list of sets
@@ -196,8 +195,8 @@ export const runMintSequenceBatch = async (kp: KeyringPair) => {
   }
 };
 
-// Get list if fixed parts
-export const getSetList = async (): Promise<FixedSet[]> => {
+// Get list of fixed trait set
+export const getSetList = async (): Promise<FixedTraitSet[]> => {
   return new Promise((res) => {
     fs.readFile(
       "drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json",

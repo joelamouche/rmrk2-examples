@@ -21,7 +21,7 @@ export interface FixedTrait {
   trait: Trait;
   zIndex: number;
 }
-export type FixedSet = FixedTrait[];
+export type FixedTraitSet = FixedTrait[];
 export type FixedSetProba = FixedPartProba[];
 
 // Slots

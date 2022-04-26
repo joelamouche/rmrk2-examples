@@ -6,8 +6,9 @@ import {
   FixedPartProba,
   SlotSet,
   slotConfigSet,
-  FixedSet,
+  FixedTraitSet,
   substraKnightsAddress,
+  drawSlotSet,
 } from "./constants";
 import { createBase } from "./create-base";
 import { createSubstraknightCollection } from "./mint-substra";
@@ -21,76 +22,8 @@ import {
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
-const weaponsFileNames = ["Fourche", "Gourdin", "Poele"];
-const weaponsNames = ["Pitchfork", "Club", "Frying Pan"];
-const weaponsDescription = [
-  `Wooden pitchfork. Better than nothing...\nPOWER: 500`,
-  `Wooden club. Better than nothing...\nPOWER: 500`,
-  `Frying pan. Better than nothing...\nPOWER: 500`,
-];
-export const drawSlotSet = (): SlotSet => {
-  const weaponIndex = Math.floor(weaponsNames.length * Math.random());
-  return [
-    {
-      slotCategory: "Backgrounds",
-      fileName: "Prison",
-      traitName: "Prison Cell",
-      zIndex: 0,
-      traitDescription:
-        "Tax fraud is no joke! In jail. It's cold and humid and there are rats about...",
-    },
-    {
-      slotCategory: "Weapons",
-      traitName: weaponsNames[weaponIndex],
-      fileName: weaponsFileNames[weaponIndex],
-      zIndex: 2,
-      traitDescription: weaponsDescription[weaponIndex],
-    },
-    {
-      slotCategory: "Legs",
-      traitName: "Prisoner Pants",
-      fileName: "Pants1",
-      zIndex: 11,
-      traitDescription: "Prisonner attire\nPOWER: 0",
-    },
-    {
-      slotCategory: "Underhelms",
-      traitName: "Basic Collar",
-      fileName: "Underhelm1",
-      zIndex: 12,
-      traitDescription: "Basic attire\nPOWER: 10",
-    },
-    {
-      slotCategory: "Feet",
-      traitName: "Prisoner Boots",
-      fileName: "Feet1",
-      zIndex: 13,
-      traitDescription: "Prisoner attire\nPOWER: 20",
-    },
-    {
-      slotCategory: "Cloths",
-      traitName: "Prisoner Cloth",
-      fileName: "Cloth1",
-      zIndex: 14,
-      traitDescription: "Prisoner attire\nPOWER: 0",
-    },
-    {
-      slotCategory: "Heads",
-      traitName: "Prisoner Collar",
-      fileName: "PrisonerCollar",
-      zIndex: 16,
-      traitDescription: "Prisoner attire\nPOWER: -500",
-    },
-    {
-      slotCategory: "Arms",
-      traitName: "Prisoner Shackles",
-      fileName: "Arms1",
-      zIndex: 17,
-      traitDescription: "Prisoner attire\nPOWER: -1000",
-    },
-  ];
-};
 
+// not used
 export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
   try {
     const ws = WS_URL;
@@ -180,7 +113,7 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
 async function mintSeries(
   kp,
   baseBlock: number,
-  fixedPartList: FixedSet[],
+  fixedPartList: FixedTraitSet[],
   api,
   collectionId: string,
   offset: number,

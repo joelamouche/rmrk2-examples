@@ -6,9 +6,13 @@ import {
   FixedPartProba,
   SlotSet,
   slotConfigSet,
-  FixedSet,
+  FixedTraitSet,
   substraKnightsAddress,
   deployementList2,
+  drawClothSet,
+  deployement1,
+  deployementList1,
+  fullKusamarauderList,
 } from "./constants";
 import { createBase } from "./create-base";
 import { createSubstraknightCollection } from "./mint-substra";
@@ -22,12 +26,12 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 
 const slotSet: SlotSet = [
   {
-    slotCategory: "Weapons",
-    fileName: "EvilFork",
-    traitName: "Evil Fork",
-    zIndex: 2,
+    slotCategory: "Backgrounds",
+    fileName: "ForestBackground",
+    traitName: "Forest Camp",
+    zIndex: 0,
     traitDescription:
-      "Taken from the void monster, sharp & pointy.\nPOWER: 900",
+      "Out of prison, out of trouble... For now...",
   },
 ];
 
@@ -73,7 +77,7 @@ export const mintOneSetForOneSoldier = async (
     soldierNumber,
   });
   fs.writeFileSync(
-    `drawnSets/add-items-${_slotSet.length}-${new Date(Date.now()).getDate()}-${
+    `deployements/addItems/add-items-${_slotSet.length}-${new Date(Date.now()).getDate()}-${
       new Date(Date.now()).getMonth() + 1
     }-${new Date(Date.now()).getUTCFullYear()}-${new Date(
       Date.now()
@@ -88,7 +92,7 @@ interface Deployement {
   baseBlock: number;
   indexList: number[];
 }
-const addToDeployement = async (
+const addItemToSoldierDeployement = async (
   dep: Deployement,
   _slotSet: SlotSet,
   cID: string
@@ -109,10 +113,10 @@ export const runMain = async (dep: Deployement[]) => {
   // await addToDeployement(deployement2,slotSet,"QmX2nTV2TpT6snZJt4eD189CkzzFFxuQUy1VbEQxKisncU")
 
   for (let j = 0; j < dep.length; j++) {
-    await addToDeployement(
+    await addItemToSoldierDeployement(
       dep[j],
       slotSet,
-      "QmX2nTV2TpT6snZJt4eD189CkzzFFxuQUy1VbEQxKisncU"
+      "QmPpmmLfsAs5PpVDY6ZK8Yr3MVfNbcreE9Qa8E283VeoBB"
     );
   }
 

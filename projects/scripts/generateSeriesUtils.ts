@@ -1,6 +1,6 @@
 import {
   FixedPartProba,
-  FixedSet,
+  FixedTraitSet,
   fixedSetProba,
   FixedSetProba,
   TraitProba,
@@ -9,7 +9,7 @@ import {
 import fs from "fs";
 require("dotenv").config();
 
-export const drawSet = (fixedSetProba: FixedSetProba): FixedSet => {
+export const drawSet = (fixedSetProba: FixedSetProba): FixedTraitSet => {
   return fixedSetProba.map((fixedPartProba: FixedPartProba) => {
     let totalProbaTrait = fixedPartProba.traits
       .map((probaTrait: TraitProba) => {
@@ -35,7 +35,7 @@ export const drawSet = (fixedSetProba: FixedSetProba): FixedSet => {
   });
 };
 
-export const logStats = (drawnSetList: FixedSet[]) => {
+export const logStats = (drawnSetList: FixedTraitSet[]) => {
   console.log("Stats for ", drawnSetList.length, "sets");
   let obj = {};
   drawnSetList.forEach((set) => {
@@ -52,7 +52,7 @@ export const logStats = (drawnSetList: FixedSet[]) => {
   console.log("obj", obj);
 };
 
-export const syncHairColor = (fixedSet: FixedSet): FixedSet => {
+export const syncHairColor = (fixedSet: FixedTraitSet): FixedTraitSet => {
   // get color
   let color = "";
   fixedSet.forEach((part) => {
@@ -96,7 +96,7 @@ export const syncHairColor = (fixedSet: FixedSet): FixedSet => {
   return newSet;
 };
 
-export const removeDuplicates = (fixedSetList: FixedSet[]): FixedSet[] => {
+export const removeDuplicates = (fixedSetList: FixedTraitSet[]): FixedTraitSet[] => {
   let res = [];
   fixedSetList.forEach((setRef, i) => {
     let hasOneDup = false;
@@ -126,7 +126,7 @@ export const removeDuplicates = (fixedSetList: FixedSet[]): FixedSet[] => {
 export const drawSets = (
   fixedSetProba: FixedSetProba,
   numberOfSets: number
-): FixedSet[] => {
+): FixedTraitSet[] => {
   // draw random sets
   const res = [];
   for (let i = 0; i < numberOfSets; i++) {

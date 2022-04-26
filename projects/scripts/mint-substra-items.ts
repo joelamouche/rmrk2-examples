@@ -261,7 +261,6 @@ export const mintAndEquipAllItemsFromSetList = async (
     let totalTxListMint = [];
     for (let i = 0; i < numberOfSoldiers; i++) {
       const txsMintItem = await getMintItemTx(kp, i + offset, slotSetList[i]);
-      console.log("got tx for substra ", i);
       totalTxListMint = [...totalTxListMint, ...txsMintItem];
     }
 
@@ -286,7 +285,6 @@ export const mintAndEquipAllItemsFromSetList = async (
         slotSetList[j],
         customCID
       );
-      console.log("got tx for substra ", j);
       totalTxAddBase = [...totalTxAddBase, ...txsAddBaseItem];
     }
 
