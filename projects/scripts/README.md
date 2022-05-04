@@ -4,11 +4,11 @@ All relevant settings are in the `constant` fodler.
 
 Run `npm run mint` to mind soldiers like in the first NFT drop of Kusamarauders
 
-*Make sure to provide the right SlotConfig and FixedTrait list in `collection-settings`.*
+_Make sure to provide the right SlotConfig and FixedTrait list in `collection-settings`._
 
 Run `npm run add-items` to add items to specific soldiers.
 
-*The data in kusamrauder-item-deployement gives the right minting block for each soldier.*
+_The data in kusamrauder-item-deployement gives the right minting block for each soldier._
 
 ## RMRK2 Substraknight minting scripts (DEPRECATED)
 

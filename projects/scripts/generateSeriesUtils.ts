@@ -96,7 +96,9 @@ export const syncHairColor = (fixedSet: FixedTraitSet): FixedTraitSet => {
   return newSet;
 };
 
-export const removeDuplicates = (fixedSetList: FixedTraitSet[]): FixedTraitSet[] => {
+export const removeDuplicates = (
+  fixedSetList: FixedTraitSet[]
+): FixedTraitSet[] => {
   let res = [];
   fixedSetList.forEach((setRef, i) => {
     let hasOneDup = false;

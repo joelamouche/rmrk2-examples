@@ -1,17 +1,9 @@
 import fs from "fs";
 import {
-  WS_URL,
-  fixedSetProba,
-  FixedSetProba,
-  FixedPartProba,
   SlotSet,
   slotConfigSet,
   FixedTraitSet,
   substraKnightsAddress,
-  deployementList2,
-  drawClothSet,
-  deployement1,
-  deployementList1,
   fullKusamarauderList,
 } from "./constants";
 import { createBase } from "./create-base";
@@ -23,17 +15,9 @@ import {
 import { getApi, getKeyringFromMnemonic, getKeyringFromUri } from "./utils";
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-
-const slotSet: SlotSet = [
-  {
-    slotCategory: "Backgrounds",
-    fileName: "ForestBackground",
-    traitName: "Forest Camp",
-    zIndex: 0,
-    traitDescription:
-      "Out of prison, out of trouble... For now...",
-  },
-];
+import { drawClothSet, drawVillainSlotSet, selectedSlot, slotSet } from "./constants/item-list";
+import { breastplate, katanaCollabs, katanaList } from "./constants/misc-items/katanaList";
+import { scoutAxe, shieldCollabList, shieldList } from "./constants/misc-items/shieldList";
 
 export const mintOneSetForOneSoldier = async (
   mintSubstraBlock,
@@ -43,8 +27,8 @@ export const mintOneSetForOneSoldier = async (
   customCID: string,
   needCreateItemCollection: boolean
 ) => {
-  const ws = WS_URL;
-  const api = await getApi(ws);
+  // const ws = WS_URL;
+  // const api = await getApi(ws);
   const kp = getKeyringFromMnemonic(process.env.MNEMONIC); //getKeyringFromMnemonic(process.env.MNEMONIC);
   if (kp.address === substraKnightsAddress) {
     console.log("RIGHT ADDRESS : " + kp.address);
@@ -60,7 +44,7 @@ export const mintOneSetForOneSoldier = async (
       kp,
       mintSubstraBlock,
       baseBlock,
-      _slotSet.length,
+      1,
       [_slotSet],
       soldierNumber,
       needCreateItemCollection,
@@ -77,14 +61,39 @@ export const mintOneSetForOneSoldier = async (
     soldierNumber,
   });
   fs.writeFileSync(
-    `deployements/addItems/add-items-${_slotSet.length}-${new Date(Date.now()).getDate()}-${
-      new Date(Date.now()).getMonth() + 1
-    }-${new Date(Date.now()).getUTCFullYear()}-${new Date(
+    `deployements/addItems/add-items-${_slotSet.length}-${new Date(
       Date.now()
-    ).toLocaleTimeString()}.json`,
+    ).getDate()}-${new Date(Date.now()).getMonth() + 1}-${new Date(
+      Date.now()
+    ).getUTCFullYear()}-${new Date(Date.now()).toLocaleTimeString()}.json`,
     data
   );
   // runFirstDropSeq(fixedSetProba);
+};
+
+const checkPresenceOfAllSoldiers = (
+  _depList: Deployement[],
+  indexWhiteList: number[]
+) => {
+  function lookForIndex(index, depList: Deployement[]) {
+    for (let j = 0; j < depList.length; j++) {
+      let indexList = depList[j].indexList;
+      for (let k = 0; k < indexList.length; k++) {
+        if (indexList[k] === index) {
+          return true;
+        }
+      }
+    }
+    console.log(`Missing Soldier info : ${index}`);
+    return false;
+  }
+  let areAllThere = indexWhiteList.reduce((prev, cur) => {
+    return prev && lookForIndex(cur, _depList);
+  }, true);
+  if (!areAllThere) {
+    console.log("NOT ALL THERE");
+  }
+  return areAllThere;
 };
 
 interface Deployement {
@@ -92,35 +101,68 @@ interface Deployement {
   baseBlock: number;
   indexList: number[];
 }
-const addItemToSoldierDeployement = async (
+const addItemsToSoldierDeployement = async (
   dep: Deployement,
   _slotSet: SlotSet,
-  cID: string
+  cID: string,
+  indexWhiteList: number[]
 ) => {
-  for (let j = 0; j < dep.indexList.length; j++) {
-    await mintOneSetForOneSoldier(
-      dep.mintSubstraBlock,
-      dep.baseBlock,
-      _slotSet,
-      dep.indexList[j] - 1, //write one under the targeted index
-      cID,
-      false
-    );
+  for (let k = 0; k < dep.indexList.length; k++) {
+    if (indexWhiteList.includes(dep.indexList[k])) {
+      await mintOneSetForOneSoldier(
+        dep.mintSubstraBlock,
+        dep.baseBlock,
+        _slotSet,
+        dep.indexList[k] - 1, //write one under the targeted index
+        cID,
+        false
+      );
+    } else {
+      console.log(`Index skiped : ${dep.indexList[k]}`);
+    }
   }
 };
-export const runMain = async (dep: Deployement[]) => {
+export const runMain = async (dep: Deployement[], indexWhiteList: number[]) => {
   // await addToDeployement(deployement1,slotSet,"QmX2nTV2TpT6snZJt4eD189CkzzFFxuQUy1VbEQxKisncU")
   // await addToDeployement(deployement2,slotSet,"QmX2nTV2TpT6snZJt4eD189CkzzFFxuQUy1VbEQxKisncU")
-
-  for (let j = 0; j < dep.length; j++) {
-    await addItemToSoldierDeployement(
-      dep[j],
-      slotSet,
-      "QmPpmmLfsAs5PpVDY6ZK8Yr3MVfNbcreE9Qa8E283VeoBB"
-    );
+  await cryptoWaitReady()
+  if (checkPresenceOfAllSoldiers(dep,indexWhiteList)) {
+    console.log("+all soldiers there+")
+    let kanataIndex=2
+    for (let j = 0; j < dep.length; j++) {
+  for (let k = 0; k < dep[j].indexList.length; k++) {
+    if (indexWhiteList.includes(dep[j].indexList[k])) {
+      console.log(kanataIndex)
+      //console.log(shieldCollabList[kanataIndex])
+      await mintOneSetForOneSoldier(
+        dep[j].mintSubstraBlock,
+        dep[j].baseBlock,
+        [{
+          slotCategory: "Weapons",
+          fileName: "IntegriteeSword",
+          traitName: "Integritee Katana",
+          zIndex: 2,
+          traitDescription:
+            "A well crafted blade, Integritee Shogun Katana.\nPOWER: 1500",
+        }],
+         //[scoutAxe],
+        dep[j].indexList[k] - 1, //write one under the targeted index
+        "QmYSPchjrfnTBEH3hmxi9pDons9kURoNtwiMtYHmT2uw3Q",
+        false
+      );
+      kanataIndex=1+kanataIndex
+    } else {
+      console.log(`Index skiped : ${dep[j].indexList[k]}`);
+    }
+  }
+    }
+  } else {
+    console.log("---      MISSING --- SOLDIER     - -");
   }
 
   console.log("SCRIPT OVER");
   process.exit();
 };
-runMain(deployementList2);
+runMain(fullKusamarauderList, [
+  24
+]);

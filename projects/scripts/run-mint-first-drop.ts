@@ -22,7 +22,6 @@ import {
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
-
 // not used
 export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
   try {

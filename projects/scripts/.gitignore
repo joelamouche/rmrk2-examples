@@ -3,5 +3,7 @@
 consolidated-from-dumps-unconsolidated.json
 node_modules
 dumps-unconsolidated.json
-drawnSets/**.json
+deployements/**/**.json
+assets/**.rtf
+assets/**.xlsx
 secretJSON/**.json
