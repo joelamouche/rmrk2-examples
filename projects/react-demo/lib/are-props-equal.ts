@@ -1,3 +1,4 @@
-import { equals } from 'ramda';
+import { equals } from "ramda";
 
-export const arePropsEqual = (prevProps: any, nextProps: any) => equals(prevProps, nextProps);
+export const arePropsEqual = (prevProps: any, nextProps: any) =>
+  equals(prevProps, nextProps);
