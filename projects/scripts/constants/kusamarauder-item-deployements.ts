@@ -15,7 +15,7 @@ export const deployementList1 = [
   {
     mintSubstraBlock: 12126283,
     baseBlock: 12126274,
-    indexList: [1],
+    indexList: [1, 2],
   },
   {
     mintSubstraBlock: 12126317,
@@ -25,7 +25,7 @@ export const deployementList1 = [
   {
     mintSubstraBlock: 12126344,
     baseBlock: 12126274,
-    indexList: [5,6],
+    indexList: [5, 6],
   },
   {
     mintSubstraBlock: 12126376,
@@ -40,7 +40,7 @@ export const deployementList1 = [
   {
     mintSubstraBlock: 12126431,
     baseBlock: 12126274,
-    indexList: [11],
+    indexList: [11,12],
   },
   {
     mintSubstraBlock: 12126461,
@@ -72,7 +72,7 @@ export const deployementList2 = [
   {
     mintSubstraBlock: 12135636,
     baseBlock: 12126274,
-    indexList: [25,26,27],
+    indexList: [25, 26, 27],
   },
   {
     mintSubstraBlock: 12135697,
@@ -112,52 +112,67 @@ export const deployementList2 = [
   {
     mintSubstraBlock: 12135936,
     baseBlock: 12126274,
-    indexList: [49,50, 51],
+    indexList: [49, 50, 51],
   },
   {
     mintSubstraBlock: 12135969,
     baseBlock: 12126274,
-    indexList: [52,53,54],
+    indexList: [52, 53, 54],
   },
   {
     mintSubstraBlock: 12136000,
     baseBlock: 12126274,
-    indexList: [55,56,57],
+    indexList: [55, 56, 57],
   },
   {
     mintSubstraBlock: 12136052,
     baseBlock: 12126274,
-    indexList: [58,59,60],
+    indexList: [58, 59, 60],
   },
   {
     mintSubstraBlock: 12136096,
     baseBlock: 12126274,
-    indexList: [61,62, 63,64],
+    indexList: [61, 62, 63, 64],
   },
   {
     mintSubstraBlock: 12136126,
     baseBlock: 12126274,
-    indexList: [65,66,67,68],
+    indexList: [65, 66, 67, 68],
   },
   {
     mintSubstraBlock: 12136160,
     baseBlock: 12126274,
-    indexList: [69,70,71,72],
+    indexList: [69, 70, 71, 72],
   },
   {
     mintSubstraBlock: 12136193,
     baseBlock: 12126274,
-    indexList: [73,74,75,76],
+    indexList: [73, 74, 75, 76],
   },
   {
     mintSubstraBlock: 12136230,
     baseBlock: 12126274,
-    indexList: [77,78,79,80],
+    indexList: [77, 78, 79, 80],
+  },
+  {
+    mintSubstraBlock: 12136319,
+    baseBlock: 12126274,
+    indexList: [81, 82, 83, 84],
+  },
+  {
+    mintSubstraBlock: 12136351,
+    baseBlock: 12126274,
+    indexList: [85, 86, 87, 88],
+  },
+  {
+    mintSubstraBlock: 12136384,
+    baseBlock: 12126274,
+    indexList: [89, 90, 91, 92],
   },
   {
     mintSubstraBlock: 12136452,
     baseBlock: 12126274,
-    indexList: [97,98],
+    indexList: [97, 98],
   },
 ];
 

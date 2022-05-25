@@ -1,12 +1,12 @@
-import { SlotSet } from "./types";
+import { SlotCategory, SlotSet } from "./types";
 
-export const selectedSlot={
+export const selectedSlot = {
   slotCategory: "Heads",
   fileName: "CyanHood",
   traitName: "Cloth Hood",
   zIndex: 16,
   traitDescription: "A basic cyan cloth hat\nPOWER: 30",
-}
+};
 export const slotSet: SlotSet = [
   {
     slotCategory: "Backgrounds",
@@ -112,7 +112,6 @@ export const slotSet: SlotSet = [
   },
 ];
 
-
 // Start Set
 const weaponsFileNames = ["Fourche", "Gourdin", "Poele"];
 const weaponsNames = ["Pitchfork", "Club", "Frying Pan"];
@@ -121,7 +120,7 @@ const weaponsDescription = [
   `Wooden club. Better than nothing...\nPOWER: 500`,
   `Frying pan. Better than nothing...\nPOWER: 500`,
 ];
-export const villainSet= [
+export const villainSet = [
   {
     slotCategory: "Backgrounds",
     fileName: "ForestBackground",
@@ -192,17 +191,18 @@ export const drawVillainSlotSet = (): SlotSet => {
   return [
     ...villainSet,
     {
-      slotCategory: "Weapons",
+      slotCategory: "Weapons" as SlotCategory,
       traitName: weaponsNames[weaponIndex],
       fileName: weaponsFileNames[weaponIndex],
       zIndex: 2,
       traitDescription: weaponsDescription[weaponIndex],
-    }]
+    },
+  ];
 };
 
 // Items for 3rd items mint
 
-const clothList = [
+const clothList:SlotSet = [
   {
     slotCategory: "Cloths",
     fileName: "Black",

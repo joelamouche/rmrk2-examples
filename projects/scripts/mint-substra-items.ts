@@ -85,7 +85,9 @@ export const getMintItemTx = async (
 
     return remarks.map((remark) => api.tx.system.remark(remark));
   } catch (error: any) {
+    console.log("ERR")
     console.error(error);
+    throw error
   }
 };
 
@@ -166,7 +168,93 @@ export const getAddItemsTx = async (
 
     return resaddSendRemarks.map((remark) => api.tx.system.remark(remark));
   } catch (error: any) {
+    console.log("ERR")
     console.error(error);
+    throw error
+  }
+};
+
+export const getSendItemsToSoldierTx = async (
+  kp: KeyringPair,
+  substraBlock: number,
+  itemBlock: number,
+  substraCollectionId,
+  _soldierNumber: number,
+  slotNumber:number,
+  slotItem: SlotTrait
+) => {
+  const soldierNumber = _soldierNumber + 1;
+  try {
+    console.log(
+      `ADD BASE SUBSTRAKNIGHT ITEMS FOR SOLDIER # ${soldierNumber} START -------`
+    );
+    await cryptoWaitReady();
+    const ws = WS_URL;
+    const api = await getApi(ws);
+
+    // const baseEntity = new Base(
+    //   baseBlock,
+    //   SUBSTRAKNIGHT_BASE_SYMBOL,
+    //   encodeAddress(kp.address, 2),
+    //   "svg"
+    // );
+
+    console.log(
+      `ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS TO SOLDIER # ${soldierNumber}  START -------`
+    );
+
+    // then add base, send and equip
+    const resaddSendRemarks = [];
+
+    substraItems([slotItem]).forEach((item, index) => {
+      const itemNft = new NFT({
+        block: itemBlock,
+        sn: slotNumber.toString().padStart(8, "0"),
+        owner: encodeAddress(kp.address, 2),
+        transferable: 1,
+        metadata: `ipfs://ipfs/trololo`,
+        collection: getItemCollectionId(kp, item.slotCategory),
+        symbol: item.symbol + slotNumber.toString(),
+      });
+      console.log("itemNft",itemNft,itemNft.getId())
+
+      // const CID = customCID ? customCID : ASSETS_CID;
+      // console.log("CID FOR Added ressources : " + CID);
+      // item.resources.forEach((resource) => {
+      //   resaddSendRemarks.push(
+      //     itemNft.resadd({
+      //       src: `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${resource}`,
+      //       thumb: `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${item.thumb}`,
+      //       id: nanoid(8),
+      //       slot: `${baseEntity.getId()}.${item.slotCategory}`,
+      //     })
+      //   );
+      // });
+
+      // instantiate soldier nft
+      const soldierNft = new NFT({
+        block: substraBlock,
+        collection: substraCollectionId,
+        symbol: `soldier_${soldierNumber}`,
+        transferable: 1,
+        sn: `${soldierNumber}`.padStart(8, "0"),
+        owner: encodeAddress(kp.address, 2), //TODO?
+        metadata: "",
+      });
+      console.log("soldierNft.getId()",soldierNft.getId())
+
+      // send and equip
+      resaddSendRemarks.push(itemNft.send(soldierNft.getId()));
+      // resaddSendRemarks.push(
+      //   itemNft.equip(`${baseEntity.getId()}.${item.slotCategory}`)
+      // );
+    });
+
+    return resaddSendRemarks.map((remark) => api.tx.system.remark(remark));
+  } catch (error: any) {
+    console.log("ERR")
+    console.error(error);
+    throw error
   }
 };
 
@@ -296,7 +384,62 @@ export const mintAndEquipAllItemsFromSetList = async (
     );
     return { mintItemBlock, resaddSendBlock };
   } catch (error: any) {
+    console.log("ERR HIGH LVL")
     console.error(error);
+    process.exit();
+    throw error
+  }
+};
+
+export const sendItemsToSoldier = async (
+  kp: KeyringPair,
+  destSubstraBlock: number,
+  mintItemBlock: number,
+  soldierNumber: number,
+  slotIndex:number,
+  slot: SlotTrait
+) => {
+  try {
+    console.log(
+      `SEND ITEM TO ${soldierNumber+1} SOLDIER START -------`
+    );
+    await cryptoWaitReady();
+    const ws = WS_URL;
+    const api = await getApi(ws);
+
+    const substraCollectionId = Collection.generateId(
+      u8aToHex(kp.publicKey),
+      SUBSTRAKNIGHT_COLLECTION_SYMBOL
+    );
+
+
+    // Get add base and equip tx
+    //let totalTxAddBase = [];
+   // for (let j = 0; j < numberOfSoldiers; j++) {
+      const txsSendItemToSoldier = await getSendItemsToSoldierTx(
+        kp,
+        destSubstraBlock,
+        mintItemBlock,
+        substraCollectionId,
+       soldierNumber,
+       slotIndex,
+        slot
+      );
+      //totalTxAddBase = [...totalTxAddBase, ...txsAddBaseItem];
+    //}
+
+    const resbatch = api.tx.utility.batch(txsSendItemToSoldier);
+    const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
+    console.log(
+      "SUBSTRAKNIGHT ITEMS RESOURCE ADDED AND SENT: ",
+      resaddSendBlock
+    );
+    return { mintItemBlock, resaddSendBlock };
+  } catch (error: any) {
+    console.log("ERR HIGH LVL")
+    console.error(error);
+    process.exit();
+    throw error
   }
 };
 

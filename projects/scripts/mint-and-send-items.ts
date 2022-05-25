@@ -5,19 +5,40 @@ import {
   FixedTraitSet,
   substraKnightsAddress,
   fullKusamarauderList,
+  SoldierDeployement,
 } from "./constants";
 import { createBase } from "./create-base";
 import { createSubstraknightCollection } from "./mint-substra";
 import {
   mintAndEquipAllItemsFromSetList,
   mintItemsFromSet,
+  sendItemsToSoldier,
 } from "./mint-substra-items";
 import { getApi, getKeyringFromMnemonic, getKeyringFromUri } from "./utils";
 import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { drawClothSet, drawVillainSlotSet, selectedSlot, slotSet } from "./constants/item-list";
-import { breastplate, katanaCollabs, katanaList } from "./constants/misc-items/katanaList";
-import { scoutAxe, shieldCollabList, shieldList } from "./constants/misc-items/shieldList";
+import {
+  drawClothSet,
+  drawVillainSlotSet,
+  selectedSlot,
+  slotSet,
+} from "./constants/item-list";
+import {
+  breastplate,
+  katanaCollabs,
+  katanaList,
+} from "./constants/misc-items/katanaList";
+import {
+  scoutAxe,
+  shieldCollabList,
+  shieldList,
+} from "./constants/misc-items/shieldList";
+import { event8List, event8ListTest } from "./constants/itemDeployementList/event8List";
+import { eventBoss1 } from "./constants/itemDeployementList/eventBoss1";
+import { merchantItems } from "./constants/itemDeployementList/merchantObjects";
+import { event2205 } from "./constants/itemDeployementList/event2205";
+import { merchant2405 } from "./constants/itemDeployementList/merchant2405";
+import { generatePants } from "./constants/itemDeployementList/generatePants";
 
 export const mintOneSetForOneSoldier = async (
   mintSubstraBlock,
@@ -101,68 +122,88 @@ interface Deployement {
   baseBlock: number;
   indexList: number[];
 }
-const addItemsToSoldierDeployement = async (
-  dep: Deployement,
-  _slotSet: SlotSet,
-  cID: string,
-  indexWhiteList: number[]
+// const addItemsToSoldierDeployement = async (
+//   dep: Deployement,
+//   _slotSet: SlotSet,
+//   cID: string,
+//   indexWhiteList: number[]
+// ) => {
+//   for (let k = 0; k < dep.indexList.length; k++) {
+//     if (indexWhiteList.includes(dep.indexList[k])) {
+//       await mintOneSetForOneSoldier(
+//         dep.mintSubstraBlock,
+//         dep.baseBlock,
+//         _slotSet,
+//         dep.indexList[k] - 1, //write one under the targeted index
+//         cID,
+//         false
+//       );
+//     } else {
+//       console.log(`Index skiped : ${dep.indexList[k]}`);
+//     }
+//   }
+// };
+export const deployItemsForSoldierList = async (
+  dep: Deployement[],
+  indexWhiteList: number[],
+  equipableList: SlotSet,
+  ipfsHash: string
 ) => {
-  for (let k = 0; k < dep.indexList.length; k++) {
-    if (indexWhiteList.includes(dep.indexList[k])) {
-      await mintOneSetForOneSoldier(
-        dep.mintSubstraBlock,
-        dep.baseBlock,
-        _slotSet,
-        dep.indexList[k] - 1, //write one under the targeted index
-        cID,
-        false
-      );
-    } else {
-      console.log(`Index skiped : ${dep.indexList[k]}`);
-    }
-  }
-};
-export const runMain = async (dep: Deployement[], indexWhiteList: number[]) => {
-  // await addToDeployement(deployement1,slotSet,"QmX2nTV2TpT6snZJt4eD189CkzzFFxuQUy1VbEQxKisncU")
-  // await addToDeployement(deployement2,slotSet,"QmX2nTV2TpT6snZJt4eD189CkzzFFxuQUy1VbEQxKisncU")
-  await cryptoWaitReady()
-  if (checkPresenceOfAllSoldiers(dep,indexWhiteList)) {
-    console.log("+all soldiers there+")
-    let kanataIndex=2
+  // TODO CHECK ZINDEX
+  await cryptoWaitReady();
+  if (checkPresenceOfAllSoldiers(dep, indexWhiteList)) {
+    console.log("+all soldiers there+");
     for (let j = 0; j < dep.length; j++) {
-  for (let k = 0; k < dep[j].indexList.length; k++) {
-    if (indexWhiteList.includes(dep[j].indexList[k])) {
-      console.log(kanataIndex)
-      //console.log(shieldCollabList[kanataIndex])
-      await mintOneSetForOneSoldier(
-        dep[j].mintSubstraBlock,
-        dep[j].baseBlock,
-        [{
-          slotCategory: "Weapons",
-          fileName: "IntegriteeSword",
-          traitName: "Integritee Katana",
-          zIndex: 2,
-          traitDescription:
-            "A well crafted blade, Integritee Shogun Katana.\nPOWER: 1500",
-        }],
-         //[scoutAxe],
-        dep[j].indexList[k] - 1, //write one under the targeted index
-        "QmYSPchjrfnTBEH3hmxi9pDons9kURoNtwiMtYHmT2uw3Q",
-        false
-      );
-      kanataIndex=1+kanataIndex
-    } else {
-      console.log(`Index skiped : ${dep[j].indexList[k]}`);
-    }
-  }
+      for (let k = 0; k < dep[j].indexList.length; k++) {
+        if (indexWhiteList.includes(dep[j].indexList[k])) {
+          console.log("Equiping sets : ", equipableList);
+          await mintOneSetForOneSoldier(
+            dep[j].mintSubstraBlock,
+            dep[j].baseBlock,
+            equipableList,
+            dep[j].indexList[k] - 1, //write one under the targeted index
+            ipfsHash,
+            false
+          );
+        } else {
+          console.log(`Index skiped : ${dep[j].indexList[k]}`);
+        }
+      }
     }
   } else {
-    console.log("---      MISSING --- SOLDIER     - -");
+    console.log("---      MISSING --- SOLDIER     - - ERR");
   }
+};
+
+export const main = async (eventList: SoldierDeployement[], ipfsHash) => {
+  // TODO CHECK ZINDEX
+  for (let k = 0; k < eventList.length; k++) {
+    console.log("eventList k",eventList[k])
+    if (eventList[k]){
+      await deployItemsForSoldierList(
+        fullKusamarauderList,
+        [eventList[k].kusamarauderNumber],
+        eventList[k].items,
+        ipfsHash
+      );
+    } else {
+      console.log("EMPTY LIST ITEM")
+    }
+  }
+
+  // send items
+  //   await cryptoWaitReady();
+  // const kp = getKeyringFromMnemonic(process.env.MNEMONIC);
+  // await cryptoWaitReady();
+  // await sendItemsToSoldier(kp,12136319,12310017,83-1,98,{
+  //         slotCategory: "Backgrounds",
+  //         fileName: "ForestBackground",
+  //         traitName: "Forest Camp",
+  //         zIndex: 0,
+  //         traitDescription: "Out of prison, out of trouble... For now...",
+  //       })
 
   console.log("SCRIPT OVER");
   process.exit();
 };
-runMain(fullKusamarauderList, [
-  24
-]);
+main(generatePants(), "QmVHMCtxa9MzeGHGuGuaasaU7PeJsmPzuN3StbCDTbigih");
