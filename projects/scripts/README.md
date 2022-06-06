@@ -1,26 +1,25 @@
-# RMRK2 Substraknight minting scripts
+# RMRK2 Substraknight 2.0 Example
 
-All relevant settings are in the `constant` fodler.
+## Collection Settings
 
-Run `npm run mint` to mind soldiers like in the first NFT drop of Kusamarauders
+The collection settings are in `constants/collection-setings`.
 
-_Make sure to provide the right SlotConfig and FixedTrait list in `collection-settings`._
+The `fixedSetProba` file lists all Fixed Parts with associated probabilities to be drawned randomly.
 
-Run `npm run add-items` to add items to specific soldiers.
+The `slotConfigSet` list will determine all nested slots for your collection.
 
-_The data in kusamrauder-item-deployement gives the right minting block for each soldier._
+The item lists for minting are in the `itemDeployementList` and `misc-items` folders.
 
-## RMRK2 Substraknight minting scripts (DEPRECATED)
+## Generate your Fixed Part List
 
-This is a collection of script to mint Substraknight composable nested NFTs using RMRK2
+Run `npm run generate`
 
-Please Run scripts in following order:
+## Mint Naked Soldiers with Fixed Part Features (Hai, Mouth, Skin, etc)
 
-- `npx ts-node ./run-mint-sequence.ts`
-- `yarn fetch --prefixes=0x726d726b,0x524d524b --append=dumps-unconsolidated.json --ws wss://kusama-rpc.polkadot.io --collection='Substra demo soldier collection'`
-- `yarn consolidate --json=dumps-unconsolidated.json`
+Run `npm run mint`
 
-- `yarn fetch --append=dumps-unconsolidated.json --ws ws://127.0.0.1:9944 --collection='Substra demo soldier collection'` for local
+## Mint Items and Send them to the Soldiers
 
-Then look at `consolidated-from-dumps-unconsolidated.json` to verify there's no invalid calls. If everything is ok, you can copy this json fil to `react-demo`
-project under `public/substra-dump.json`
+After minting all your soldiers, update the file `FULL_KUSAMARAUDER_LIST` in `constants/kusamrauder-item-deployement` using the files saved in `deployements/deployement`
+
+Run `npm run add-items`
