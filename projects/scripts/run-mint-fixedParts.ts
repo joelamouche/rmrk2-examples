@@ -16,7 +16,7 @@ import {
 } from "./mint-substra";
 import { addBaseResource } from "./mint-substra";
 import { KeyringPair } from "@polkadot/keyring/types";
-import { allFixedPartsList } from "constants/misc";
+import { allFixedPartsList } from "./constants/misc";
 
 export const mintOneBase = async (
   kp: KeyringPair,
@@ -97,7 +97,7 @@ export const mintListBaseTx = async (
       fixedSetList[i],
       api,
       collectionId,
-      i + offset
+       i + offset
     );
     totalTxListAddABase = [...totalTxListAddABase, ...txsAddBase];
   }
@@ -195,11 +195,10 @@ export const runMintSequenceBatch = async (kp: KeyringPair) => {
   }
 };
 
-// Get list of fixed trait set
-export const getSetList = async (): Promise<FixedTraitSet[]> => {
+async function getListFromPath(path:string): Promise<FixedTraitSet[]>{
   return new Promise((res) => {
     fs.readFile(
-      "drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json",
+      path,
       (err, data) => {
         if (err) throw err;
         let setList = JSON.parse(data.toString());
@@ -207,6 +206,16 @@ export const getSetList = async (): Promise<FixedTraitSet[]> => {
       }
     );
   });
+}
+
+// Get list of fixed trait set
+export const getLatestSetList = async (): Promise<FixedTraitSet[]> => {
+  return await getListFromPath("deployements/drawnSets/drawnset-30-26-5-2022-2:39:32 PM.json")
+};
+
+// Get list of fixed trait set
+export const getOldSetList = async (): Promise<FixedTraitSet[]> => {
+  return [...await getListFromPath("drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json"),...await getListFromPath("drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json")]
 };
 
 // Run mint seq with probas
@@ -238,7 +247,7 @@ export const runMintSequenceBatchWithProba = async (
     await mintListBaseTx(
       kp,
       baseBlock,
-      await getSetList(),
+      await getLatestSetList(),
       api,
       collectionId,
       0

@@ -8,7 +8,6 @@ import {
   slotConfigSet,
   FixedTraitSet,
   substraKnightsAddress,
-  drawSlotSet,
 } from "./constants";
 import { createBase } from "./create-base";
 import { createSubstraknightCollection } from "./mint-substra";
@@ -19,8 +18,9 @@ import {
   getKeyringFromUri,
   sleep,
 } from "./utils";
-import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
+import { getLatestSetList, mintListBaseTx } from "./run-mint-fixedParts";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
+import { drawVillainSlotSet } from "./constants/item-list";
 
 // not used
 export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
@@ -58,7 +58,7 @@ export const runFirstDropSeq = async (_fixedSetProba: FixedSetProba) => {
     // Create Subtra collection
     const { collectionId } = await createSubstraknightCollection(kp);
 
-    const fixedPartList = await getSetList();
+    const fixedPartList = await getLatestSetList();
 
     // mint all bases
     console.log("baseBlock", baseBlock);
@@ -118,6 +118,7 @@ async function mintSeries(
   offset: number,
   needCollectionMint
 ) {
+  console.log("fixedPartList.length",fixedPartList.length)
   const { mintSubstraBlock, addBaseBlock } = await mintListBaseTx(
     kp,
     baseBlock,
@@ -128,7 +129,7 @@ async function mintSeries(
   );
 
   // Add items
-  const drawnSlotList = fixedPartList.map((_) => drawSlotSet());
+  const drawnSlotList = fixedPartList.map((_) => drawVillainSlotSet());
   console.log("drawnSlotList", drawnSlotList);
 
   const { mintItemBlock, resaddSendBlock } =
@@ -155,7 +156,7 @@ async function mintSeries(
     offset,
   });
   fs.writeFileSync(
-    `drawnSets/deployement-${fixedPartList.length}-${new Date(
+    `deployements/deployement/deployement-${fixedPartList.length}-${new Date(
       Date.now()
     ).getDate()}-${new Date(Date.now()).getMonth() + 1}-${new Date(
       Date.now()
@@ -176,11 +177,12 @@ export const runMain = async () => {
       console.log("SHOULD BE : " + substraKnightsAddress);
       return;
     }
-    const fixedPartList = await getSetList();
+    const fixedPartList = await getLatestSetList();
+    console.log("OH",fixedPartList.length)
     //await mintSeries(kp, 12126274, fixedPartList.slice(16,17), api, "7472058104f9f93924-SKC",16,false);
 
-    const step = 4;
-    for (let j = 20; j < 25; j++) {
+    const step = 2;
+    for (let j = 8; j < 15; j++) {
       console.log(
         "++++++++++++______________++++++++++++_____________+++++++++____________SEQ___ " +
           j +
@@ -193,10 +195,10 @@ export const runMain = async () => {
         fixedPartList.slice(j * step, (j + 1) * step),
         api,
         "7472058104f9f93924-SKC",
-        j * step,
-        j === 0
+        120+j * step,
+        false//j === 0
       );
-      await sleep(60000);
+      await sleep(10000);
     }
     //runFirstDropSeq
     console.log("SCRIPT OVER");

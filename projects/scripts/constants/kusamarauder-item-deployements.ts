@@ -170,6 +170,11 @@ export const deployementList2 = [
     indexList: [89, 90, 91, 92],
   },
   {
+    mintSubstraBlock: 12136420,
+    baseBlock: 12126274,
+    indexList: [93, 94, 95, 96],
+  },
+  {
     mintSubstraBlock: 12136452,
     baseBlock: 12126274,
     indexList: [97, 98],

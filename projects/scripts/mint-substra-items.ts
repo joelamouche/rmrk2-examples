@@ -1,5 +1,5 @@
 import {
-  ASSETS_CID,
+  LATEST_CID,
   SUBSTRAKNIGHT_COLLECTION_SYMBOL,
   SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   WS_URL,
@@ -135,7 +135,7 @@ export const getAddItemsTx = async (
         symbol: item.symbol + soldierNumber.toString(),
       });
 
-      const CID = customCID ? customCID : ASSETS_CID;
+      const CID = customCID ? customCID : LATEST_CID;
       console.log("CID FOR Added ressources : " + CID);
       item.resources.forEach((resource) => {
         resaddSendRemarks.push(

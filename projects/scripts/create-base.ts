@@ -1,6 +1,6 @@
 import { IBasePart } from "rmrk-tools/dist/classes/base";
 import {
-  ASSETS_CID,
+  BASE_ASSETS_CID,
   SUBSTRAKNIGHT_BASE_SYMBOL,
   WS_URL,
   FixedPart,
@@ -19,7 +19,7 @@ export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
       res.push({
         type: "fixed",
         id: trait,
-        src: `ipfs://ipfs/${ASSETS_CID}/FixedParts/${fixedPart.traitClass}/${trait}.svg`,
+        src: `ipfs://ipfs/${BASE_ASSETS_CID}/FixedParts/${fixedPart.traitClass}/${trait}.svg`,
         z: fixedPart.zIndex,
       });
     });

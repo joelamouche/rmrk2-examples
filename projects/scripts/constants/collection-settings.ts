@@ -1,6 +1,7 @@
 import { FixedSetProba, SlotConfigSet } from "./types";
 
-export const ASSETS_CID = "QmVrRsTBcSh8mswQYpKMfaGwFKvNrpLiZVNmWQY9CXLozD";
+export const BASE_ASSETS_CID = "QmVHMCtxa9MzeGHGuGuaasaU7PeJsmPzuN3StbCDTbigih";
+export const LATEST_CID="Qmbxk97hsrivcTSy7Qzar3B3KRUPVGzFqMUdT18sNgjT1Q"
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
 export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "SKC";
@@ -185,7 +186,7 @@ export const fixedSetProba: FixedSetProba = [
     zIndex: 8,
   },
   {
-    traitClass: "Eyepatch",
+    traitClass: "EyePatch",
     traits: [
       { traitName: "_Eyepatch1", traitProba: 91, fixedPartdescription: "ok" },
       { traitName: "Eyepatch1", traitProba: 3, fixedPartdescription: "ok" },

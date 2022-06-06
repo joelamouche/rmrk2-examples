@@ -6,6 +6,7 @@ import {
   substraKnightsAddress,
   fullKusamarauderList,
   SoldierDeployement,
+  LATEST_CID,
 } from "./constants";
 import { createBase } from "./create-base";
 import { createSubstraknightCollection } from "./mint-substra";
@@ -15,7 +16,7 @@ import {
   sendItemsToSoldier,
 } from "./mint-substra-items";
 import { getApi, getKeyringFromMnemonic, getKeyringFromUri } from "./utils";
-import { getSetList, mintListBaseTx } from "./run-mint-fixedParts";
+import { getLatestSetList, mintListBaseTx } from "./run-mint-fixedParts";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import {
   drawClothSet,
@@ -206,4 +207,31 @@ export const main = async (eventList: SoldierDeployement[], ipfsHash) => {
   console.log("SCRIPT OVER");
   process.exit();
 };
-main(generatePants(), "QmVHMCtxa9MzeGHGuGuaasaU7PeJsmPzuN3StbCDTbigih");
+main([
+  {
+    kusamarauderNumber:92,
+    items: [
+      {
+     slotCategory: "Weapons",
+     fileName: "ListenSword",
+     traitName: "Listen Katana",
+     zIndex: 2,
+     traitDescription:
+       "A well crafted blade, Listen Shogun Katana.\nPOWER: 1500",
+   }
+  ]
+ },{
+  kusamarauderNumber:72,
+  items: [
+    {
+   slotCategory: "Heads",
+   fileName: "LegionaryHelmet",
+   traitName: "Legionary Helmet",
+   zIndex: 16,
+   traitDescription:
+     "A solid helmet covering most of the head.\nPOWER: 200",
+ }
+]
+}
+
+], LATEST_CID);

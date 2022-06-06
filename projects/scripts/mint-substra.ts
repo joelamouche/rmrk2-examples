@@ -1,7 +1,7 @@
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
 import { getApi, sendAndFinalize } from "./utils";
 import {
-  ASSETS_CID,
+  LATEST_CID,
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SUBSTRAKNIGHT_COLLECTION_SYMBOL,
   WS_URL,
@@ -99,7 +99,7 @@ export const getTxAddBaseResource = async (
             ...fixedPartSet.map((fixedPart) => fixedPart.trait),
             ...slotConfigSet.map((slot) => slot.slotCategory),
           ],
-          thumb: `ipfs://ipfs/${ASSETS_CID}/SoldierPreview.png`,
+          thumb: `ipfs://ipfs/${LATEST_CID}/SoldierPreview.png`,
         })
       ),
     ];
