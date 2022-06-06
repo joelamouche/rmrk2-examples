@@ -1,40 +1,23 @@
 import fs from "fs";
-import { sendAndFinalize, getApi } from "./utils";
+import { sendAndFinalize, getApi } from "../utils";
 import {
   FixedTrait,
   FixedTraitSet,
   WS_URL,
   FixedSetProba,
   FixedPartProba,
-} from "./constants";
-import { createBase } from "./create-base";
+} from "../constants";
+import { createBase } from "./create-soldier-collection-base";
 import {
-  createSubstraknightCollection,
   getTxAddBaseResource,
   getTxMintSubstraknight,
-  mintSubstraknight,
-} from "./mint-substra";
-import { addBaseResource } from "./mint-substra";
+} from "./mint-soldier-tx";
 import { KeyringPair } from "@polkadot/keyring/types";
-import { allFixedPartsList } from "./constants/misc";
+import { allFixedPartsList } from "../constants/misc";
+import { createSubstraknightCollection } from "soldier-lib/soldier-collection-utils";
 
-export const mintOneBase = async (
-  kp: KeyringPair,
-  baseBlock: number,
-  fixedPartsSet: FixedTraitSet,
-  soldierIndex
-) => {
-  const substrasBlock = await mintSubstraknight(kp, soldierIndex);
-  await addBaseResource(
-    kp,
-    substrasBlock,
-    baseBlock,
-    fixedPartsSet,
-    soldierIndex
-  );
-};
 
-export const mintOneBaseTx = async (
+export const getMintOneBaseTx = async (
   kp: KeyringPair,
   baseBlock: number,
   fixedPartsSet: FixedTraitSet,
@@ -107,49 +90,6 @@ export const mintListBaseTx = async (
   return { mintSubstraBlock: block, addBaseBlock: block2 };
 };
 
-//deprecated
-export const runMintSequence = async (kp: KeyringPair) => {
-  try {
-    const baseBlock = await createBase(kp, allFixedPartsList, []);
-    console.log("BASE CREATED");
-    let mintList = [];
-    allFixedPartsList[0].traits.forEach(async (trait0, i) => {
-      allFixedPartsList[1].traits.forEach(async (trait1, j) => {
-        allFixedPartsList[2].traits.forEach(async (trait2, k) => {
-          mintList.push(
-            [
-              {
-                traitClass: "NakedMan",
-                trait: trait0,
-                zIndex: 0,
-              },
-              {
-                traitClass: "Eyes",
-                trait: trait1,
-                zIndex: 1,
-              },
-              {
-                traitClass: "Node",
-                trait: trait2,
-                zIndex: 2,
-              },
-            ].filter((fixedTrait: FixedTrait) => fixedTrait.trait !== "_")
-          );
-        });
-      });
-    });
-    console.log("mintList", mintList);
-    for (let i = 0; i < mintList.length; i++) {
-      console.log("----------------------------------STARTING MINT FOR");
-      console.log(mintList[i]);
-      await mintOneBase(kp, baseBlock, mintList[i], i);
-    }
-    process.exit(0);
-  } catch (error: any) {
-    console.error(error);
-    process.exit(0);
-  }
-};
 export const runMintSequenceBatch = async (kp: KeyringPair) => {
   try {
     const ws = WS_URL;

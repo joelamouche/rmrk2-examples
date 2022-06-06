@@ -1,5 +1,5 @@
 import axios from "axios";
-import { sleep } from "./utils";
+import { sleep } from ".";
 
 require("dotenv").config();
 import { Metadata } from "rmrk-tools/dist/tools/types";

@@ -1,4 +1,3 @@
-import { SlotSet } from "./types";
 
 // deployement details
 export const deployement1 = {
@@ -181,4 +180,4 @@ export const deployementList2 = [
   },
 ];
 
-export const fullKusamarauderList = [...deployementList1, ...deployementList2];
+export const FULL_KUSAMARAUDER_LIST = [...deployementList1, ...deployementList2];

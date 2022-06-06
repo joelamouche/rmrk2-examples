@@ -1,4 +1,4 @@
-import { WS_URL } from "./constants";
+import { WS_URL } from "../constants";
 import fs from "fs";
 require("dotenv").config();
 import { KeyringPair, KeyringPair$Json } from "@polkadot/keyring/types";
@@ -6,8 +6,6 @@ import { ApiPromise, Keyring, WsProvider } from "@polkadot/api";
 import { SubmittableExtrinsic } from "@polkadot/api/types";
 import { ISubmittableResult } from "@polkadot/types/types";
 import { CodecHash } from "@polkadot/types/interfaces";
-import { generateKey } from "crypto";
-//import { keyring  } from '@polkadot/ui-keyring';
 
 export const getKeys = (): KeyringPair[] => {
   const k = [];
@@ -28,28 +26,6 @@ export const getKeyringFromUri = (phrase: string): KeyringPair => {
   return keyring.addFromUri(phrase);
 };
 
-export const getKeyringFromMnemonic = (mnemonic: string): KeyringPair => {
-  const keyring = new Keyring({ ss58Format: 42, type: "sr25519" });
-  keyring.setSS58Format(2);
-  return keyring.addFromMnemonic(mnemonic); //, {genesisHash}, "sr25519");
-};
-
-function parseFile(
-  keyring,
-  file: Uint8Array,
-  genesisHash?: string | null
-): KeyringPair | null {
-  try {
-    return keyring.createFromJson(
-      JSON.parse(u8aToString(file)) as KeyringPair$Json,
-      { genesisHash }
-    );
-  } catch (error) {
-    console.error(error);
-  }
-
-  return null;
-}
 
 // Get list if fixed parts
 export const getJSONString = async (): Promise<any> => {
@@ -65,47 +41,6 @@ export const getJSONString = async (): Promise<any> => {
   });
 };
 
-const genesisHash =
-  "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe";
-
-export const getKeyringFromJSON = async (): Promise<KeyringPair> => {
-  const keyring = new Keyring({ type: "sr25519" });
-  const json = await getJSONString();
-  console.log("json", json);
-  //keyring.loadAll({genesisHash})
-
-  let pair = keyring.createFromJson(
-    {
-      encoded:
-        "2gZ2dmz4+YLt4juetJ3JhOCFqviXwptmK6hfeyQCbHgAgAAAAQAAAAgAAAAI/xqCjYUZmbCzqsBxd0Oi2yHD9Y2nP/tLjn9x1yyA4RknCtBmwBNBvsckE5vF5vk7rGxRUL78pqfLYw7ruzhruCbEg/IonRBWWRlRrCL7Mc36wzXPtnA0RUIA7OhyqBzZLP7SEasMDZgopuWviQrtVgcC35TaLNO5N4EmMpTdqqd690cNTyQJN5dsO9kiaZNkrYwNlpcKtTNVBILH",
-      encoding: {
-        content: ["pkcs8", "sr25519"],
-        type: ["scrypt", "xsalsa20-poly1305"],
-        version: "3",
-      },
-      address: "FCzwhSLYhFdqdSXXdUM2nGGpgDFit24tX8ajgfXWj49VEwo",
-      meta: {
-        genesisHash:
-          "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe",
-        isHardware: false,
-        name: "Substraknight acc",
-        tags: [],
-        whenCreated: 1649182151932,
-      },
-    }
-    //JSON.parse(
-    //json
-    //)
-  );
-
-  // console.log("decode", pair.decodePkcs8('password'));
-  const password = "password";
-  pair.unlock("password");
-  console.log("unlocked pair", pair);
-  pair.unlock("password");
-  console.log("unlocked pair", pair.toJson("password"));
-  return pair;
-};
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -171,6 +106,3 @@ export const sendAndFinalize = async (
     );
   });
 };
-function u8aToString(file: Uint8Array): string {
-  throw new Error("Function not implemented.");
-}

@@ -19,7 +19,7 @@ import {
   uploadAndPinIpfsMetadata,
   pinFileStreamToIpfs,
   StreamPinata,
-} from "./pinata-utils";
+} from "./utils/pinata-utils";
 import { IProperties } from "rmrk-tools/dist/tools/types";
 import { Readable } from "stream";
 import { u8aToHex } from "@polkadot/util";

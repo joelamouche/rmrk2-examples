@@ -5,7 +5,7 @@ import {
   FixedSetProba,
   TraitProba,
   WS_URL,
-} from "./constants";
+} from "../constants";
 import fs from "fs";
 require("dotenv").config();
 

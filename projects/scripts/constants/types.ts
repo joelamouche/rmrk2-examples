@@ -44,7 +44,23 @@ export interface SlotConfig {
 export type SlotConfigSet = SlotConfig[];
 export type SlotSet = SlotTrait[];
 
+export interface SlotInfo {
+  symbol: string;
+  thumb: string;
+  resources: string[];
+  fileName: string;
+  slotCategory: string;
+  description: TraitDescription;
+}
+
 export interface SoldierDeployement {
   kusamarauderNumber: number;
   items: SlotSet;
+}
+
+
+export interface Deployement {
+  mintSubstraBlock: number;
+  baseBlock: number;
+  indexList: number[];
 }

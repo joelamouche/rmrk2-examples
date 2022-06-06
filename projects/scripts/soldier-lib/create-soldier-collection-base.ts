@@ -5,12 +5,12 @@ import {
   WS_URL,
   FixedPart,
   SlotConfig,
-} from "./constants";
+} from "../constants";
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
-import { getApi, sendAndFinalize } from "./utils";
+import { getApi, sendAndFinalize } from "../utils";
 import { Base } from "rmrk-tools";
-import { getItemCollectionId } from "./mint-substra-items";
 import { KeyringPair } from "@polkadot/keyring/types";
+import { getItemCollectionId } from "../item-lib/item-collection-util";
 
 export const allFixedParts = (list: FixedPart[]): IBasePart[] => {
   let res = [];
