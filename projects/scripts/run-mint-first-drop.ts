@@ -1,15 +1,11 @@
 import fs from "fs";
-import {
-  WS_URL,
-  FixedTraitSet,
-  substraKnightsAddress,
-} from "./constants";
+import { WS_URL, FixedTraitSet, substraKnightsAddress } from "./constants";
 import { mintAndEquipAllItemsFromSetList } from "./item-lib/mint-substra-items";
+import { getApi, sleep } from "./utils";
 import {
-  getApi,
-  sleep,
-} from "./utils";
-import { getLatestSetList, mintListBaseTx } from "./soldier-lib/mint-soldier-fixedParts";
+  getLatestSetList,
+  mintListBaseTx,
+} from "./soldier-lib/mint-soldier-fixedParts";
 import { drawVillainSlotSet } from "./constants/item-list";
 import { getKeyringFromMnemonic } from "./utils/mnemonic-utils";
 
@@ -88,7 +84,8 @@ export const mintSoldiersInBatches = async () => {
 
     // MINT SOLDIERS IN BATCHES
     const step = 2; // adjust the number of soldiers per batch here
-    for (let j = 8; j < 15; j++) { // adjust the maximum number of soldiers here
+    for (let j = 8; j < 15; j++) {
+      // adjust the maximum number of soldiers here
       console.log(
         "++++++++++++______________++++++++++++_____________+++++++++____________SEQ___ " +
           j +
@@ -101,8 +98,8 @@ export const mintSoldiersInBatches = async () => {
         fixedPartList.slice(j * step, (j + 1) * step),
         api,
         "7472058104f9f93924-SKC",
-        120+j * step,
-        false//j === 0
+        120 + j * step,
+        false //j === 0
       );
       await sleep(10000);
     }

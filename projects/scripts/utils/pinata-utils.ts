@@ -76,8 +76,10 @@ export const pinSingleMetadataFromDir = async (
 ) => {
   try {
     // Check that there is no typo in filename
-    const fileNameList=await fsPromises.readdir(`${process.cwd()}${dir}`)
-    if (!fileNameList.includes(path)){throw new Error(`${path} not in directory`)}
+    const fileNameList = await fsPromises.readdir(`${process.cwd()}${dir}`);
+    if (!fileNameList.includes(path)) {
+      throw new Error(`${path} not in directory`);
+    }
 
     // get image from file
     const imageFile = await fsPromises.readFile(
@@ -102,9 +104,9 @@ export const pinSingleMetadataFromDir = async (
     console.log(`NFT ${name} METADATA: `, metadataCid);
     return metadataCid;
   } catch (error) {
-    console.log("ERR IPFS")
+    console.log("ERR IPFS");
     console.log(error);
     console.log(JSON.stringify(error));
-    throw error
+    throw error;
   }
 };

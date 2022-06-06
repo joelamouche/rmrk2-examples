@@ -26,7 +26,6 @@ export const getKeyringFromUri = (phrase: string): KeyringPair => {
   return keyring.addFromUri(phrase);
 };
 
-
 // Get list if fixed parts
 export const getJSONString = async (): Promise<any> => {
   return new Promise((res) => {
@@ -40,7 +39,6 @@ export const getJSONString = async (): Promise<any> => {
     );
   });
 };
-
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);

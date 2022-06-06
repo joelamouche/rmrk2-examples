@@ -27,7 +27,19 @@ export type FixedSetProba = FixedPartProba[];
 // Slots
 export type SlotTraitName = string;
 export type SlotFileName = string;
-export type SlotCategory = "Backgrounds"|"Mounts"|"Weapons"|"Legs"|"Underhelms"|"Feet"|"Cloths"|"Chests"|"Heads"|"Arms"|"Shield"|"Pet"
+export type SlotCategory =
+  | "Backgrounds"
+  | "Mounts"
+  | "Weapons"
+  | "Legs"
+  | "Underhelms"
+  | "Feet"
+  | "Cloths"
+  | "Chests"
+  | "Heads"
+  | "Arms"
+  | "Shield"
+  | "Pet";
 
 export type TraitDescription = string;
 export interface SlotTrait {
@@ -57,7 +69,6 @@ export interface SoldierDeployement {
   kusamarauderNumber: number;
   items: SlotSet;
 }
-
 
 export interface Deployement {
   mintSubstraBlock: number;

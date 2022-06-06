@@ -195,7 +195,7 @@ export const drawVillainSlotSet = (): SlotSet => {
 
 // Items for 3rd items mint
 
-const clothList:SlotSet = [
+const clothList: SlotSet = [
   {
     slotCategory: "Cloths",
     fileName: "Black",

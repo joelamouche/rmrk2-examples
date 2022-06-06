@@ -3,7 +3,6 @@ import { KeyringPair } from "@polkadot/keyring/types";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { fixedSetProba, FixedSetProba } from "../constants";
 
-
 const expectedAddress = "FCzwhSLYhFdqdSXXdUM2nGGpgDFit24tX8ajgfXWj49VEwo";
 
 export const checkMnemonic = async (_fixedSetProba: FixedSetProba) => {
@@ -27,6 +26,5 @@ export const getKeyringFromMnemonic = (mnemonic: string): KeyringPair => {
   keyring.setSS58Format(2);
   return keyring.addFromMnemonic(mnemonic); //, {genesisHash}, "sr25519");
 };
-
 
 // checkMnemonic(fixedSetProba);

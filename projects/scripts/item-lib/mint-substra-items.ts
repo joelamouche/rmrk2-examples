@@ -18,7 +18,10 @@ import { encodeAddress } from "@polkadot/keyring";
 import { nanoid } from "nanoid";
 import { pinSingleMetadataFromDir } from "../utils/pinata-utils";
 import { KeyringPair } from "@polkadot/keyring/types";
-import { createItemsCollections, getItemCollectionId } from "./item-collection-util";
+import {
+  createItemsCollections,
+  getItemCollectionId,
+} from "./item-collection-util";
 
 const substraItems = (list: SlotSet): SlotInfo[] => {
   return list.map((slot: SlotTrait) => {
@@ -80,9 +83,9 @@ export const getMintItemTx = async (
 
     return remarks.map((remark) => api.tx.system.remark(remark));
   } catch (error: any) {
-    console.log("ERR")
+    console.log("ERR");
     console.error(error);
-    throw error
+    throw error;
   }
 };
 
@@ -163,9 +166,9 @@ export const getAddItemsTx = async (
 
     return resaddSendRemarks.map((remark) => api.tx.system.remark(remark));
   } catch (error: any) {
-    console.log("ERR")
+    console.log("ERR");
     console.error(error);
-    throw error
+    throw error;
   }
 };
 
@@ -175,7 +178,7 @@ export const getSendItemsToSoldierTx = async (
   itemBlock: number,
   substraCollectionId,
   _soldierNumber: number,
-  slotNumber:number,
+  slotNumber: number,
   slotItem: SlotTrait
 ) => {
   const soldierNumber = _soldierNumber + 1;
@@ -211,7 +214,7 @@ export const getSendItemsToSoldierTx = async (
         collection: getItemCollectionId(kp, item.slotCategory),
         symbol: item.symbol + slotNumber.toString(),
       });
-      console.log("itemNft",itemNft,itemNft.getId())
+      console.log("itemNft", itemNft, itemNft.getId());
 
       // const CID = customCID ? customCID : ASSETS_CID;
       // console.log("CID FOR Added ressources : " + CID);
@@ -236,7 +239,7 @@ export const getSendItemsToSoldierTx = async (
         owner: encodeAddress(kp.address, 2), //TODO?
         metadata: "",
       });
-      console.log("soldierNft.getId()",soldierNft.getId())
+      console.log("soldierNft.getId()", soldierNft.getId());
 
       // send and equip
       resaddSendRemarks.push(itemNft.send(soldierNft.getId()));
@@ -247,9 +250,9 @@ export const getSendItemsToSoldierTx = async (
 
     return resaddSendRemarks.map((remark) => api.tx.system.remark(remark));
   } catch (error: any) {
-    console.log("ERR")
+    console.log("ERR");
     console.error(error);
-    throw error
+    throw error;
   }
 };
 
@@ -379,11 +382,9 @@ export const mintAndEquipAllItemsFromSetList = async (
     );
     return { mintItemBlock, resaddSendBlock };
   } catch (error: any) {
-    console.log("ERR HIGH LVL")
+    console.log("ERR HIGH LVL");
     console.error(error);
     process.exit();
-    throw error
+    throw error;
   }
 };
-
-

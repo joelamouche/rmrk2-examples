@@ -1,7 +1,8 @@
 // ITEMS TO SEND
 
 //———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//———,//—————
-export const event8ListTest = [,
+export const event8ListTest = [
+  ,
   {
     kusamarauderNumber: 5,
     items: [

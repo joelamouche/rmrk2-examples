@@ -12,7 +12,6 @@ import { pinSingleMetadataFromDir } from "../utils/pinata-utils";
 import { nanoid } from "nanoid";
 import { KeyringPair } from "@polkadot/keyring/types";
 
-
 export const getTxAddBaseResource = async (
   kp: KeyringPair,
   substraBlock: number,

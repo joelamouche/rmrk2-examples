@@ -1,63 +1,74 @@
 import { Collection } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
-import fs from "fs"
+import fs from "fs";
 
-import { Deployement, FULL_KUSAMARAUDER_LIST, SlotSet, SlotTrait, SoldierDeployement, substraKnightsAddress, SUBSTRAKNIGHT_COLLECTION_SYMBOL, WS_URL } from "../constants";
+import {
+  Deployement,
+  FULL_KUSAMARAUDER_LIST,
+  SlotSet,
+  SlotTrait,
+  SoldierDeployement,
+  substraKnightsAddress,
+  SUBSTRAKNIGHT_COLLECTION_SYMBOL,
+  WS_URL,
+} from "../constants";
 import { getApi, sendAndFinalize } from "../utils";
-import { getSendItemsToSoldierTx, mintAndEquipAllItemsFromSetList } from "./mint-substra-items";
+import {
+  getSendItemsToSoldierTx,
+  mintAndEquipAllItemsFromSetList,
+} from "./mint-substra-items";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { getKeyringFromMnemonic } from "../utils/mnemonic-utils";
 
 export const mintOneSetForOneSoldier = async (
-    mintSubstraBlock,
-    baseBlock,
-    _slotSet: SlotSet,
-    soldierNumber: number,
-    customCID: string,
-    needCreateItemCollection: boolean
-  ) => {
-    const kp = getKeyringFromMnemonic(process.env.MNEMONIC);
-    if (kp.address === substraKnightsAddress) {
-      console.log("RIGHT ADDRESS : " + kp.address);
-    } else {
-      console.log("WRONG ADDRESS : " + kp.address);
-      console.log("SHOULD BE : " + substraKnightsAddress);
-      return;
-    }
-    // Add items
-  
-    const { mintItemBlock, resaddSendBlock } =
-      await mintAndEquipAllItemsFromSetList(
-        kp,
-        mintSubstraBlock,
-        baseBlock,
-        1,
-        [_slotSet],
-        soldierNumber,
-        needCreateItemCollection,
-        customCID
-      );
-    // Save deployement
-    let data = JSON.stringify({
-      address: kp.address,
-      time: Date.now().toLocaleString(),
-      baseBlock,
-      mintSubstraBlock,
-      mintItemBlock,
-      resaddSendBlock,
-      soldierNumber,
-    });
-    fs.writeFileSync(
-      `deployements/addItems/add-items-${_slotSet.length}-${new Date(
-        Date.now()
-      ).getDate()}-${new Date(Date.now()).getMonth() + 1}-${new Date(
-        Date.now()
-      ).getUTCFullYear()}-${new Date(Date.now()).toLocaleTimeString()}.json`,
-      data
-    );
-  };
+  mintSubstraBlock,
+  baseBlock,
+  _slotSet: SlotSet,
+  soldierNumber: number,
+  customCID: string,
+  needCreateItemCollection: boolean
+) => {
+  const kp = getKeyringFromMnemonic(process.env.MNEMONIC);
+  if (kp.address === substraKnightsAddress) {
+    console.log("RIGHT ADDRESS : " + kp.address);
+  } else {
+    console.log("WRONG ADDRESS : " + kp.address);
+    console.log("SHOULD BE : " + substraKnightsAddress);
+    return;
+  }
+  // Add items
 
+  const { mintItemBlock, resaddSendBlock } =
+    await mintAndEquipAllItemsFromSetList(
+      kp,
+      mintSubstraBlock,
+      baseBlock,
+      1,
+      [_slotSet],
+      soldierNumber,
+      needCreateItemCollection,
+      customCID
+    );
+  // Save deployement
+  let data = JSON.stringify({
+    address: kp.address,
+    time: Date.now().toLocaleString(),
+    baseBlock,
+    mintSubstraBlock,
+    mintItemBlock,
+    resaddSendBlock,
+    soldierNumber,
+  });
+  fs.writeFileSync(
+    `deployements/addItems/add-items-${_slotSet.length}-${new Date(
+      Date.now()
+    ).getDate()}-${new Date(Date.now()).getMonth() + 1}-${new Date(
+      Date.now()
+    ).getUTCFullYear()}-${new Date(Date.now()).toLocaleTimeString()}.json`,
+    data
+  );
+};
 
 const checkPresenceOfAllSoldiers = (
   _depList: Deployement[],
@@ -83,7 +94,6 @@ const checkPresenceOfAllSoldiers = (
   }
   return areAllThere;
 };
-
 
 export const deployItemsForSoldierList = async (
   dep: Deployement[],
@@ -117,7 +127,10 @@ export const deployItemsForSoldierList = async (
   }
 };
 
-export async function mintAndSendItemsForEvent(eventList: SoldierDeployement[], ipfsHash: any) {
+export async function mintAndSendItemsForEvent(
+  eventList: SoldierDeployement[],
+  ipfsHash: any
+) {
   // TODO CHECK ZINDEX
   for (let k = 0; k < eventList.length; k++) {
     console.log("eventList k", eventList[k]);
@@ -139,13 +152,11 @@ export const sendItemsToSoldier = async (
   destSubstraBlock: number,
   mintItemBlock: number,
   soldierNumber: number,
-  slotIndex:number,
+  slotIndex: number,
   slot: SlotTrait
 ) => {
   try {
-    console.log(
-      `SEND ITEM TO ${soldierNumber+1} SOLDIER START -------`
-    );
+    console.log(`SEND ITEM TO ${soldierNumber + 1} SOLDIER START -------`);
     await cryptoWaitReady();
     const ws = WS_URL;
     const api = await getApi(ws);
@@ -155,20 +166,19 @@ export const sendItemsToSoldier = async (
       SUBSTRAKNIGHT_COLLECTION_SYMBOL
     );
 
-
     // Get add base and equip tx
     //let totalTxAddBase = [];
-   // for (let j = 0; j < numberOfSoldiers; j++) {
-      const txsSendItemToSoldier = await getSendItemsToSoldierTx(
-        kp,
-        destSubstraBlock,
-        mintItemBlock,
-        substraCollectionId,
-       soldierNumber,
-       slotIndex,
-        slot
-      );
-      //totalTxAddBase = [...totalTxAddBase, ...txsAddBaseItem];
+    // for (let j = 0; j < numberOfSoldiers; j++) {
+    const txsSendItemToSoldier = await getSendItemsToSoldierTx(
+      kp,
+      destSubstraBlock,
+      mintItemBlock,
+      substraCollectionId,
+      soldierNumber,
+      slotIndex,
+      slot
+    );
+    //totalTxAddBase = [...totalTxAddBase, ...txsAddBaseItem];
     //}
 
     const resbatch = api.tx.utility.batch(txsSendItemToSoldier);
@@ -179,8 +189,8 @@ export const sendItemsToSoldier = async (
     );
     return { mintItemBlock, resaddSendBlock };
   } catch (error: any) {
-    console.log("ERR HIGH LVL")
-    throw error
+    console.log("ERR HIGH LVL");
+    throw error;
     process.exit();
   }
 };

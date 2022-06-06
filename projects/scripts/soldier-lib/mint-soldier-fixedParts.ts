@@ -16,7 +16,6 @@ import { KeyringPair } from "@polkadot/keyring/types";
 import { allFixedPartsList } from "../constants/misc";
 import { createSubstraknightCollection } from "soldier-lib/soldier-collection-utils";
 
-
 export const getMintOneBaseTx = async (
   kp: KeyringPair,
   baseBlock: number,
@@ -80,7 +79,7 @@ export const mintListBaseTx = async (
       fixedSetList[i],
       api,
       collectionId,
-       i + offset
+      i + offset
     );
     totalTxListAddABase = [...totalTxListAddABase, ...txsAddBase];
   }
@@ -135,27 +134,33 @@ export const runMintSequenceBatch = async (kp: KeyringPair) => {
   }
 };
 
-async function getListFromPath(path:string): Promise<FixedTraitSet[]>{
+async function getListFromPath(path: string): Promise<FixedTraitSet[]> {
   return new Promise((res) => {
-    fs.readFile(
-      path,
-      (err, data) => {
-        if (err) throw err;
-        let setList = JSON.parse(data.toString());
-        res(setList);
-      }
-    );
+    fs.readFile(path, (err, data) => {
+      if (err) throw err;
+      let setList = JSON.parse(data.toString());
+      res(setList);
+    });
   });
 }
 
 // Get list of fixed trait set
 export const getLatestSetList = async (): Promise<FixedTraitSet[]> => {
-  return await getListFromPath("deployements/drawnSets/drawnset-30-26-5-2022-2:39:32 PM.json")
+  return await getListFromPath(
+    "deployements/drawnSets/drawnset-30-26-5-2022-2:39:32 PM.json"
+  );
 };
 
 // Get list of fixed trait set
 export const getOldSetList = async (): Promise<FixedTraitSet[]> => {
-  return [...await getListFromPath("drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json"),...await getListFromPath("drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json")]
+  return [
+    ...(await getListFromPath(
+      "drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json"
+    )),
+    ...(await getListFromPath(
+      "drawnSets/drawnset-100-5-4-2022-9:58:22 PM.json"
+    )),
+  ];
 };
 
 // Run mint seq with probas

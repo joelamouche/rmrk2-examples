@@ -1,4 +1,3 @@
-
 // deployement details
 export const deployement1 = {
   mintSubstraBlock: 12126344,
@@ -39,7 +38,7 @@ export const deployementList1 = [
   {
     mintSubstraBlock: 12126431,
     baseBlock: 12126274,
-    indexList: [11,12],
+    indexList: [11, 12],
   },
   {
     mintSubstraBlock: 12126461,
@@ -180,4 +179,7 @@ export const deployementList2 = [
   },
 ];
 
-export const FULL_KUSAMARAUDER_LIST = [...deployementList1, ...deployementList2];
+export const FULL_KUSAMARAUDER_LIST = [
+  ...deployementList1,
+  ...deployementList2,
+];

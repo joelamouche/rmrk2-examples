@@ -148,11 +148,11 @@ export const drawSets = (
   // Save drawn sets
   let data = JSON.stringify(filteredRes);
   fs.writeFileSync(
-    `deployements/drawnSets/drawnset-${numberOfSets}-${new Date(Date.now()).getDate()}-${
-      new Date(Date.now()).getMonth() + 1
-    }-${new Date(Date.now()).getUTCFullYear()}-${new Date(
+    `deployements/drawnSets/drawnset-${numberOfSets}-${new Date(
       Date.now()
-    ).toLocaleTimeString()}.json`,
+    ).getDate()}-${new Date(Date.now()).getMonth() + 1}-${new Date(
+      Date.now()
+    ).getUTCFullYear()}-${new Date(Date.now()).toLocaleTimeString()}.json`,
     data
   );
   return filteredRes;
