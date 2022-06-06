@@ -5,6 +5,7 @@ import {
   FixedSetProba,
   TraitProba,
   WS_URL,
+  NUMBER_OF_SETS,
 } from "../constants";
 import fs from "fs";
 require("dotenv").config();
@@ -158,4 +159,4 @@ export const drawSets = (
   return filteredRes;
 };
 
-drawSets(fixedSetProba, 30);
+drawSets(fixedSetProba, NUMBER_OF_SETS);

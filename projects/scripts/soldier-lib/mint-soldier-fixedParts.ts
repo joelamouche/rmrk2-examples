@@ -6,6 +6,7 @@ import {
   WS_URL,
   FixedSetProba,
   FixedPartProba,
+  LATEST_SOLDIER_SET,
 } from "../constants";
 import { createBase } from "./create-soldier-collection-base";
 import {
@@ -147,7 +148,7 @@ async function getListFromPath(path: string): Promise<FixedTraitSet[]> {
 // Get list of fixed trait set
 export const getLatestSetList = async (): Promise<FixedTraitSet[]> => {
   return await getListFromPath(
-    "deployements/drawnSets/drawnset-30-26-5-2022-2:39:32 PM.json"
+    LATEST_SOLDIER_SET
   );
 };
 
