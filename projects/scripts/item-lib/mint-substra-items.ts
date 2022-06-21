@@ -1,17 +1,14 @@
 import {
   LATEST_CID,
   SUBSTRAKNIGHT_COLLECTION_SYMBOL,
-  SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL,
   WS_URL,
   SUBSTRAKNIGHT_BASE_SYMBOL,
   SlotSet,
   SlotTrait,
-  TraitDescription,
-  SlotCategory,
   SlotInfo,
 } from "../constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { getApi, getKeyringFromUri, sendAndFinalize } from "../utils";
+import { getApi, sendAndFinalize } from "../utils";
 import { Collection, NFT, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 import { encodeAddress } from "@polkadot/keyring";
@@ -325,8 +322,9 @@ export const mintAndEquipAllItemsFromSetList = async (
   customCID?: string
 ) => {
   try {
+    console.log(`------------------------------------------------------------------------------------------------ `)
     console.log(
-      `CREATE SUBSTRAKNIGHT ITEMS FOR ${numberOfSoldiers} SOLDIER START -------`
+      `-------- CREATE SUBSTRAKNIGHT ITEMS FOR ${numberOfSoldiers} SOLDIER START -------`
     );
     await cryptoWaitReady();
     const ws = WS_URL;
@@ -355,7 +353,7 @@ export const mintAndEquipAllItemsFromSetList = async (
     console.log("SUBSTRAKNIGHT ITEMS MINTED AT BLOCK: ", mintItemBlock);
 
     console.log(
-      `ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS TO ${numberOfSoldiers} SOLDIERS  START -------`
+      `-------- ADD,SEND,EQUIP SUBSTRAKNIGHT ITEMS TO ${numberOfSoldiers} SOLDIERS  START -------`
     );
 
     // Get add base and equip tx

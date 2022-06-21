@@ -1,8 +1,7 @@
 import { KeyringPair } from "@polkadot/keyring/types";
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
-import { getApi } from "rmrk-tools/dist/tools/utils";
 import { Collection } from "rmrk-tools";
-import { sendAndFinalize } from "utils";
+import { sendAndFinalize, getApi } from "../utils";
 import { u8aToHex } from "@polkadot/util";
 
 import {

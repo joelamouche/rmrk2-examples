@@ -1,7 +1,11 @@
-import fs from "fs";
 import { SoldierDeployement, LATEST_CID } from "./constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { mintAndSendItemsForEvent } from "./item-lib/send-item-to-soldier-utils";
+import { eventList0506 } from "./constants/itemDeployementList/eventList0506";
+import { mint1006 } from "./constants/itemDeployementList/mint1006";
+import { bossEvent2 } from "./constants/itemDeployementList/bossEvent2";
+import { distrib1506 } from "./constants/itemDeployementList/distrib1506";
+import { event1906 } from "./constants/itemDeployementList/event1906";
 
 export const main = async (eventList: SoldierDeployement[], ipfsHash) => {
   await cryptoWaitReady();
@@ -23,33 +27,6 @@ export const main = async (eventList: SoldierDeployement[], ipfsHash) => {
   process.exit();
 };
 main(
-  [
-    {
-      kusamarauderNumber: 92,
-      items: [
-        {
-          slotCategory: "Weapons",
-          fileName: "ListenSword",
-          traitName: "Listen Katana",
-          zIndex: 2,
-          traitDescription:
-            "A well crafted blade, Listen Shogun Katana.\nPOWER: 1500",
-        },
-      ],
-    },
-    {
-      kusamarauderNumber: 72,
-      items: [
-        {
-          slotCategory: "Heads",
-          fileName: "LegionaryHelmet",
-          traitName: "Legionary Helmet",
-          zIndex: 16,
-          traitDescription:
-            "A solid helmet covering most of the head.\nPOWER: 200",
-        },
-      ],
-    },
-  ],
+  event1906,
   LATEST_CID
 );
