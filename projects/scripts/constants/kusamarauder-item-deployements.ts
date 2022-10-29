@@ -184,6 +184,26 @@ export const deployementList2 = [
     indexList: [101]
   },
   {
+    mintSubstraBlock: 12839242,
+    baseBlock: 12126274,
+    indexList: [103]
+  },
+  {
+    mintSubstraBlock: 12839242,
+    baseBlock: 12126274,
+    indexList: [104]
+  },
+  {
+    mintSubstraBlock: 12839402,
+    baseBlock: 12126274,
+    indexList: [105]
+  },
+  {
+    mintSubstraBlock: 12839909,
+    baseBlock: 12126274,
+    indexList: [111],
+  },
+  {
     mintSubstraBlock: 12840273,
     baseBlock: 12126274,
     indexList: [112],
@@ -197,6 +217,11 @@ export const deployementList2 = [
     mintSubstraBlock: 12841045,
     baseBlock: 12126274,
     indexList: [116],
+  },
+  {
+    mintSubstraBlock: 12841112,
+    baseBlock: 12126274,
+    indexList: [118],
   },
   {
     mintSubstraBlock: 12842970,

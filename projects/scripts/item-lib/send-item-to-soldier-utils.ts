@@ -132,9 +132,12 @@ export async function mintAndSendItemsForEvent(
   ipfsHash: any
 ) {
   // TODO CHECK ZINDEX
+  let lastProcessedSoldierNumber=0
   for (let k = 0; k < eventList.length; k++) {
     console.log("eventList k", eventList[k]);
-    if (eventList[k]) {
+    // check that the next soldier number is stricly superior
+    if (eventList[k] && eventList[k].kusamarauderNumber &&eventList[k].kusamarauderNumber>lastProcessedSoldierNumber) {
+      lastProcessedSoldierNumber=eventList[k].kusamarauderNumber
       await deployItemsForSoldierList(
         FULL_KUSAMARAUDER_LIST,
         [eventList[k].kusamarauderNumber],
@@ -142,7 +145,7 @@ export async function mintAndSendItemsForEvent(
         ipfsHash
       );
     } else {
-      console.log("EMPTY LIST ITEM");
+      console.log("EMPTY LIST ITEM OR NON INCREMENTAL NUMBER");
     }
   }
 }
