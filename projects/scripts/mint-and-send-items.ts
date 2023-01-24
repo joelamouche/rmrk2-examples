@@ -20,8 +20,20 @@ import { event2509 } from "./constants/itemDeployementList/event2509";
 import { event0210 } from "./constants/itemDeployementList/event0210";
 import { event0910 } from "./constants/itemDeployementList/event0910";
 import { event2410 } from "./constants/itemDeployementList/event2410";
+import { event0111 } from "./constants/itemDeployementList/event0111";
+import { event0611 } from "./constants/itemDeployementList/event0611";
+import { event2211 } from "./constants/itemDeployementList/event2211";
+import { event0412 } from "./constants/itemDeployementList/event0412";
+import { event1912 } from "./constants/itemDeployementList/event1912";
+import { event1812 } from "./constants/itemDeployementList/event1812";
+import { eventBossSanta } from "./constants/itemDeployementList/eventBossSanta";
+import { event080123 } from "./constants/itemDeployementList/event080123";
+import { event080123Tournament } from "./constants/itemDeployementList/event080123Tournament";
+import { event150123 } from "./constants/itemDeployementList/event150123";
+import { event230123 } from "./constants/itemDeployementList/event230123";
+import { testEvent } from "./constants/itemDeployementList/testEvent";
 
-export const main = async (eventList: SoldierDeployement[], ipfsHash) => {
+export const main = async (eventList: SoldierDeployement[], ipfsHash:string) => {
   await cryptoWaitReady();
 
   // Mint and send items
@@ -41,6 +53,6 @@ export const main = async (eventList: SoldierDeployement[], ipfsHash) => {
   process.exit();
 };
 main(
-  event2410,
+  testEvent,
   LATEST_CID
 );

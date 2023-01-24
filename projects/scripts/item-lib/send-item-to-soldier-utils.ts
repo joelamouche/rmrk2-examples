@@ -129,7 +129,7 @@ export const deployItemsForSoldierList = async (
 
 export async function mintAndSendItemsForEvent(
   eventList: SoldierDeployement[],
-  ipfsHash: any
+  ipfsHash: string
 ) {
   // TODO CHECK ZINDEX
   let lastProcessedSoldierNumber=0

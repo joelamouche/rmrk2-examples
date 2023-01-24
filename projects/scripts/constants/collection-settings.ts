@@ -4,7 +4,7 @@ export const LATEST_SOLDIER_SET= "deployements/drawnSets/drawnset-30-26-5-2022-2
 export const NUMBER_OF_SETS=30
 
 export const BASE_ASSETS_CID = "QmVHMCtxa9MzeGHGuGuaasaU7PeJsmPzuN3StbCDTbigih";
-export const LATEST_CID = "QmVwqM36CxSuM4AnMZ86oy1cuP5A5tNWT9yFQ1FiKPyntP";
+export const LATEST_CID = "QmTibSN9guPEG3cPLCzm8N5Y4Gz4qu5GD2HAT2ttTHdy4W";
 
 export const SUBSTRAKNIGHT_ITEMS_COLLECTION_SYMBOL = "SKITMS";
 export const SUBSTRAKNIGHT_COLLECTION_SYMBOL = "SKC";

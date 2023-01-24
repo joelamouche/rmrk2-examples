@@ -29,6 +29,7 @@ const substraItems = (list: SlotSet): SlotInfo[] => {
       fileName: slot.fileName,
       description: slot.traitDescription,
       slotCategory: slot.slotCategory,
+      separateCID:slot.separateCID
     };
   });
 };
@@ -132,11 +133,15 @@ export const getAddItemsTx = async (
 
       const CID = customCID ? customCID : LATEST_CID;
       console.log("CID FOR Added ressources : " + CID);
+      // TODO: use custom item CID
+      // Add i to the SlotSet on the item
       item.resources.forEach((resource) => {
         resaddSendRemarks.push(
           itemNft.resadd({
-            src: `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${resource}`,
-            thumb: `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${item.thumb}`,
+            src:item.separateCID? `ipfs://ipfs/${item.separateCID}/${resource}`:
+            `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${resource}`,
+            thumb: item.separateCID? `ipfs://ipfs/${item.separateCID}/${item.thumb}`:
+            `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${item.thumb}`,
             id: nanoid(8),
             slot: `${baseEntity.getId()}.${item.slotCategory}`,
           })
