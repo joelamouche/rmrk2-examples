@@ -1,4 +1,3 @@
-
 ## RMRK2 Substraknight minting scripts (DEPRECATED)
 
 This is a collection of script to mint Substraknight composable nested NFTs using RMRK2

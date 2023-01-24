@@ -104,9 +104,8 @@ export const sendAndFinalize = async (
         }
       );
     } catch (error: any) {
-    console.error("error sendAndFinalize ",error);
-    process.exit();
-  }
-    
+      console.error("error sendAndFinalize ", error);
+      process.exit();
+    }
   });
 };

@@ -33,7 +33,10 @@ import { event150123 } from "./constants/itemDeployementList/event150123";
 import { event230123 } from "./constants/itemDeployementList/event230123";
 import { testEvent } from "./constants/itemDeployementList/testEvent";
 
-export const main = async (eventList: SoldierDeployement[], ipfsHash:string) => {
+export const main = async (
+  eventList: SoldierDeployement[],
+  ipfsHash: string
+) => {
   await cryptoWaitReady();
 
   // Mint and send items
@@ -52,7 +55,4 @@ export const main = async (eventList: SoldierDeployement[], ipfsHash:string) => 
   console.log("SCRIPT OVER");
   process.exit();
 };
-main(
-  testEvent,
-  LATEST_CID
-);
+main(testEvent, LATEST_CID);

@@ -147,9 +147,7 @@ async function getListFromPath(path: string): Promise<FixedTraitSet[]> {
 
 // Get list of fixed trait set
 export const getLatestSetList = async (): Promise<FixedTraitSet[]> => {
-  return await getListFromPath(
-    LATEST_SOLDIER_SET
-  );
+  return await getListFromPath(LATEST_SOLDIER_SET);
 };
 
 // Get list of fixed trait set

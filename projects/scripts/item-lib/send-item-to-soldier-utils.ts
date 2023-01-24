@@ -132,12 +132,16 @@ export async function mintAndSendItemsForEvent(
   ipfsHash: string
 ) {
   // TODO CHECK ZINDEX
-  let lastProcessedSoldierNumber=0
+  let lastProcessedSoldierNumber = 0;
   for (let k = 0; k < eventList.length; k++) {
     console.log("eventList k", eventList[k]);
     // check that the next soldier number is stricly superior
-    if (eventList[k] && eventList[k].kusamarauderNumber &&eventList[k].kusamarauderNumber>lastProcessedSoldierNumber) {
-      lastProcessedSoldierNumber=eventList[k].kusamarauderNumber
+    if (
+      eventList[k] &&
+      eventList[k].kusamarauderNumber &&
+      eventList[k].kusamarauderNumber > lastProcessedSoldierNumber
+    ) {
+      lastProcessedSoldierNumber = eventList[k].kusamarauderNumber;
       await deployItemsForSoldierList(
         FULL_KUSAMARAUDER_LIST,
         [eventList[k].kusamarauderNumber],

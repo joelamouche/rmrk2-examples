@@ -29,7 +29,7 @@ const substraItems = (list: SlotSet): SlotInfo[] => {
       fileName: slot.fileName,
       description: slot.traitDescription,
       slotCategory: slot.slotCategory,
-      separateCID:slot.separateCID
+      separateCID: slot.separateCID,
     };
   });
 };
@@ -138,10 +138,12 @@ export const getAddItemsTx = async (
       item.resources.forEach((resource) => {
         resaddSendRemarks.push(
           itemNft.resadd({
-            src:item.separateCID? `ipfs://ipfs/${item.separateCID}/${resource}`:
-            `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${resource}`,
-            thumb: item.separateCID? `ipfs://ipfs/${item.separateCID}/${item.thumb}`:
-            `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${item.thumb}`,
+            src: item.separateCID
+              ? `ipfs://ipfs/${item.separateCID}/${resource}`
+              : `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${resource}`,
+            thumb: item.separateCID
+              ? `ipfs://ipfs/${item.separateCID}/${item.thumb}`
+              : `ipfs://ipfs/${CID}/SlotParts/${item.slotCategory}/${item.thumb}`,
             id: nanoid(8),
             slot: `${baseEntity.getId()}.${item.slotCategory}`,
           })
@@ -327,7 +329,9 @@ export const mintAndEquipAllItemsFromSetList = async (
   customCID?: string
 ) => {
   try {
-    console.log(`------------------------------------------------------------------------------------------------ `)
+    console.log(
+      `------------------------------------------------------------------------------------------------ `
+    );
     console.log(
       `-------- CREATE SUBSTRAKNIGHT ITEMS FOR ${numberOfSoldiers} SOLDIER START -------`
     );

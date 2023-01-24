@@ -48,7 +48,7 @@ export interface SlotTrait {
   fileName: SlotFileName;
   traitDescription: TraitDescription;
   zIndex: number;
-  separateCID?:string
+  separateCID?: string;
 }
 export interface SlotConfig {
   slotCategory: SlotCategory;
@@ -64,7 +64,7 @@ export interface SlotInfo {
   fileName: string;
   slotCategory: string;
   description: TraitDescription;
-  separateCID?:string
+  separateCID?: string;
 }
 
 export interface SoldierDeployement {
